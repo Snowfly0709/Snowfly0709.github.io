@@ -51,29 +51,8 @@ body {
         transition: all 1s ease-in-out;
         }
 
-        .line{
-          width: 3px;
-          height: 14px;
-          display: block;
-          background-color: #a8a8a8;
-          transform: rotate(320deg);
-          position: absolute;
-          left: 30px;
-          top: 32px;
-          z-index: 10;
-          opacity: 1;
-          transition: all 1s ease-in-out;
-        }
-        .input:focus,.input:valid{
+        #searchInput:focus{
           width: 180px;
-        }
-        .input:focus+.line,.input:valid+.line{
-          width: 1px;
-          height: 16px;
-          left: 19px;
-          top: 10px;
-          opacity: 0;
-          transform: rotate(360deg);
         }
       }
     }
@@ -99,7 +78,6 @@ body {
     <div class="app">
       <label>
         <input type="text" id="searchInput" required>
-        <span class="line"></span>
       </label>
     </div>
     <ul class="urlset">
