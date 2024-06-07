@@ -28,9 +28,10 @@ body {
     }
     .searchInput {
         margin-bottom: 10px;
+        text-align: center;
         }
     .urlset li {
-        display: none;
+        display: flex;
     }
     .pagination {
         margin-top: 10px;
@@ -54,5 +55,23 @@ body {
     <!-- 此处省略一万条链接 -->
     </ul>
   </div>
+<script>
+  document.getElementById('searchInput').addEventListener('input', function () {
+      var searchKeyword = this.value.toLowerCase();
+      var links = document.querySelectorAll('.urlset a');
+
+      links.forEach(function (link) {
+          var title = link.getAttribute('title').toLowerCase();
+          var url = link.getAttribute('href').toLowerCase();
+
+          if (title.includes(searchKeyword) || url.includes(searchKeyword)) {
+              link.parentNode.style.display = 'block';
+          } else {
+              link.parentNode.style.display = 'none';
+          }
+      });
+  });
+</script>
+
 </body>
 </html>
