@@ -29,7 +29,6 @@ body {
     .app{
       width: 100%;
       height: 100vh;
-      background-color: #ffffff;
       position: relative;
       display: flex;
       justify-content: center;
@@ -38,7 +37,7 @@ body {
       label{
       position: relative;
 
-        #searchInput{
+        searchInput{
         width: 38px;
         height: 38px;
         line-height: 38px;
@@ -77,12 +76,15 @@ body {
           transform: rotate(360deg);
         }
       }
-      .urlset li {
-        display:flex;
-      }
-      .pagination {
-        margin-top: 10px;
-      }
+    }
+    .urlset li {
+      display:flex;   
+      position: relative;   
+      justify-content: center;
+      align-items: center;
+    }
+    .pagination {
+      margin-top: 10px;
     }
   }
 }
@@ -100,13 +102,13 @@ body {
         <input type="text" id="searchInput">
         <span class="line">  </span>
       </label>
-      <ul class="urlset">
-        <li class="aurl"><a href="https://www.ks-vpeptide.com/" data-lastfrom="" title="Peptide Expert &amp; Quality Proteins &amp; Ubiquitins factory">Peptide Expert & Quality Proteins & Ubiquitins factory</a></li>
-        <li class="aurl"><a href="https://www.ks-vpeptide.com/webim/webim_tab.html" data-lastfrom="" title="chat with us">chat with us</a></li>
-        <li class="aurl"><a href="https://www.ks-vpeptide.com/aboutus.html" data-lastfrom="" title="China Hefei KS-V Peptide Biological Technology Co.Ltd company profile">China Hefei KS-V Peptide Biological Technology Co.Ltd company profile</a></li>
-        <!-- 此处省略一万条链接 -->
-      </ul>
     </div>
+    <ul class="urlset">
+      <li class="aurl"><a href="https://www.ks-vpeptide.com/" data-lastfrom="" title="Peptide Expert &amp; Quality Proteins &amp; Ubiquitins factory">Peptide Expert & Quality Proteins & Ubiquitins factory</a></li>
+      <li class="aurl"><a href="https://www.ks-vpeptide.com/webim/webim_tab.html" data-lastfrom="" title="chat with us">chat with us</a></li>
+      <li class="aurl"><a href="https://www.ks-vpeptide.com/aboutus.html" data-lastfrom="" title="China Hefei KS-V Peptide Biological Technology Co.Ltd company profile">China Hefei KS-V Peptide Biological Technology Co.Ltd company profile</a></li>
+      <!-- 此处省略一万条链接 -->
+    </ul>
   </div>
 <script>
   document.getElementById('searchInput').addEventListener('input', function () {
