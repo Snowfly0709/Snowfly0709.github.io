@@ -5,23 +5,46 @@
 <title>CSS</title>
 <style>
 body {
-  background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
+  background-color: #e493d0;
+  background-image: 
+    radial-gradient(closest-side, rgba(235, 105, 78, 1), rgba(235, 105, 78, 0)),
+    radial-gradient(closest-side, rgba(243, 11, 164, 1), rgba(243, 11, 164, 0)),
+    radial-gradient(closest-side, rgba(254, 234, 131, 1), rgba(254, 234, 131, 0)),
+    radial-gradient(closest-side, rgba(170, 142, 245, 1), rgba(170, 142, 245, 0)),
+    radial-gradient(closest-side, rgba(248, 192, 147, 1), rgba(248, 192, 147, 0));
+  background-size: 
+    130vmax 130vmax,
+    80vmax 80vmax,
+    90vmax 90vmax,
+    110vmax 110vmax,
+    90vmax 90vmax;
+  background-position:
+    -80vmax -80vmax,
+    60vmax -30vmax,
+    10vmax 10vmax,
+    -30vmax -10vmax,
+    50vmax 50vmax;
   background-repeat: no-repeat;
-  background-size:cover;
-  height: 100vh;
+  animation: 10s movement linear infinite;
   .container{
     h1 {
       position: relative;
-      top: 200px;
-      width: 100%;
-      text-align: center;
-      font-size: 128pt;
-      font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-      color: #ffffff;
+	  z-index: 10;
+	  display: flex;
+	  min-height: 68vh;
+	  width: 100%;
+	  justify-content: center;
+	  align-items: center;
+	  font-size: 5rem;
+	  color: transparent;
+	  text-shadow:
+		0px 0px 1px rgba(255, 255, 255, .6),
+		0px 4px 4px rgba(0, 0, 0, .05);
+	  letter-spacing: .2rem;
     }
     .brief{
-      position: relative;
-      top: 0;
+      position: static;
+      top: 50px;
       width: 100%;
       text-align: center;
       font-size: x-large;
@@ -30,7 +53,7 @@ body {
     }
     .app{
       width: 100%;
-      top:20px;
+      top:80px;
       position: relative;
       display: flex;
       justify-content: center;
@@ -40,34 +63,60 @@ body {
       position: relative;
 
         #searchInput{
-        width: 60px;
+        width: 320px;
         height: 38px;
         line-height: 38px;
         outline-style: none;
         font-size: 16px;
         color: #333;
+		opacity: 0.6;
         border: 3px solid #ffffff;
         border-radius: 19px;
         padding: 0 16px;
         box-sizing: border-box;
         transition: all 1s ease-in-out;
+		font-family: Consolas,STZhongsong;
+		text-align: center;
         }
 
         #searchInput:focus{
-          width: 400px;
+          	width: 1000px;
+			color: #333;
         }
       }
     }
-    .urlset li {  
-      list-style: none;
-      font-size: x-large;
-      font-family: STZhongsong,'Times New Roman';
-
-      .a{
-      a:link{color: #ffffff;}
-      a:visited{color: #000000;}
-      a:hover{color: #a8a8a8;}
-    }
+	  h5{
+		  width: 100%;
+		  top:68px;
+		  position: relative;
+		  display: flex;
+		  justify-content: center;
+		  align-items: center;
+		  font-family: STFangsong,Consolas, "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", "monospace";
+		  color: #ffffff
+	  }
+    .urlset{
+		background-color: white;
+		opacity:0.5;
+		border: 3px solid #ffffff;
+        border-radius: 19px;
+		li{
+      		list-style: none;
+      		font-size: 28pt;
+      		font-family: STZhongsong，'Times New Roman'，Times, serif;
+		}
+      	a:link{
+			color: #4B0082;
+			font-size: 28pt;
+			font-family: STZhongsong，'Times New Roman'，Times, serif;
+			text-decoration: none;
+    	}
+		a:visited{
+			color: #4B0082;
+			font-size:28pt;
+			font-family: STZhongsong，'Times New Roman'，Times, serif;
+			text-decoration: noe;
+		}
     }
     .pagination {
       margin-top: 10px;
@@ -75,22 +124,85 @@ body {
   }
 }
 
+	
+@keyframes movement {
+  0%, 100% {
+    background-size: 
+      130vmax 130vmax,
+      80vmax 80vmax,
+      90vmax 90vmax,
+      110vmax 110vmax,
+      90vmax 90vmax;
+    background-position:
+      -80vmax -80vmax,
+      60vmax -30vmax,
+      10vmax 10vmax,
+      -30vmax -10vmax,
+      50vmax 50vmax;
+  }
+  25% {
+    background-size: 
+      100vmax 100vmax,
+      90vmax 90vmax,
+      100vmax 100vmax,
+      90vmax 90vmax,
+      60vmax 60vmax;
+    background-position:
+      -60vmax -90vmax,
+      50vmax -40vmax,
+      0vmax -20vmax,
+      -40vmax -20vmax,
+      40vmax 60vmax;
+  }
+  50% {
+    background-size: 
+      80vmax 80vmax,
+      110vmax 110vmax,
+      80vmax 80vmax,
+      60vmax 60vmax,
+      80vmax 80vmax;
+    background-position:
+      -50vmax -70vmax,
+      40vmax -30vmax,
+      10vmax 0vmax,
+      20vmax 10vmax,
+      30vmax 70vmax;
+  }
+  75% {
+    background-size: 
+      90vmax 90vmax,
+      90vmax 90vmax,
+      100vmax 100vmax,
+      90vmax 90vmax,
+      70vmax 70vmax;
+    background-position:
+      -50vmax -40vmax,
+      50vmax -30vmax,
+      20vmax 0vmax,
+      -10vmax 10vmax,
+      40vmax 60vmax;
+  }
+}
 </style>
 </head>
 <body>
   <div class="container">
     <h1>LEON NAVIGATION PAGE</h1>
     <div class="brief">
-      My list for Software Engineering Studying. 
+      A list for Software Engineering studying. 
     </div>
     <div class="app">
       <label>
-        <input type="text" id="searchInput" required>
+        <input type="text" id="searchInput" required placeholder="e.g. MV NLP，目前仅支持英文关键字" onFocus="this.placeholder=''" onBlur="this.placeholder='e.g. MV NLP，目前仅支持英文关键字'">
       </label>
     </div>
+	 <h5>由Snowfly强力聚合制作v1.0</h5>
+	<p><br><br><br><br></p>
     <ul class="urlset">
-      <li class="aurl"><a href="https://www.ks-vpeptide.com/" data-lastfrom="" title="Peptide Expert &amp; Quality Proteins &amp; Ubiquitins factory">Peptide Expert & Quality Proteins & Ubiquitins factory</a></li>
-      <li class="aurl"><a href="https://www.ks-vpeptide.com/webim/webim_tab.html" data-lastfrom="" title="chat with us和我们交流">chat with us</a></li>
+      <li class="aurl"><a href="https://www.ks-vpeptide.com/" data-lastfrom="" title="MV Paper part1">Peptide Expert & Quality Proteins & Ubiquitins factory</a></li>
+		<p></p>
+      <li class="aurl"><a href="https://www.ks-vpeptide.com/webim/webim_tab.html" data-lastfrom="" title="Paper part2">chat with us</a></li>
+		<p></p>
       <li class="aurl"><a href="https://www.ks-vpeptide.com/aboutus.html" data-lastfrom="" title="China Hefei KS-V Peptide Biological Technology Co.Ltd company profile">China Hefei KS-V Peptide Biological Technology Co.Ltd company profile</a></li>
       <!-- 此处省略一万条链接 -->
     </ul>
