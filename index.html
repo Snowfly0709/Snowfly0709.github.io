@@ -1,74 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background: #f4f4f4;
-    color: #333;
-}
-
-/* 头部样式 */
-header {
-    background: #333;
-    color: #fff;
-    padding: 10px;
-    text-align: left;
-    font-family: 'Times New Roman', Times, serif;
-}
-
-container {
-    display: flex;
-    height: calc(100vh - 60px); /* 减去 header 的高度 */
-  }
-  .left {
-    background-color: #f9f9f9;
-    padding: 10px;
-    width: 200px; /* 左边栏宽度 */
-  }
-  .middle {
-    background-color: #f0f0f0;
-    padding: 10px;
-    flex: 1; /* 可伸缩 */
-  }
-  .img {
-      height: 300px;
-      width: 200px;
-    }
-
-/* 底部样式 */
-footer {
-    background: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px 20px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
-</style>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zifeng Xiong | XJTU SE</SEct></title>
-    <link rel="stylesheet" href="styles.css">
+    <title>个人展示</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-top: 20px;
+        }
+        .section {
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            box-sizing: border-box;
+        }
+        .header {
+            background: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .photo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .photo img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+        }
+        .section h2 {
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .section p, .section ul {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        .section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .section li {
+            background: #f9f9f9;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-left: 5px solid #333;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>熊子锋 | Xiong Zifeng</h1>
-    </header>
-    <container>
-      <left>
-        <img src="Haed.jpg">
-      </left>
-      <right>
-        321
-      </right>
-    </container>
-    <footer>
-        <p>版权所有 © 2024 张三</p>
-    </footer>
+    <div class="header">
+        <h1>熊子锋 | Zifeng Xiong</h1>
+    </div>
+    
+    <div class="container">
+        <!-- 左侧：照片和基本信息展示 -->
+        <div class="section">
+            <div class="photo">
+                <img src="Haed.jpg" alt="个人照片">
+            </div>
+            <h2>基本信息</h2>
+            <p>熊子锋</p>
+            <p>男</p>
+            <p>Tel: (+86) 135-3402-0847</p>
+            <p>E-mail: zifengxiong@foxmail.com</p>
+            <p>        zifengxiong@stu.xjtu.edu.cn</p>
+        </div>
+
+        <!-- 中间：学习经历展示 -->
+        <div class="section">
+            <h2>学习经历</h2>
+            <ul>
+                <li>2020年 - 2024年：XX大学 - 计算机科学与技术本科</li>
+                <li>2016年 - 2020年：XX高中 - 高中</li>
+            </ul>
+        </div>
+
+        <!-- 右侧：荣誉展示 -->
+        <div class="section">
+            <h2>荣誉展示</h2>
+            <ul>
+                <li>2023年：全国数学建模竞赛一等奖</li>
+                <li>2022年：大学生创新创业大赛二等奖</li>
+                <li>2021年：优秀学生奖学金</li>
+            </ul>
+        </div>
+    </div>
 </body>
 </html>
