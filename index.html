@@ -14,38 +14,25 @@
 header {
     background: #333;
     color: #fff;
-    padding: 10px 20px;
+    padding: 10px;
     text-align: left;
     font-family: 'Times New Roman', Times, serif;
 }
 
-/* 个人简介样式 */
-.profile-image {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin: 20px 0;
-}
-
-/* 技能列表样式 */
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    padding: 5px 0;
-}
-
-/* 联系方式样式 */
-a {
-    color: #0099cc;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
+container {
+    display: flex;
+    height: calc(100vh - 60px); /* 减去 header 的高度 */
+  }
+  .left {
+    background-color: #f9f9f9;
+    padding: 10px;
+    width: 200px; /* 左边栏宽度 */
+  }
+  .middle {
+    background-color: #f0f0f0;
+    padding: 10px;
+    flex: 1; /* 可伸缩 */
+  }
 
 /* 底部样式 */
 footer {
@@ -61,93 +48,23 @@ footer {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>熊子锋 Zifeng Xiong | XJTU SE</SEct></title>
+    <title>Zifeng Xiong | XJTU SE</SEct></title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>熊子锋 Xiong Zifeng</h1>
+        <h1>熊子锋 | Xiong Zifeng</h1>
     </header>
-    <section>
-        <h2>关于我</h2>
-        <img src="profile.jpg" alt="个人照片" class="profile-image">
-        <p>您好，我叫张三，是一名前端开发工程师。</p>
-        <p>我对网页设计和用户体验充满热情。</p>
-    </section>
-    <section>
-        <h2>技能</h2>
-        <ul>
-            <li>HTML/CSS</li>
-            <li>JavaScript</li>
-            <li>React</li>
-            <li>Vue</li>
-        </ul>
-    </section>
-    <section>
-        <h2>联系方式</h2>
-        <p>邮箱: <a href="mailto:zhangsan@example.com">zhangsan@example.com</a></p>
-        <p>电话: <a href="tel:123-456-7890">123-456-7890</a></p>
-        <p>LinkedIn: <a href="https://www.linkedin.com/in/zhangsan" target="_blank">张三的LinkedIn</a></p>
-    </section>
+    <container>
+      <left>
+        123
+      </left>
+      <right>
+        321
+      </right>
+    </container>
     <footer>
         <p>版权所有 © 2024 张三</p>
     </footer>
 </body>
 </html>
-CSS代码 (styles.css)
-/* 全局样式 */
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background: #f4f4f4;
-    color: #333;
-}
-
-/* 头部样式 */
-header {
-    background: #333;
-    color: #fff;
-    padding: 10px 20px;
-    text-align: center;
-}
-
-/* 个人简介样式 */
-.profile-image {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    margin: 20px 0;
-}
-
-/* 技能列表样式 */
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    padding: 5px 0;
-}
-
-/* 联系方式样式 */
-a {
-    color: #0099cc;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* 底部样式 */
-footer {
-    background: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px 20px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
