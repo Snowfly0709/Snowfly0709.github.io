@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zifeng Xiong | XJTU SE</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
+            background-color: #222324;
+            margin: 0;
+            padding: 0;
+        }
+        a {
+            text-decoration: none;
+            color: var(--primary);
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-top: 20px;
+        }
+        .section {
+            background: #222324;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .header {
+            background: #222324;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            max-width: calc(var(1024px) + var(14px)* 2);
+            margin-inline-start: auto;
+            margin-inline-end: auto;
+            line-height: var(60px);
+            unicode-bidi: isolate;
+        }
+        .header h1 {
+            color: #eeeeee;
+            flex-wrap: inherit;
+            position: fixed;
+            left: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .header ul{
+            list-style: none;
+            word-break: keep-all;
+            overflow-x: auto;
+            white-space: nowrap;
+            display: flex;
+            margin: auto var(14px);
+            padding: 0;
+        }
+        .header li {
+            color: #eeeeee;
+            display: list-item;
+            text-align: -webkit-match-parent;
+            unicode-bidi: isolate;
+            padding: 14px;
+        }
+        .header li + li {
+            margin-inline-start: var(14px);
+        }
+        .photo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .photo img {
+            width: 150px;
+            height: 200px;
+        }
+        .section h2 {
+            color: #eeeeee;
+            border-bottom: 2px solid #eeeeee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
+        }
+        .section p{
+            margin: 10px 0;
+            color: #eeeeee;
+            line-height: 1.6;
+            text-align: left;
+            font-family:  -apple-system, BlinkMacSystemFont, segoe ui, Roboto, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
+        }
+        .section p, .section ul {
+            margin: 10px 0;
+            line-height: 1.6;
+            text-align: left;
+        }
+        .section ul{
+            word-break: keep-all;
+            overflow-x: auto;
+            white-space: nowrap;
+            display: flex;
+            margin: auto var(14px);
+            padding: 0;
+        }
+        .section li {
+            color: #eeeeee;
+            display: list-item;
+            text-align: -webkit-match-parent;
+            unicode-bidi: isolate;
+            padding: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><a href="#TOP"><span>&nbsp;&nbsp;&nbsp;&nbsp;Zifeng Xiong</span></a></h1>
+        <ul id="TOP">
+            <li><a href="index.html"><span>Curriculum Vitae</span></a></li>
+            <li><a href="postsList.html"><span>Posts</span></a></li>
+            <li><a href="https://github.com/Snowfly0709/"><span>Github</span></a></li>
+            <li><a href="https://www.linkedin.com/in/zifeng-xiong-75a406298/"><span>Linkedin</span></a></li>
+            <li><a href="friendsList.html"><span>Favorites</span></a></li>
+        </ul>
+    </div>
+    
+    <div class="container">
+        <!-- 左侧：照片和基本信息展示 -->
+        <div class="section">
+            <h2>Writing</h2>
+            <ul>
+                <li><b>1. Changing code into Microsoft Word type:</b> <a href="https://codeinword.yiove.com/"><span>https://codeinword.yiove.com/</span></a></li>
+            </ul>
+
+            <h2>Coding</h2>
+            <ul>
+                <li><b>1. CSS dynamic background:</b> <a href="https://codepen.io/stevenlei/pen/ZEJxXGL"><span>https://codepen.io/stevenlei/pen/ZEJxXGL</span></a></li>
+            </ul>
+        </div>
+   </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/text-vide/dist/index.iife.js"></script>
+<script>
+  const text = 'Recently I am working on Static Program Analysis and Program Verification.'
+  
+  const highlightedText = textVide.textVide(text);
+
+  console.log(highlightedText); // '<b>Bion</b>ic <b>Readi</b>ng ... <b>writt</b>en <b>conte</b>nt.'
+</script>
+</html>

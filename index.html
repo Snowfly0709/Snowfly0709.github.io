@@ -33,10 +33,10 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-end;
-            max-width: calc(var(--nav-width) + var(--gap)* 2);
+            max-width: calc(var(1024px) + var(14px)* 2);
             margin-inline-start: auto;
             margin-inline-end: auto;
-            line-height: var(--header-height);
+            line-height: var(60px);
             unicode-bidi: isolate;
         }
         .header h1 {
@@ -48,20 +48,23 @@
             font-weight: 700;
         }
         .header ul{
-            display: block;
-            list-style-type: disc;
-            margin-block-start: 1em;
-            margin-block-end: 1em;
-            margin-inline-start: 0px;
-            margin-inline-end: 0px;
-            padding-inline-start: 40px;
-            unicode-bidi: isolate;
+            list-style: none;
+            word-break: keep-all;
+            overflow-x: auto;
+            white-space: nowrap;
+            display: flex;
+            margin: auto var(14px);
+            padding: 0;
         }
         .header li {
             color: #eeeeee;
             display: list-item;
             text-align: -webkit-match-parent;
             unicode-bidi: isolate;
+            padding: 14px;
+        }
+        .header li + li {
+            margin-inline-start: var(14px);
         }
         .photo {
             text-align: center;
@@ -104,9 +107,13 @@
 </head>
 <body>
     <div class="header">
-        <h1>&nbsp;&nbsp;&nbsp;&nbsp;Zifeng Xiong</h1>
-        <ul>
-            <li><a href="staticProgramAnalysis"><span>Posts</span></a></li>
+        <h1><a href="#TOP"><span>&nbsp;&nbsp;&nbsp;&nbsp;Zifeng Xiong</span></a></h1>
+        <ul id="TOP">
+            <li><a href=""><span>Curriculum Vitae</span></a></li>
+            <li><a href="postsList.html"><span>Posts</span></a></li>
+            <li><a href="https://github.com/Snowfly0709/"><span>Github</span></a></li>
+            <li><a href="https://www.linkedin.com/in/zifeng-xiong-75a406298/"><span>Linkedin</span></a></li>
+            <li><a href="friendsList.html"><span>Favorites</span></a></li>
         </ul>
     </div>
     
@@ -195,7 +202,7 @@
             <br>
 
             <p><b>Xi 'an Sure Software Technology Co., LTD, 2023.01-2023.02</b></p>
-            <p>Project Manager(PM)</p>
+            <p>Project Manager</p>
             <p>&nbsp;&nbsp;1. I contributed to the development of an online e-commerce product management system and the implementation of a company-warehouse chat room feature.</p>
             <p>&nbsp;&nbsp;2. The project is a Management Information System (MIS) developed based on RDBC, which integrates with common online shopping platforms. It enables the transmission of text and files between different IPs using local networking.</p>
  
