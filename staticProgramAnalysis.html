@@ -1,0 +1,43 @@
+作者：熊福端
+链接：https://www.zhihu.com/question/53311539/answer/1837760394
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+<body>
+<code mkd>
+## 在 HTML 中使用 markdown
+
+在这里面写就行。
+</code>
+code 块外面只能写 html 语法，比如
+## 这几个字就不会转成标题格式
+<pre mkd>
+## 注意
+
+你可以多复制几个 code 块或 pre 块来实现多个 markdown 区域。
+
+用 markdown 语法插个图 ![](https://www.zhihu.com/favicon.ico)
+
+只需要引入一个 JS 即可，但是使用的是 3.0 的版本。
+</pre>
+<script src="marked.min.js"></script>
+<!-- 下载地址：https://cdn.jsdelivr.net/npm/marked@3.0.0/marked.min.js -->
+<!-- 懒得下载也可以直接用下面这段代码（但是不保证游客能访问） -->
+<script src="https://cdn.jsdelivr.net/npm/marked@3.0.0/marked.min.js"></script>
+<script> // 21年那时代码写得比较烂，献丑了，现在重写一版
+var m = document.querySelectorAll('code[mkd=""], pre[mkd=""]');
+for(var i = 0; i < m.length; i++){
+  var e = m[i];
+  var div = document.createElement('div');
+  div.className = 'mkd';
+  div.innerHTML = marked(e.innerHTML.trim());
+  e.parentNode.insertBefore(div, e);
+  e.setAttribute('mkd', 1); // 此处用标记防止重复解析
+}
+</script>
+<style>
+div.mkd + code[mkd], div.mkd + pre[mkd]{
+  display: none;
+}
+</style>
+</body>
