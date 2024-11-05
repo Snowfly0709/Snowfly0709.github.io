@@ -6,46 +6,58 @@
     <title>Zifeng Xiong | XJTU SE</title>
     <style>
         body {
-            font-family: 'Times New Roman', Times, serif;
-            background-color: #f4f4f4;
+            font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
+            background-color: #222324;
             margin: 0;
             padding: 0;
         }
         .container {
-            width: 90%;
+            width: 50%;
             margin: auto;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             padding-top: 20px;
         }
-        .section-left{
-            background: #fff;
-            padding: 20px;
-            width: 20%;
-            box-sizing: border-box;
-        }
         .section {
-            background: #fff;
+            background: #222324;
             padding: 20px;
-            width: 40%;
             box-sizing: border-box;
-        }
-        .section-left p{
-            margin: 10px 0;
-            line-height: 1.6;
-            font-family: Arial, Helvetica, sans-serif;
-            text-align: left;
         }
         .header {
-            background: #333;
-            color: #fff;
-            padding: 20px 0;
-            text-align: center;
+            background: #222324;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            max-width: calc(var(--nav-width) + var(--gap)* 2);
+            margin-inline-start: auto;
+            margin-inline-end: auto;
+            line-height: var(--header-height);
+            unicode-bidi: isolate;
         }
         .header h1 {
-            margin: 0;
-            text-align: left;
+            color: #eeeeee;
+            flex-wrap: inherit;
+            position: fixed;
+            left: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .header ul{
+            display: block;
+            list-style-type: disc;
+            margin-block-start: 1em;
+            margin-block-end: 1em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+            padding-inline-start: 40px;
+            unicode-bidi: isolate;
+        }
+        .header li {
+            color: #eeeeee;
+            display: list-item;
+            text-align: -webkit-match-parent;
+            unicode-bidi: isolate;
         }
         .photo {
             text-align: center;
@@ -56,17 +68,18 @@
             height: 200px;
         }
         .section h2 {
-            color: #333;
-            border-bottom: 2px solid #333;
+            color: #eeeeee;
+            border-bottom: 2px solid #eeeeee;
             padding-bottom: 10px;
             margin-bottom: 20px;
-            font-family: 'Times New Roman', Times, serif;
+            font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
         }
         .section p{
             margin: 10px 0;
+            color: #eeeeee;
             line-height: 1.6;
             text-align: left;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family:  -apple-system, BlinkMacSystemFont, segoe ui, Roboto, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
         }
         .section p, .section ul {
             margin: 10px 0;
@@ -88,115 +101,109 @@
 <body>
     <div class="header">
         <h1>&nbsp;&nbsp;&nbsp;&nbsp;Zifeng Xiong</h1>
+        <ul>
+            <li><a href="snowfly09.com/staticProgramAnalysis"><span>Posts</span></a></li>
+        </ul>
     </div>
     
     <div class="container">
         <!-- 左侧：照片和基本信息展示 -->
-        <div class="section-left">
+        <div class="section">
           <p></p>
             <div class="photo">
             </div>
-            <p><b>Zifeng Xiong 熊子鋒</b></p>
-            <hr>
-            <p><b>Undergraduate</b></p>
-            <p><b>Major:</b>Software Engineering</p>
-            <p><b>School:</b>Xi'an Jiaotong University</p>
-            <p><b>Addr:</b>Xi'an, Shannxi</p>
-            <p><b>Tel:</b>(+86) 135-3402-0847</p>
-            <p><b>E-mail:</b></p>
-            <p>zifengxiong@stu.xjtu.edu.cn</p>
-            <p>zif.xiong@gmail.com</p>
-            <p><b>Expected Year of Graduation:</b></p>
-            <p>2025</p>
+            <h2>Zifeng Xiong 熊子鋒</h2>
+            <p>SEP.2021-JUL.2025: B.Eng in Software Engineering, Xian Jiaotong University, Xian, ShaanXi.</p>
+            <p>SEP.2018-JUL.2021: Shenzhen Experimental School(High School Campus), Shenzhen, Guangdong</p>
             <p></p>
-            <p><br><br></p>
-            <p><b>GPA & Scores</b></p>
-            <hr>
-            <p><b>GPA:</b>3.13(81.3/100)</p>
-            <p><b>IELTS:</b>7.5(L7.5/R9.0/W6.0/S6.5)</p>
-            <p><b>CET4:</b>633</p>
-            <p><b>CET6:</b>606</p>
-            <p></p>
-            <p><br><br></p>
-            <p><b>Reaserch Interest</b></p>
-            <hr>
-            <p>I am broadly interested in the intersection between Operations Research and Machine Learning. I am also interested in Statistic Analysis and Data-Driven Decision-Making in Different Aspects.</p>
-        </div>
+            <br>
+            <p><b>Contact: </b>zif.xiong@gmail.com</p>
+            <br>
 
-        <!-- 中间：学习经历展示 -->
-        <div class="section">
+            <h2>Reaserch Interest</h2>
+            <p>I am broadly interested in the intersection between Operations Research and Machine Learning. 
+                I am also interested in Statistic Analysis and Data-Driven Decision-Making in Different Aspects. 
+                Recently I am working on Static Program Analysis and Program Verification.
+            </p>
+            <br>
+
             <h2>Publications</h2>
-            <p><b>A deep multi-agent reinforcement learning approach for the micro-service migration problem with affinity in the cloud(Expert Systems With Applications | JCR Q1)</b>(Under review)<br>Third Author</p>
+            <p>A deep multi-agent reinforcement learning approach for the micro-service migration problem with affinity in the cloud, Ning Ma, Angjun Tang, <b>Zifeng Xiong</b>, Fuxin Jiang, Expert Systems with Applications, Under review</p>
             <p></p>
+            <br>
+
             <h2>Research Experience</h2>
             <p><b>Micro-Service Rescheduling in Cloud Computing Center</b></p>
-            <p><b>Research Assistant, Advisor: Prof. Ning Ma, XJTU, Collaboration with ByteDance Inc. | 2022.10 - present</b></p>
-            <p>This project is funded by Bytedance Inc. and focuses on the micro-service migration problem with affinity, stemming from the cloud computing industry.</p>
+            <p>Research Assistant, Advisor:Associate Prof. Ning Ma, XJTU, Collaboration with ByteDance Inc., 2022.10 - present</p>
                 <p>&nbsp;&nbsp;1. Because micro-services are invariably changing to satisfy users' demands, we formulated an optimal migration method minimizing the number of activated physical machines and migration steps as well as maximizing services' total internal affinity.</p>
                 <p>&nbsp;&nbsp;2. We proposed a cooperative Multi-Agent Reinforcement Learning(MARL) algorithm based on the Advantage
                     Actor-Critic Algorithm and improved its efficiency by fine-tuning a pre-trained ResNet model.</p>
                 <p>&nbsp;&nbsp;3. We validate the proposed MARL on both synthetic datasets and real cloud traces of ByteDance, compared to two heuristic benchmark approaches: Migration Ant Colony Optimization and Migration Neighborhood Search.</p>
                 <p>&nbsp;&nbsp;4. MARL framework consistently maintained stability on datasets ranging from 10 to 60 machines and 80 to 200 service types.</p>
                 <p>&nbsp;&nbsp;5. Finally, we propose an evaluation mechanism called the Matching Score to explain the superior performance of MARL.</p>
-            <p>In this project, I was mainly responsible for the construction of heuristic algorithms and data mining.
-                I have tried Bestfit, Firstfit, annealing algorithm and other benchmark algorithms.
-                At the same time, I assisted my supervisor (First Author) and his postgraduate student (Second Author) to build the basic reward structure of multi-agent.
-            </p>
+            <br>
+
             <p><b>Langchain-Chatchat LLM Fine-tuning</b></p>
-            <p><b>Research Assistant, Advisor: Associate Prof. Peilin Jiang, XJTU, Collaboration with Alibaba Inc. | 2024.02 - 2024.09</b></p>
-            <p>This project focuses on the localization of large language models, one of the most important applications of large language models.</p>
+            <p>Research Assistant, Advisor: Associate Prof. Peilin Jiang, XJTU, Collaboration with Alibaba Inc., 2024.02 - 2024.09</p>
                 <p>&nbsp;&nbsp;1. We utilized web crawlers to collect 10k data from both official and unofficial school web pages, followed by thorough data cleaning.</p>
                 <p>&nbsp;&nbsp;2. The cleaned data was segmented using Bidirectional Maximum Matching(BMM) and annotated accordingly.</p>
                 <p>&nbsp;&nbsp;3. Finally, we fine-tuned the model parameters to develop a LLM based on the school's knowledge base.</p>  
-            <p>In this project, I collaborated with other team members to design the entire knowledge base localization strategy from start to finish.
-                I was also responsible for fine-tuning the model parameters and performing data cleaning.
-                Upon the project's completion, after an online trial and approval from our tutor, I achieved a final grade of <b>95(GPA 4.3/4.3)</b>.
-            </p>
+            <br>
+
             <p><b>Research on application of satellite navigation system in the field of deep space navigation</b></p>
-            <p><b>Project Leader, Advisor: Prof. Yikang Yang, XJTU | 2024.05 - 2024.08</b></p>
-                <p>In the absence of a fixed reference system, this project studies asteroid avoidance and star navigation positioning, trying to provide a little inspiration for possible interstellar navigation in the future.</p>
+            <p>Leader, Advisor: Prof. Yikang Yang, XJTU, 2024.05 - 2024.08</p>
                 <p>&nbsp;&nbsp;1. We constructed a mathematical model named the spacecraft satellite ring and employed four-point positioning in space to ascertain whether the spacecraft's path coincided with the asteroid's trajectory, thereby determining whether the avoidance action should be implemented.</p>
                 <p>&nbsp;&nbsp;2. Compared with traditional celestial navigation and ground-based fixed deep space navigation, we propose that positioning accuracy can be effectively enhanced through the utilization of the adjoint satellite and the validity of this theory is demonstrated by mathematical calculation.</p>
-            <p>In this project, I primarily proposed the navigation model and established the mathematical model throughout.
-                Upon the project's completion, I received <b>full scores(GPA 4.3/4.3)</b> from my advisor.
-            </p>
-        </div>
+            <br>
 
-        <!-- 右侧：荣誉展示 -->
-        <div class="section">
             <h2>Education Experience & Honors</h2>
             <p><b>2024</b></p>
-            <p>&nbsp;&nbsp;<b>Natural language processing technology:</b>92(rank:7/36)</p>
-            <p>&nbsp;&nbsp;<b>Image processing & Machine vision:</b>92(rank:30/102)</p>
+            <p>&nbsp;&nbsp;Natural language processing technology:92</p>
+            <p>&nbsp;&nbsp;Image processing & Machine vision:92</p>
             <p><b>2023</b></p>
-            <p>&nbsp;&nbsp;<b>Experiments of Computer Organization:</b>TOP 1%</p>
+            <p>&nbsp;&nbsp;Experiments of Computer Organization:TOP 1%</p>
             <p><b>2022</b></p>
-            <p>&nbsp;&nbsp;<b>Comprehensive Training for DS and Algorithms:</b>TOP 1%</p>
-            <p>&nbsp;&nbsp;<b>Comprehensive Training of object-oriented programming:</b>TOP 1%</p>
-            <p>&nbsp;&nbsp;<b>English Debate:</b>91(rank:3/213)</p>
-            <p>&nbsp;&nbsp;<b>Merit Student</b></p>
-            <p>&nbsp;&nbsp;<b>Advanced Class(as monitor)</b></p>
+            <p>&nbsp;&nbsp;Comprehensive Training for DS and Algorithms:TOP 1%</p>
+            <p>&nbsp;&nbsp;Comprehensive Training of object-oriented programming:TOP 1%</p>
+            <p>&nbsp;&nbsp;English Debate:91</p>
+            <p>&nbsp;&nbsp;Outstanding Individual in Social Events</p>
+            <p>&nbsp;&nbsp;Advanced Class(as monitor)</p>
             <p><b>2021</b></p>
-            <p>&nbsp;&nbsp;<b>General Academic English:</b>95(rank:1/916,TOP 0.1%)</p>
-            <p>&nbsp;&nbsp;<b>College Computer III:</b>84(rank:25/140)</p>
-            <p>&nbsp;&nbsp;<b>IELTS Speaking:</b>92(rank:11/625)</p>
+            <p>&nbsp;&nbsp;General Academic English:TOP 0.1%</p>
+            <p>&nbsp;&nbsp;College Computer III:84</p>
+            <p>&nbsp;&nbsp;IELTS Speaking:92</p>
+            <br>
+
             <h2>Internship Experience</h2>
             <p><b>Chengdu Shangcheng Data Co., LTD, 2023.11-2024.01</b></p>
-            <p><b>Project Manager(PM)</b></p>
+            <p>Project Manager</p>
             <p>&nbsp;&nbsp;1. I led a team of six in the company, primarily overseeing the development of management systems for schools and training institutions.</p>
             <p>&nbsp;&nbsp;2. The project utilizes Vue and Spring Boot to develop an RDBC system, which supports login management, experimental resource reservations, personnel rights management, and other key functions.</p>
             <p>&nbsp;&nbsp;3. The project also implements a distributed architecture to alleviate the processing load when a large number of users access the system simultaneously.</p>
-            <p><b>Aspire Digital Technology (Shenzhen) Co., LTD, 2023.06-2023.09</b></p>
-            <p><b>Developer</b></p>
+            <br>
+
+            <p><b>Aspire Technology (Shenzhen) Co., LTD, 2023.06-2023.09</b></p>
+            <p>Developer</p>
             <p>&nbsp;&nbsp;1. I participated in the development of a traffic violation accident processing system in collaboration with the traffic police department, where I was primarily responsible for constructing the image classification algorithm and developing the back-end code.</p>
             <p>&nbsp;&nbsp;2. The project is developed on LINUX CentOS, with the back-end programming utilizing SpringCloud, MyBatis, MySQL, and Redis. The image classification component is implemented using Python.</p>
             <p>&nbsp;&nbsp;3. Using a large dataset of license plate photos captured by traffic cameras, we trained a neural network to develop the final classification model.</p>
             <p>&nbsp;&nbsp;4. With a model architecture that includes a 3x3 convolutional layer, three ReLU layers, three fully connected layers, and a dropout rate of 0.15, we achieved an accuracy of 99.04%.</p>
+            <br>
+
             <p><b>Xi 'an Sure Software Technology Co., LTD, 2023.01-2023.02</b></p>
-            <p><b>Project Manager(PM)</b></p>
+            <p>Project Manager(PM)</p>
             <p>&nbsp;&nbsp;1. I contributed to the development of an online e-commerce product management system and the implementation of a company-warehouse chat room feature.</p>
             <p>&nbsp;&nbsp;2. The project is a Management Information System (MIS) developed based on RDBC, which integrates with common online shopping platforms. It enables the transmission of text and files between different IPs using local networking.</p>
+ 
         </div>
-    </div>
+   </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/text-vide/dist/index.iife.js"></script>
+<script>
+  const text = 'Recently I am working on Static Program Analysis and Program Verification.'
+  
+  const highlightedText = textVide.textVide(text);
+
+  console.log(highlightedText); // '<b>Bion</b>ic <b>Readi</b>ng ... <b>writt</b>en <b>conte</b>nt.'
+</script>
 </html>
