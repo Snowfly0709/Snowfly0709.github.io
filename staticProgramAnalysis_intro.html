@@ -1,25 +1,49 @@
-作者：熊福端
-链接：https://www.zhihu.com/question/53311539/answer/1837760394
-来源：知乎
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-
 <body>
+    <a href="postsList.html"><span>Click Here Return to Posts List</span></a>
 <code mkd>
-## 在 HTML 中使用 markdown
+# Introduction
 
-在这里面写就行。
+## Structure of Programming Language
+
+### Theory
+
+### Environment
+
+### Application
+
+1. **Program analysis(You are here!)**
+2. Program verification
+3. Program synthesis
+
+## Why do we need program analysis?
+
+1. Program Reliability
+2. Program Security
+3. Compiler Optimization
+4. Program Understanding
+
+## Static Analysis
+
+analysis program P to reason about its behaviors and determines whether it satisfies some demands before running.
+
+*Rice Theory: Any non-trival property of the behavior of programs in a r.e language is undecidable.*
+*总的来说，一个完美的静态分析是不存在的*
+
+Perfect Static Analysis can not be done:Sound&Complete
+
+=>Sound ~= overapproximate
+
+=>Complete ~= underapproximate
+
+p.s:*Sound和Complete二选一：选sound则出现false positive误报，选complete则出现false negative漏报*
+
+一般来说，我们更倾向soundness
+
+### Necessity of Soundness
+
+Soundness is critical in compiler optimization and program verification
+
 </code>
-code 块外面只能写 html 语法，比如
-## 这几个字就不会转成标题格式
-<pre mkd>
-## 注意
-
-你可以多复制几个 code 块或 pre 块来实现多个 markdown 区域。
-
-用 markdown 语法插个图 ![](https://www.zhihu.com/favicon.ico)
-
-只需要引入一个 JS 即可，但是使用的是 3.0 的版本。
-</pre>
 <script src="marked.min.js"></script>
 <!-- 下载地址：https://cdn.jsdelivr.net/npm/marked@3.0.0/marked.min.js -->
 <!-- 懒得下载也可以直接用下面这段代码（但是不保证游客能访问） -->
