@@ -8,6 +8,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const about = aboutSections[lang];
+
 const labels = {
   about: lang === "en" ? "About" : "关于",
   experience: lang === "en" ? "Experience" : "工作经历",
@@ -17,21 +18,46 @@ const labels = {
   skills: lang === "en" ? "Skill Cloud" : "技能云图",
   contact: lang === "en" ? "Go To Contact" : "前往联系"
 };
+
+const cloudMap = [
+  { x: 8, y: 8, s: 0.94, d: 0.2 },
+  { x: 36, y: 12, s: 1.04, d: 0.8 },
+  { x: 63, y: 10, s: 1.0, d: 1.3 },
+  { x: 12, y: 28, s: 0.96, d: 1.1 },
+  { x: 40, y: 30, s: 0.92, d: 0.4 },
+  { x: 70, y: 29, s: 1.1, d: 1.5 },
+  { x: 5, y: 46, s: 1.05, d: 0.5 },
+  { x: 28, y: 49, s: 0.94, d: 0.7 },
+  { x: 49, y: 48, s: 1.09, d: 0.9 },
+  { x: 76, y: 46, s: 0.98, d: 1.6 },
+  { x: 15, y: 65, s: 1.0, d: 0.3 },
+  { x: 44, y: 68, s: 0.96, d: 1.2 },
+  { x: 66, y: 66, s: 1.03, d: 0.6 },
+  { x: 4, y: 82, s: 0.93, d: 1.5 },
+  { x: 30, y: 84, s: 1.12, d: 0.8 },
+  { x: 55, y: 84, s: 0.94, d: 0.2 },
+  { x: 74, y: 82, s: 1.06, d: 1.1 },
+  { x: 43, y: 4, s: 0.9, d: 0.45 }
+] as const;
 ---
 <Hero lang={lang} />
 
 <section id="about" class="section">
   <div class="container">
     <h2 class="section-title">{labels.about}</h2>
+
     <div class="grid-12">
       <p class="about-intro">{about.intro}</p>
+
       <aside class="profile-panel">
-        <img src="/images/profile.png" alt="Zifeng Xiong portrait" loading="lazy" />
+        <div class="profile-photo-box">
+          <img src="/images/profile.png" alt="Portrait of Zifeng Xiong" loading="lazy" width="820" height="1200" />
+        </div>
         <p>Zifeng Xiong</p>
       </aside>
 
       <div class="timeline">
-        <h3 class="section-title" style="font-size:1.1rem;margin-bottom:0;">{labels.experience}</h3>
+        <h3 class="subsection-title">{labels.experience}</h3>
         {about.work.map((item) => (
           <article class="timeline-item">
             <h3>{item.title}</h3>
@@ -40,7 +66,7 @@ const labels = {
           </article>
         ))}
 
-        <h3 class="section-title" style="font-size:1.1rem;margin-top:20px;margin-bottom:0;">{labels.projects}</h3>
+        <h3 class="subsection-title">{labels.projects}</h3>
         {about.projects.map((item) => (
           <article class="timeline-item">
             <h3>{item.name}</h3>
@@ -49,7 +75,7 @@ const labels = {
           </article>
         ))}
 
-        <h3 class="section-title" style="font-size:1.1rem;margin-top:20px;margin-bottom:0;">{labels.education}</h3>
+        <h3 class="subsection-title">{labels.education}</h3>
         {about.education.map((item) => (
           <article class="timeline-item">
             <h3>{item.school}</h3>
@@ -58,7 +84,7 @@ const labels = {
           </article>
         ))}
 
-        <h3 class="section-title" style="font-size:1.1rem;margin-top:20px;margin-bottom:0;">{labels.publications}</h3>
+        <h3 class="subsection-title">{labels.publications}</h3>
         {about.publications.map((item) => (
           <article class="timeline-item">
             <p>{item}</p>
@@ -66,17 +92,27 @@ const labels = {
         ))}
       </div>
 
-      <div class="skill-cloud" aria-label={labels.skills}>
-        <h3 class="section-title" style="font-size:1.1rem;grid-column:1 / -1;margin-bottom:6px;">{labels.skills}</h3>
-        {skills.map((skill) => (
-          <span class="skill-chip">{skill}</span>
-        ))}
+      <div class="skill-cloud-wrap">
+        <h3 class="subsection-title">{labels.skills}</h3>
+        <div class="skill-cloud" aria-label={labels.skills}>
+          {skills.map((skill, idx) => {
+            const cfg = cloudMap[idx % cloudMap.length];
+            return (
+              <span
+                class="skill-chip cloud-chip"
+                style={`--x:${cfg.x}%;--y:${cfg.y}%;--scale:${cfg.s};--delay:${cfg.d}s;`}
+              >
+                {skill}
+              </span>
+            );
+          })}
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section">
+<section class="section section-cta">
   <div class="container">
     <a class="btn primary" href={lang === "en" ? "/en/contact/" : "/zh/contact/"}>{labels.contact}</a>
   </div>

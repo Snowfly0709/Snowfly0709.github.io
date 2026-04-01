@@ -1,4 +1,4 @@
----
+﻿---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import TOC from "../../../components/TOC.astro";
 import { getCollection, render, type CollectionEntry } from "astro:content";
@@ -53,20 +53,24 @@ const { Content, headings } = await render(post);
   <section class="section">
     <div class="container post-layout">
       <TOC lang="en" headings={headings} />
+
       <article class="post-body">
         <p class="meta-line">{post.data.date.toISOString().slice(0, 10)}</p>
         <h1>{post.data.title}</h1>
         <p>{post.data.description}</p>
+
         <div class="post-meta">
           {post.data.tags.map((tag) => (
             <span>{tag}</span>
           ))}
         </div>
+
         <hr style="border:none;border-top:1px solid var(--line);margin:18px 0;" />
         <Content />
+
         <div class="post-nav">
-          {prev ? <a href={prev.href}>�� Prev: {prev.title}</a> : <span></span>}
-          {next ? <a href={next.href}>Next: {next.title} ��</a> : <span></span>}
+          {prev ? <a href={prev.href}>&lt; Prev: {prev.title}</a> : <span></span>}
+          {next ? <a href={next.href}>Next: {next.title} &gt;</a> : <span></span>}
         </div>
       </article>
     </div>

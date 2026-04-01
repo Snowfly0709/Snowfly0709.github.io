@@ -1,4 +1,4 @@
-import rss from "@astrojs/rss";
+﻿import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 
 export async function GET(context) {
@@ -7,8 +7,8 @@ export async function GET(context) {
   );
 
   return rss({
-    title: "���ӷ㲩��",
-    description: "�����ʼ��� AI ��Ʒ˼����",
+    title: "熊子枫博客",
+    description: "技术笔记与 AI 产品思考。",
     site: context.site,
     items: posts.map((post) => ({
       title: post.data.title,

@@ -1,4 +1,4 @@
----
+﻿---
 import { heroCopy } from "../data/site";
 
 interface Props {
@@ -10,10 +10,18 @@ const copy = heroCopy[lang];
 ---
 <section class="hero">
   <canvas class="hero-canvas" id="hero-canvas"></canvas>
+  <div class="hero-gridline" aria-hidden="true"></div>
+
   <div class="container grid-12 hero-grid">
     <p class="hero-kicker">{copy.kicker}</p>
-    <h1 class="hero-headline">{copy.headline.replace("Ship.", "Ship").replace("��Ʒ��", "��Ʒ")}{lang === "en" ? <span class="accent">.</span> : <span class="accent">��</span>}</h1>
+
+    <h1 class="hero-headline">
+      {copy.headline}
+      <span class="accent-square" aria-hidden="true"></span>
+    </h1>
+
     <p class="hero-subline">{copy.subline}</p>
+
     <div class="hero-actions">
       <a href={lang === "en" ? "/en/blog/" : "/zh/blog/"} class="btn primary">{copy.ctaPrimary}</a>
       <a href={lang === "en" ? "/en/contact/" : "/zh/contact/"} class="btn">{copy.ctaSecondary}</a>
@@ -23,49 +31,67 @@ const copy = heroCopy[lang];
 
 <script>
   const canvas = document.getElementById("hero-canvas");
+
   if (canvas instanceof HTMLCanvasElement) {
     const ctx = canvas.getContext("2d");
     const points = [];
-    const pointCount = 60;
+    const pointCount = 96;
     const pointer = { x: 0, y: 0 };
 
     const resize = () => {
-      canvas.width = canvas.clientWidth * window.devicePixelRatio;
-      canvas.height = canvas.clientHeight * window.devicePixelRatio;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      const dpr = window.devicePixelRatio || 1;
+
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+
       if (ctx) {
-        ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
     };
 
     const spawn = () => {
       points.length = 0;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+
+      pointer.x = width * 0.5;
+      pointer.y = height * 0.5;
+
       for (let i = 0; i < pointCount; i += 1) {
         points.push({
-          x: Math.random() * canvas.clientWidth,
-          y: Math.random() * canvas.clientHeight,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.4
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.28,
+          vy: (Math.random() - 0.5) * 0.28
         });
       }
     };
 
     const tick = () => {
       if (!ctx) return;
-      ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+
+      ctx.clearRect(0, 0, width, height);
 
       for (const p of points) {
         p.x += p.vx;
         p.y += p.vy;
 
-        if (p.x < 0 || p.x > canvas.clientWidth) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.clientHeight) p.vy *= -1;
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
 
         const dx = pointer.x - p.x;
         const dy = pointer.y - p.y;
         const dist = Math.hypot(dx, dy);
-        if (dist < 130 && dist > 0) {
-          p.x -= (dx / dist) * 0.35;
-          p.y -= (dy / dist) * 0.35;
+
+        if (dist > 0 && dist < 170) {
+          const force = (170 - dist) / 170;
+          p.x -= (dx / dist) * force * 0.8;
+          p.y -= (dy / dist) * force * 0.8;
         }
       }
 
@@ -74,9 +100,10 @@ const copy = heroCopy[lang];
           const a = points[i];
           const b = points[j];
           const d = Math.hypot(a.x - b.x, a.y - b.y);
-          if (d < 120) {
-            const alpha = 1 - d / 120;
-            ctx.strokeStyle = `rgba(0,0,0,${alpha * 0.12})`;
+
+          if (d < 140) {
+            const alpha = (1 - d / 140) * 0.2;
+            ctx.strokeStyle = `rgba(15,15,15,${alpha})`;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
@@ -86,21 +113,17 @@ const copy = heroCopy[lang];
       }
 
       for (const p of points) {
-        ctx.fillStyle = "#121212";
+        ctx.fillStyle = "#111111";
         ctx.fillRect(p.x - 1, p.y - 1, 2, 2);
       }
-
-      const barX = canvas.clientWidth * 0.78;
-      ctx.fillStyle = "#d70a22";
-      ctx.fillRect(barX, 0, 2, canvas.clientHeight);
 
       requestAnimationFrame(tick);
     };
 
-    window.addEventListener("pointermove", (e) => {
+    window.addEventListener("pointermove", (event) => {
       const rect = canvas.getBoundingClientRect();
-      pointer.x = e.clientX - rect.left;
-      pointer.y = e.clientY - rect.top;
+      pointer.x = event.clientX - rect.left;
+      pointer.y = event.clientY - rect.top;
     });
 
     window.addEventListener("resize", () => {

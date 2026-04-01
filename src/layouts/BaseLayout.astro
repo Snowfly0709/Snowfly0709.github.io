@@ -1,4 +1,4 @@
----
+﻿---
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import { siteMeta } from "../data/site";
@@ -29,8 +29,9 @@ const { lang, title = siteMeta.title, description = siteMeta.description } = Ast
     <main>
       <slot />
     </main>
+
     <footer class="site-footer">
-      <div class="container">? {new Date().getFullYear()} Zifeng Xiong</div>
+      <div class="container">(C) {new Date().getFullYear()} Zifeng Xiong</div>
     </footer>
 
     <script>

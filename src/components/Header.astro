@@ -1,4 +1,4 @@
----
+﻿---
 import { navItems } from "../data/site";
 
 interface Props {
@@ -9,21 +9,27 @@ const { lang } = Astro.props;
 const pathname = Astro.url.pathname;
 const nav = navItems[lang];
 
-const targetPath = lang === "en" ? pathname.replace(/^\/en/, "/zh") || "/zh/" : pathname.replace(/^\/zh/, "/en") || "/en/";
-const altLang = lang === "en" ? "ZH" : "EN";
+const enPath = pathname.startsWith("/zh/") ? pathname.replace(/^\/zh\//, "/en/") : pathname;
+const zhPath = pathname.startsWith("/en/") ? pathname.replace(/^\/en\//, "/zh/") : pathname;
 ---
 <header class="site-header">
   <div class="container inner">
     <a href={lang === "en" ? "/en/" : "/zh/"} class="brand">Zifeng Xiong<span class="dot">.</span></a>
-    <button class="mobile-toggle" data-nav-toggle>{lang === "en" ? "Menu" : "�˵�"}</button>
+
+    <button class="mobile-toggle" type="button" data-nav-toggle>
+      {lang === "en" ? "Menu" : "菜单"}
+    </button>
+
     <div class="nav-wrap" data-nav-wrap>
       <nav class="nav-links" aria-label="Main navigation">
         {nav.map((item) => (
           <a href={item.href}>{item.label}</a>
         ))}
       </nav>
+
       <div class="lang-switch" aria-label="Language switcher">
-        <a href={targetPath} class="active">{altLang}</a>
+        <a href={enPath} class={lang === "en" ? "active" : ""}>EN</a>
+        <a href={zhPath} class={lang === "zh" ? "active" : ""}>中</a>
       </div>
     </div>
   </div>

@@ -1,4 +1,4 @@
----
+﻿---
 import type { CollectionEntry } from "astro:content";
 import PostCard from "./PostCard.astro";
 
@@ -10,11 +10,12 @@ interface Props {
 const { lang, posts } = Astro.props;
 
 const labels = {
-  title: lang === "en" ? "Blog" : "����",
-  search: lang === "en" ? "Search posts..." : "��������...",
-  tags: lang === "en" ? "Tags" : "��ǩ",
-  all: lang === "en" ? "All" : "ȫ��",
-  empty: lang === "en" ? "No posts match your filters." : "û�з������������¡�"
+  title: lang === "en" ? "Blog" : "博客",
+  search: lang === "en" ? "Search posts..." : "搜索文章...",
+  tags: lang === "en" ? "Tags" : "标签",
+  all: lang === "en" ? "All" : "全部",
+  empty: lang === "en" ? "No posts match your filters." : "没有符合条件的文章。",
+  rss: lang === "en" ? "RSS" : "订阅"
 };
 
 const tagSet = new Set<string>();
@@ -23,14 +24,20 @@ for (const post of posts) {
     tagSet.add(tag);
   }
 }
+
 const tags = [...tagSet].sort((a, b) => a.localeCompare(b));
 ---
 <section class="section">
   <div class="container">
-    <h1 class="section-title">{labels.title}</h1>
+    <div class="blog-title-row">
+      <h1 class="section-title">{labels.title}</h1>
+      <a class="rss-link" href={lang === "en" ? "/en/rss.xml" : "/zh/rss.xml"}>{labels.rss}</a>
+    </div>
+
     <div class="blog-layout">
       <aside class="blog-sidebar">
         <input class="search-input" type="search" placeholder={labels.search} data-search-input />
+
         <p class="meta-line" style="margin:0 0 8px;">{labels.tags}</p>
         <div class="tag-list" data-tag-list>
           <button class="tag-btn active" data-tag="all">{labels.all}</button>
