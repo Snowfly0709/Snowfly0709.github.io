@@ -27,32 +27,30 @@ for (const post of posts) {
 
 const tags = [...tagSet].sort((a, b) => a.localeCompare(b));
 ---
-<section class="section">
-  <div class="container">
+<section class="section blog-page">
+  <div class="container blog-shell">
     <div class="blog-title-row">
       <h1 class="section-title">{labels.title}</h1>
       <a class="rss-link" href={lang === "en" ? "/en/rss.xml" : "/zh/rss.xml"}>{labels.rss}</a>
     </div>
 
-    <div class="blog-layout">
-      <aside class="blog-sidebar">
-        <input class="search-input" type="search" placeholder={labels.search} data-search-input />
+    <div class="blog-controls panel-card">
+      <input class="search-input" type="search" placeholder={labels.search} data-search-input />
 
-        <p class="meta-line" style="margin:0 0 8px;">{labels.tags}</p>
-        <div class="tag-list" data-tag-list>
-          <button class="tag-btn active" data-tag="all">{labels.all}</button>
-          {tags.map((tag) => (
-            <button class="tag-btn" data-tag={tag.toLowerCase()}>{tag}</button>
-          ))}
-        </div>
-      </aside>
-
-      <div class="blog-list" data-post-list>
-        {posts.map((post) => (
-          <PostCard post={post} />
+      <p class="meta-line" style="margin:0;">{labels.tags}</p>
+      <div class="tag-list" data-tag-list>
+        <button class="tag-btn active" data-tag="all">{labels.all}</button>
+        {tags.map((tag) => (
+          <button class="tag-btn" data-tag={tag.toLowerCase()}>{tag}</button>
         ))}
-        <div class="empty-state" data-empty hidden>{labels.empty}</div>
       </div>
+    </div>
+
+    <div class="blog-list" data-post-list>
+      {posts.map((post) => (
+        <PostCard post={post} />
+      ))}
+      <div class="empty-state" data-empty hidden>{labels.empty}</div>
     </div>
   </div>
 </section>

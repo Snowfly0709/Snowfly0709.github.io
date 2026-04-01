@@ -16,7 +16,8 @@ const labels = {
   education: lang === "en" ? "Education" : "教育经历",
   publications: lang === "en" ? "Publications" : "出版作品",
   skills: lang === "en" ? "Skill Cloud" : "技能云图",
-  contact: lang === "en" ? "Go To Contact" : "前往联系"
+  contact: lang === "en" ? "Go To Contact" : "前往联系",
+  laneHint: lang === "en" ? "Latest to Earlier" : "从新到旧"
 };
 
 const cloudMap = [
@@ -47,52 +48,72 @@ const cloudMap = [
     <h2 class="section-title">{labels.about}</h2>
 
     <div class="grid-12">
-      <p class="about-intro">{about.intro}</p>
+      <article class="about-intro panel-card">
+        <p>{about.intro}</p>
+      </article>
 
-      <aside class="profile-panel">
+      <aside class="profile-panel panel-card">
         <div class="profile-photo-box">
           <img src="/images/profile.png" alt="Portrait of Zifeng Xiong" loading="lazy" width="820" height="1200" />
         </div>
         <p>Zifeng Xiong</p>
       </aside>
 
+      <section class="project-lane panel-card">
+        <div class="lane-head">
+          <h3 class="subsection-title">{labels.projects}</h3>
+          <span class="lane-hint">{labels.laneHint}</span>
+        </div>
+
+        <div class="project-track">
+          {about.projects.map((item, idx) => (
+            <article class="project-card">
+              <div class="project-card-head">
+                <span class="project-index">{String(idx + 1).padStart(2, "0")}</span>
+                <span class="project-arrow" aria-hidden="true">→</span>
+              </div>
+              <h4>{item.name}</h4>
+              <p class="meta-line">{item.period}</p>
+              <p>{item.detail}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <div class="timeline">
-        <h3 class="subsection-title">{labels.experience}</h3>
-        {about.work.map((item) => (
-          <article class="timeline-item">
-            <h3>{item.title}</h3>
-            <p class="meta-line">{item.org} | {item.period}</p>
-            <p>{item.detail}</p>
-          </article>
-        ))}
+        <section class="panel-card info-block">
+          <h3 class="subsection-title">{labels.experience}</h3>
+          {about.work.map((item) => (
+            <article class="timeline-item">
+              <h3>{item.title}</h3>
+              <p class="meta-line">{item.org} | {item.period}</p>
+              <p>{item.detail}</p>
+            </article>
+          ))}
+        </section>
 
-        <h3 class="subsection-title">{labels.projects}</h3>
-        {about.projects.map((item) => (
-          <article class="timeline-item">
-            <h3>{item.name}</h3>
-            <p class="meta-line">{item.period}</p>
-            <p>{item.detail}</p>
-          </article>
-        ))}
+        <section class="panel-card info-block">
+          <h3 class="subsection-title">{labels.education}</h3>
+          {about.education.map((item) => (
+            <article class="timeline-item">
+              <h3>{item.school}</h3>
+              <p class="meta-line">{item.degree} | {item.period}</p>
+              <p>{item.location}</p>
+            </article>
+          ))}
+        </section>
 
-        <h3 class="subsection-title">{labels.education}</h3>
-        {about.education.map((item) => (
-          <article class="timeline-item">
-            <h3>{item.school}</h3>
-            <p class="meta-line">{item.degree} | {item.period}</p>
-            <p>{item.location}</p>
-          </article>
-        ))}
-
-        <h3 class="subsection-title">{labels.publications}</h3>
-        {about.publications.map((item) => (
-          <article class="timeline-item">
-            <p>{item}</p>
-          </article>
-        ))}
+        <section class="panel-card info-block">
+          <h3 class="subsection-title">{labels.publications}</h3>
+          {about.publications.map((item) => (
+            <article class="timeline-item">
+              <p>{item}</p>
+            </article>
+          ))}
+        </section>
       </div>
 
-      <div class="skill-cloud-wrap">
+      <section class="skill-cloud-wrap panel-card">
         <h3 class="subsection-title">{labels.skills}</h3>
         <div class="skill-cloud" aria-label={labels.skills}>
           {skills.map((skill, idx) => {
@@ -107,7 +128,7 @@ const cloudMap = [
             );
           })}
         </div>
-      </div>
+      </section>
     </div>
   </div>
 </section>

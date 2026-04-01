@@ -50,7 +50,7 @@ const { post, prev, next } = Astro.props;
 const { Content, headings } = await render(post);
 ---
 <BaseLayout lang="zh" title={`${post.data.title} | 熊子枫`} description={post.data.description}>
-  <section class="section">
+  <section class="section post-page">
     <div class="container post-layout">
       <TOC lang="zh" headings={headings} />
 
@@ -76,3 +76,4 @@ const { Content, headings } = await render(post);
     </div>
   </section>
 </BaseLayout>
+

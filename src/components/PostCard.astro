@@ -1,4 +1,4 @@
----
+﻿---
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -8,14 +8,29 @@ interface Props {
 const { post } = Astro.props;
 const localSlug = post.slug.replace(/^en\//, "").replace(/^zh\//, "");
 const url = `/${post.data.lang}/blog/${localSlug}/`;
+
+const isZh = post.data.lang === "zh";
+const dateText = post.data.date.toLocaleDateString(isZh ? "zh-CN" : "en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric"
+});
+
+const words = post.body.split(/\s+/).filter(Boolean).length;
+const readMins = Math.max(3, Math.round(words / 180));
 ---
-<article class="post-card" data-post-card data-tags={post.data.tags.join(",").toLowerCase()} data-title={post.data.title.toLowerCase()} data-desc={post.data.description.toLowerCase()} data-body={post.body.toLowerCase()}>
-  <h3><a href={url}>{post.data.title}</a></h3>
+<article
+  class="post-card blog-entry"
+  data-post-card
+  data-tags={post.data.tags.join(",").toLowerCase()}
+  data-title={post.data.title.toLowerCase()}
+  data-desc={post.data.description.toLowerCase()}
+  data-body={post.body.toLowerCase()}
+>
+  <h3 class="post-title"><a href={url}>{post.data.title}</a></h3>
   <p class="desc">{post.data.description}</p>
-  <div class="post-meta">
-    <span>{post.data.date.toISOString().slice(0, 10)}</span>
-    {post.data.tags.map((tag) => (
-      <span>{tag}</span>
-    ))}
-  </div>
+
+  <p class="post-line">
+    {isZh ? `日期：${dateText}` : `Date: ${dateText}`} | {isZh ? `预计阅读：${readMins} 分钟` : `Estimated Reading Time: ${readMins} min`} | {isZh ? "作者：Zifeng Xiong" : "Author: Zifeng Xiong"}
+  </p>
 </article>
