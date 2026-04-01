@@ -1,0 +1,12 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import BlogIndexPage from "../../../components/BlogIndexPage.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog", (entry) => entry.data.lang === "en" && !entry.data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+---
+<BaseLayout lang="en" title="Blog | Zifeng Xiong" description="Technical notes and product thinking by Zifeng Xiong.">
+  <BlogIndexPage lang="en" posts={posts} />
+</BaseLayout>

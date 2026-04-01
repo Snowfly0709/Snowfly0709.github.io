@@ -1,0 +1,74 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import TOC from "../../../components/TOC.astro";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+
+interface NavPost {
+  title: string;
+  href: string;
+}
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  prev: NavPost | null;
+  next: NavPost | null;
+}
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog", (entry) => entry.data.lang === "zh" && !entry.data.draft)).sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime()
+  );
+
+  return posts.map((post, index) => {
+    const localSlug = post.slug.replace(/^zh\//, "");
+
+    const prevPost = posts[index + 1];
+    const nextPost = posts[index - 1];
+
+    return {
+      params: { slug: localSlug },
+      props: {
+        post,
+        prev: prevPost
+          ? {
+              title: prevPost.data.title,
+              href: `/zh/blog/${prevPost.slug.replace(/^zh\//, "")}/`
+            }
+          : null,
+        next: nextPost
+          ? {
+              title: nextPost.data.title,
+              href: `/zh/blog/${nextPost.slug.replace(/^zh\//, "")}/`
+            }
+          : null
+      }
+    };
+  });
+}
+
+const { post, prev, next } = Astro.props;
+const { Content, headings } = await render(post);
+---
+<BaseLayout lang="zh" title={`${post.data.title} | ���ӷ�`} description={post.data.description}>
+  <section class="section">
+    <div class="container post-layout">
+      <TOC lang="zh" headings={headings} />
+      <article class="post-body">
+        <p class="meta-line">{post.data.date.toISOString().slice(0, 10)}</p>
+        <h1>{post.data.title}</h1>
+        <p>{post.data.description}</p>
+        <div class="post-meta">
+          {post.data.tags.map((tag) => (
+            <span>{tag}</span>
+          ))}
+        </div>
+        <hr style="border:none;border-top:1px solid var(--line);margin:18px 0;" />
+        <Content />
+        <div class="post-nav">
+          {prev ? <a href={prev.href}>�� ��һƪ��{prev.title}</a> : <span></span>}
+          {next ? <a href={next.href}>��һƪ��{next.title} ��</a> : <span></span>}
+        </div>
+      </article>
+    </div>
+  </section>
+</BaseLayout>

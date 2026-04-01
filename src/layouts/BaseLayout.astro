@@ -1,0 +1,64 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import { siteMeta } from "../data/site";
+
+interface Props {
+  lang: "en" | "zh";
+  title?: string;
+  description?: string;
+}
+
+const { lang, title = siteMeta.title, description = siteMeta.description } = Astro.props;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <Header lang={lang} />
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="container">? {new Date().getFullYear()} Zifeng Xiong</div>
+    </footer>
+
+    <script>
+      const pres = document.querySelectorAll(".post-body pre");
+      for (const pre of pres) {
+        if (pre.querySelector(".copy-btn")) continue;
+        const button = document.createElement("button");
+        button.className = "copy-btn";
+        button.textContent = "Copy";
+        button.type = "button";
+        button.addEventListener("click", async () => {
+          const code = pre.querySelector("code");
+          if (!code) return;
+          try {
+            await navigator.clipboard.writeText(code.textContent || "");
+            button.textContent = "Copied";
+            setTimeout(() => {
+              button.textContent = "Copy";
+            }, 1200);
+          } catch {
+            button.textContent = "Failed";
+            setTimeout(() => {
+              button.textContent = "Copy";
+            }, 1200);
+          }
+        });
+        pre.append(button);
+      }
+    </script>
+  </body>
+</html>

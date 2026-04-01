@@ -1,0 +1,83 @@
+﻿---
+import Hero from "./Hero.astro";
+import { aboutSections, skills } from "../data/site";
+
+interface Props {
+  lang: "en" | "zh";
+}
+
+const { lang } = Astro.props;
+const about = aboutSections[lang];
+const labels = {
+  about: lang === "en" ? "About" : "关于",
+  experience: lang === "en" ? "Experience" : "工作经历",
+  projects: lang === "en" ? "Projects" : "项目经历",
+  education: lang === "en" ? "Education" : "教育经历",
+  publications: lang === "en" ? "Publications" : "出版作品",
+  skills: lang === "en" ? "Skill Cloud" : "技能云图",
+  contact: lang === "en" ? "Go To Contact" : "前往联系"
+};
+---
+<Hero lang={lang} />
+
+<section id="about" class="section">
+  <div class="container">
+    <h2 class="section-title">{labels.about}</h2>
+    <div class="grid-12">
+      <p class="about-intro">{about.intro}</p>
+      <aside class="profile-panel">
+        <img src="/images/profile.png" alt="Zifeng Xiong portrait" loading="lazy" />
+        <p>Zifeng Xiong</p>
+      </aside>
+
+      <div class="timeline">
+        <h3 class="section-title" style="font-size:1.1rem;margin-bottom:0;">{labels.experience}</h3>
+        {about.work.map((item) => (
+          <article class="timeline-item">
+            <h3>{item.title}</h3>
+            <p class="meta-line">{item.org} | {item.period}</p>
+            <p>{item.detail}</p>
+          </article>
+        ))}
+
+        <h3 class="section-title" style="font-size:1.1rem;margin-top:20px;margin-bottom:0;">{labels.projects}</h3>
+        {about.projects.map((item) => (
+          <article class="timeline-item">
+            <h3>{item.name}</h3>
+            <p class="meta-line">{item.period}</p>
+            <p>{item.detail}</p>
+          </article>
+        ))}
+
+        <h3 class="section-title" style="font-size:1.1rem;margin-top:20px;margin-bottom:0;">{labels.education}</h3>
+        {about.education.map((item) => (
+          <article class="timeline-item">
+            <h3>{item.school}</h3>
+            <p class="meta-line">{item.degree} | {item.period}</p>
+            <p>{item.location}</p>
+          </article>
+        ))}
+
+        <h3 class="section-title" style="font-size:1.1rem;margin-top:20px;margin-bottom:0;">{labels.publications}</h3>
+        {about.publications.map((item) => (
+          <article class="timeline-item">
+            <p>{item}</p>
+          </article>
+        ))}
+      </div>
+
+      <div class="skill-cloud" aria-label={labels.skills}>
+        <h3 class="section-title" style="font-size:1.1rem;grid-column:1 / -1;margin-bottom:6px;">{labels.skills}</h3>
+        {skills.map((skill) => (
+          <span class="skill-chip">{skill}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <a class="btn primary" href={lang === "en" ? "/en/contact/" : "/zh/contact/"}>{labels.contact}</a>
+  </div>
+</section>

@@ -1,0 +1,115 @@
+---
+import { heroCopy } from "../data/site";
+
+interface Props {
+  lang: "en" | "zh";
+}
+
+const { lang } = Astro.props;
+const copy = heroCopy[lang];
+---
+<section class="hero">
+  <canvas class="hero-canvas" id="hero-canvas"></canvas>
+  <div class="container grid-12 hero-grid">
+    <p class="hero-kicker">{copy.kicker}</p>
+    <h1 class="hero-headline">{copy.headline.replace("Ship.", "Ship").replace("��Ʒ��", "��Ʒ")}{lang === "en" ? <span class="accent">.</span> : <span class="accent">��</span>}</h1>
+    <p class="hero-subline">{copy.subline}</p>
+    <div class="hero-actions">
+      <a href={lang === "en" ? "/en/blog/" : "/zh/blog/"} class="btn primary">{copy.ctaPrimary}</a>
+      <a href={lang === "en" ? "/en/contact/" : "/zh/contact/"} class="btn">{copy.ctaSecondary}</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const canvas = document.getElementById("hero-canvas");
+  if (canvas instanceof HTMLCanvasElement) {
+    const ctx = canvas.getContext("2d");
+    const points = [];
+    const pointCount = 60;
+    const pointer = { x: 0, y: 0 };
+
+    const resize = () => {
+      canvas.width = canvas.clientWidth * window.devicePixelRatio;
+      canvas.height = canvas.clientHeight * window.devicePixelRatio;
+      if (ctx) {
+        ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+      }
+    };
+
+    const spawn = () => {
+      points.length = 0;
+      for (let i = 0; i < pointCount; i += 1) {
+        points.push({
+          x: Math.random() * canvas.clientWidth,
+          y: Math.random() * canvas.clientHeight,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4
+        });
+      }
+    };
+
+    const tick = () => {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+      for (const p of points) {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.clientWidth) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.clientHeight) p.vy *= -1;
+
+        const dx = pointer.x - p.x;
+        const dy = pointer.y - p.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 130 && dist > 0) {
+          p.x -= (dx / dist) * 0.35;
+          p.y -= (dy / dist) * 0.35;
+        }
+      }
+
+      for (let i = 0; i < points.length; i += 1) {
+        for (let j = i + 1; j < points.length; j += 1) {
+          const a = points[i];
+          const b = points[j];
+          const d = Math.hypot(a.x - b.x, a.y - b.y);
+          if (d < 120) {
+            const alpha = 1 - d / 120;
+            ctx.strokeStyle = `rgba(0,0,0,${alpha * 0.12})`;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      for (const p of points) {
+        ctx.fillStyle = "#121212";
+        ctx.fillRect(p.x - 1, p.y - 1, 2, 2);
+      }
+
+      const barX = canvas.clientWidth * 0.78;
+      ctx.fillStyle = "#d70a22";
+      ctx.fillRect(barX, 0, 2, canvas.clientHeight);
+
+      requestAnimationFrame(tick);
+    };
+
+    window.addEventListener("pointermove", (e) => {
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = e.clientX - rect.left;
+      pointer.y = e.clientY - rect.top;
+    });
+
+    window.addEventListener("resize", () => {
+      resize();
+      spawn();
+    });
+
+    resize();
+    spawn();
+    tick();
+  }
+</script>

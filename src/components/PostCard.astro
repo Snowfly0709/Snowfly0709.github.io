@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const localSlug = post.slug.replace(/^en\//, "").replace(/^zh\//, "");
+const url = `/${post.data.lang}/blog/${localSlug}/`;
+---
+<article class="post-card" data-post-card data-tags={post.data.tags.join(",").toLowerCase()} data-title={post.data.title.toLowerCase()} data-desc={post.data.description.toLowerCase()} data-body={post.body.toLowerCase()}>
+  <h3><a href={url}>{post.data.title}</a></h3>
+  <p class="desc">{post.data.description}</p>
+  <div class="post-meta">
+    <span>{post.data.date.toISOString().slice(0, 10)}</span>
+    {post.data.tags.map((tag) => (
+      <span>{tag}</span>
+    ))}
+  </div>
+</article>

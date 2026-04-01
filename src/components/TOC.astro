@@ -1,0 +1,17 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+  lang: "en" | "zh";
+}
+
+const { headings, lang } = Astro.props;
+const title = lang === "en" ? "Contents" : "Ŀ¼";
+---
+<aside class="post-toc">
+  <h2>{title}</h2>
+  {headings
+    .filter((h) => h.depth >= 2 && h.depth <= 3)
+    .map((heading) => (
+      <a href={`#${heading.slug}`} style={`padding-left:${(heading.depth - 2) * 12}px`}>{heading.text}</a>
+    ))}
+</aside>

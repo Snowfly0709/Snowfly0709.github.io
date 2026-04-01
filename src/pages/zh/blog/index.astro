@@ -1,0 +1,12 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import BlogIndexPage from "../../../components/BlogIndexPage.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog", (entry) => entry.data.lang === "zh" && !entry.data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+---
+<BaseLayout lang="zh" title="���� | ���ӷ�" description="���ӷ�ļ����ʼ����Ʒ˼����">
+  <BlogIndexPage lang="zh" posts={posts} />
+</BaseLayout>

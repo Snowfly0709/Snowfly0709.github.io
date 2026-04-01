@@ -1,0 +1,39 @@
+﻿---
+import { contactLinks } from "../data/site";
+
+interface Props {
+  lang: "en" | "zh";
+}
+
+const { lang } = Astro.props;
+const labels = {
+  title: lang === "en" ? "Contact" : "联系",
+  intro:
+    lang === "en"
+      ? "Reach me through these channels for collaboration, product discussions, and career opportunities."
+      : "如果你希望合作、交流产品思路或工作机会，可以通过以下方式联系我。"
+};
+
+const iconMap: Record<string, string> = {
+  LinkedIn: "IN",
+  GitHub: "GH",
+  CSDN: "CS",
+  Email: "@"
+};
+---
+<section class="section">
+  <div class="container contact-grid">
+    <div class="left">
+      <h1 class="section-title">{labels.title}</h1>
+      <p>{labels.intro}</p>
+    </div>
+    <div class="right">
+      {contactLinks.map((item) => (
+        <a class="contact-link" href={item.href} target={item.label === "Email" ? undefined : "_blank"} rel="noreferrer">
+          <span>{iconMap[item.label]} {item.label}</span>
+          <span>↗</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
