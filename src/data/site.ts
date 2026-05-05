@@ -2,7 +2,7 @@
   name: "Zifeng Xiong",
   title: "Zifeng Xiong | AI Product Manager",
   description:
-    "AI Product Manager focused on shipping LLM, RAG, and AI Agent workflows into production-ready products.",
+    "AI Product Associate at KeyReply, building LLM, RAG, and AI Agent workflows into reliable, secure-by-design systems.",
   email: "zif.xiong@gmail.com",
   defaultLang: "en"
 } as const;
@@ -25,7 +25,7 @@ export const heroCopy = {
     kicker: "AI PRODUCT MANAGER",
     headline: "I Build AI Products That Ship.",
     subline:
-      "Focused on turning LLM, RAG, and Agent workflows into production-ready systems. This site is my portfolio and working notebook for ideas, experiments, and execution.",
+      "AI Product Associate at KeyReply. Turning LLM, RAG, and Agent capabilities into reliable, secure-by-design systems.",
     ctaPrimary: "Read Blog",
     ctaSecondary: "Contact"
   },
@@ -33,7 +33,7 @@ export const heroCopy = {
     kicker: "AI 产品经理",
     headline: "我把 AI 想法做成真正上线的产品。",
     subline:
-      "专注于将 LLM、RAG 与 Agent 工作流落地为可交付系统。这个网站既是我的作品集，也是我在工作中的技术复盘与思考博客。",
+      "KeyReply AI 产品助理。把 LLM、RAG 与 Agent 能力打造成可靠、安全、可落地的系统。",
     ctaPrimary: "查看博客",
     ctaSecondary: "联系我"
   }
@@ -42,45 +42,42 @@ export const heroCopy = {
 export const aboutSections = {
   en: {
     intro:
-      "M.Sc. candidate in Cyber Security at NTU (Singapore), previously B.Eng. in Software Engineering at Xi'an Jiaotong University. I work at the intersection of AI product strategy, engineering execution, and technical writing.",
+      "Master's student in Cybersecurity at NTU Singapore, working at the intersection of AI, security, and product design. I translate technical capabilities into practical, user-oriented solutions — LLM applications, RAG architectures, and backend systems that emphasize reliability, scalability, and data privacy in sensitive domains.",
     work: [
       {
-        title: "AI Product Manager",
-        org: "Current Focus",
-        period: "2026 - Present",
+        title: "AI Product Associate",
+        org: "KeyReply",
+        period: "04/2026 - Present",
+        detail: ""
+      },
+      {
+        title: "Researcher (Part-time)",
+        org: "Xi'an Jiaotong University",
+        period: "11/2024 - 06/2025",
         detail:
-          "Designing and delivering AI products with RAG pipelines, workflow orchestration, and agent-driven automation."
+          "Built a RAG-based internal Q&A system over policy and process documents. KNN retrieval on long-document corpora; scenario-grounded evaluation reaching 96% Recall@N and 4.4/5 answer relevance."
+      },
+      {
+        title: "Researcher (Part-time)",
+        org: "Xi'an Jiaotong University · w/ ByteDance",
+        period: "10/2023 - 01/2025",
+        detail:
+          "Multi-agent reinforcement learning (A2C-based) for large-scale microservice scheduling. Validated on real-world ByteDance and Alibaba traces; co-authored publication in Expert Systems with Applications."
       },
       {
         title: "Project Manager Intern",
-        org: "Chengdu Hwadee Information Technology Co., LTD",
+        org: "Chengdu Hwadee IT Co., Ltd",
         period: "11/2023 - 01/2024",
-        detail: "Delivered requirement coordination and technical planning for enterprise software projects."
-      },
-      {
-        title: "Back-end Developer Intern",
-        org: "Aspire Technology (Shenzhen) Co., LTD",
-        period: "06/2023 - 09/2023",
-        detail: "Built and maintained backend services for production systems."
+        detail:
+          "Coordinated full-stack delivery (SpringBoot + Vue) for an e-commerce product management system. Defined milestones via Lark; authored 20+ project documents."
       }
     ],
     projects: [
       {
-        name: "Industry Dialogue System Based on LLM",
-        period: "11/2024 - 06/2025",
+        name: "AI Data Visualization Workflow Tool",
+        period: "01/2026",
         detail:
-          "Research assistant work on domain dialogue capabilities and productizable AI interaction workflows."
-      },
-      {
-        name: "Real-time Monitoring for Zhejiang Power Grid",
-        period: "02/2025 - 06/2025",
-        detail:
-          "Collaborated on delivery strategy and engineering coordination for an enterprise monitoring platform."
-      },
-      {
-        name: "Micro-Service Rescheduling in Cloud Computing",
-        period: "10/2022 - 02/2025",
-        detail: "Research and engineering exploration in collaboration with ByteDance."
+          "End-to-end LLM workflow that unifies parsing, cleaning, analysis, and visualization across heterogeneous data (PDF / Excel / CSV). Compresses multi-hour analyst work to ~10 minutes; deployed as a Lark bot for zero-setup access. Built with Coze."
       }
     ],
     education: [
@@ -103,55 +100,55 @@ export const aboutSections = {
   },
   zh: {
     intro:
-      "我目前在南洋理工大学攻读网络安全硕士，曾就读于西安交通大学软件工程专业。我的工作重心在 AI 产品策略、工程落地与技术写作的交叉点。",
+      "南洋理工大学网络安全硕士在读，专注于 AI、安全与产品设计的交叉领域。我擅长把技术能力转化为可落地的用户解决方案 —— 涵盖 LLM 应用、RAG 架构与后端系统，强调在敏感领域中的可靠性、可扩展性与数据隐私。",
     work: [
       {
-        title: "AI 产品经理",
-        org: "当前工作重心",
-        period: "2026 - 至今",
-        detail: "围绕 RAG、工作流编排和 Agent 自动化设计并落地可交付 AI 产品。"
+        title: "AI 产品助理",
+        org: "KeyReply",
+        period: "2026.04 - 至今",
+        detail: ""
+      },
+      {
+        title: "研究员（兼职）",
+        org: "西安交通大学",
+        period: "2024.11 - 2025.06",
+        detail:
+          "搭建面向内部员工的 RAG 智能问答系统，覆盖政策与流程文档；在长文档语料上设计 KNN 检索方案，构建场景化评估框架，达到 96% Recall@N 与 4.4/5 答案相关度。"
+      },
+      {
+        title: "研究员（兼职）",
+        org: "西安交通大学 · 与字节跳动合作",
+        period: "2023.10 - 2025.01",
+        detail:
+          "围绕大规模微服务调度问题展开基于 A2C 的多智能体强化学习研究，在字节跳动与阿里巴巴真实数据集上验证有效性，合著论文已发表于 Expert Systems with Applications。"
       },
       {
         title: "项目经理实习生",
         org: "成都华栈信息技术有限公司",
-        period: "11/2023 - 01/2024",
-        detail: "负责企业软件项目需求协同与技术规划。"
-      },
-      {
-        title: "后端开发实习生",
-        org: "亚信科技（深圳）有限公司",
-        period: "06/2023 - 09/2023",
-        detail: "参与生产环境后端服务开发与维护。"
+        period: "2023.11 - 2024.01",
+        detail:
+          "协调电商产品管理系统的全栈交付（SpringBoot + Vue），通过飞书定义与跟踪里程碑，撰写 20+ 项目文档。"
       }
     ],
     projects: [
       {
-        name: "基于 LLM 的行业对话系统",
-        period: "11/2024 - 06/2025",
-        detail: "参与行业对话能力研究与产品化 AI 交互流程设计。"
-      },
-      {
-        name: "浙江电网实时监控系统",
-        period: "02/2025 - 06/2025",
-        detail: "参与企业级监控平台交付策略与工程协同。"
-      },
-      {
-        name: "云计算中心微服务重调度",
-        period: "10/2022 - 02/2025",
-        detail: "与字节跳动合作开展研究与工程探索。"
+        name: "AI 数据可视化工作流工具",
+        period: "2026.01",
+        detail:
+          "端到端的 LLM 工作流，统一处理 PDF / Excel / CSV 等异构数据的解析、清洗、分析与可视化；将原本数小时的分析压缩至 ~10 分钟，以飞书机器人形态部署，零配置即用。基于 Coze 搭建。"
       }
     ],
     education: [
       {
         school: "南洋理工大学",
         degree: "网络安全硕士",
-        period: "08/2025 - 12/2026",
+        period: "2025.08 - 2026.12",
         location: "新加坡"
       },
       {
         school: "西安交通大学",
         degree: "软件工程学士",
-        period: "09/2021 - 07/2025",
+        period: "2021.09 - 2025.07",
         location: "中国西安"
       }
     ],
@@ -162,24 +159,20 @@ export const aboutSections = {
 } as const;
 
 export const skills = [
+  "Product Management",
+  "LLM",
+  "RAG",
+  "AI Agent",
+  "Prompt Engineering",
+  "Workflow Design",
   "Coze",
   "FastGPT",
-  "Workflow",
-  "AI Agent",
-  "Vue.js",
-  "Spring Boot",
-  "Lark",
-  "Microservices",
-  "RAG",
-  "AI",
-  "HTML",
-  "Vibe Coding",
+  "Cybersecurity",
+  "TypeScript",
   "Java",
-  "LLM",
-  "Project Management",
-  "Product Management",
-  "MongoDB",
-  "PostgreSQL"
+  "Spring Boot",
+  "PostgreSQL",
+  "MongoDB"
 ] as const;
 
 export const contactLinks = [
