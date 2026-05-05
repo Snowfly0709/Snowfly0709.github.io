@@ -51,7 +51,8 @@ Variable Type Analysis(VTA)
 
 Pointer Analysis
 
-瓒婂線涓嬭秺绮剧‘锛岃秺寰€涓婃晥鐜囪秺锟?
+越往下越精确，越往上效率越高
+
 #### Method Dispatch on Virtual Call
 
 a virtual call is resolved based on:
@@ -80,8 +81,10 @@ class C extends B{
 }
 ```
 
-瀵逛簬x.foo() 瀹為檯涓篋ispatch(B,A.foo()),鐢变簬鍦˙涓病鏈夋壘鍒癴oo鏂规硶锛屾墍浠ュ鎵綛鐨勭埗绫籄锛屽疄闄呰皟鐢ㄧ殑鏄疉绫讳腑鐨刦oo鏂规硶锟?
-瀵逛簬y.foo() 瀹為檯涓篋ispatch(C,A.foo()),鐢变簬C涓氨瀛樺湪浜唂oo鏂规硶锛屾墍浠ュ疄闄呰皟鐢ㄤ负C涓殑foo鏂规硶锟?
+对于x.foo() 实际为Dispatch(B,A.foo()),由于在B中没有找到foo方法，所以寻找B的父类A，实际调用的是A类中的foo方法。
+
+对于y.foo() 实际为Dispatch(C,A.foo()),由于C中就存在了foo方法，所以实际调用为C中的foo方法。
+
 ### Class Hierarchy Analysis
 
 We define func *Resolve(cs)* to resolve possible target methods of a call site *cs* by CHA.
@@ -101,7 +104,7 @@ Resolve(cs)
 return T
 ```
 
-e.g.瀵逛簬铏氭嫙璋冪敤
+e.g.对于虚拟调用
 
 ```bash
 class A{void foo(){...}}
@@ -130,7 +133,8 @@ Resolve(a.foo()) = {a.foo(),c.foo(),d.foo()}
 
 Resolve(b.foo()) = {a.foo(),c.foo(),d.foo()}
 
-濡傛灉鍦ㄥ０鏄庢椂浣跨敤浜咮 b = new B() 姝ゆ椂Resolve鐨刣ispatch缁撴灉浠嶇劧涓嶅彉锛屽悓鏍峰寘鍚玞.foo() & d.foo(), 涓庢垜浠墠鏂囦腑鎵€鍐欑殑鏈被涓病鏈夊簲璇ュ湪鐖剁被涓皟鐢ㄦ湁鎵€涓嶇锛岃繖灏辨槸CHA鏂规硶甯︽潵鐨勨€滃亣鈥濊皟鐢拷?
+如果在声明时使用了B b = new B() 此时Resolve的dispatch结果仍然不变，同样包含c.foo() & d.foo(), 与我们前文中所写的本类中没有应该在父类中调用有所不符，这就是CHA方法带来的"假"调用。
+
 ### Call Graph Construction in CHA
 
 Start from entry method, for each reachable method,resolve each CS using CHA, until no method is discovered
@@ -197,7 +201,8 @@ class ZERO implements Number{
 }
 ```
 
-锟?*Resolve(n.get())* 鏃讹紝鐢变簬鏄疌HA鐨剉irtual call锛屾墍浠ヤ細杩斿洖zero.get(),one.get(),two.get()涓変釜return edge杩斿洖鐨勶拷?,1,2锛屾鏃朵氦杩愮畻鍒欎細鍙樹负NAC锛堝弬鑰冨墠闈㈠父閲忎紶鎾鍒欙級锛岃繖鏄剧劧鏄笉绗﹀悎瀹為檯鐨勶拷?
+当 *Resolve(n.get())* 时，由于是CHA的virtual call，所以会返回zero.get(),one.get(),two.get()三个return edge返回的值0,1,2，此时交运算则会变为NAC（参考前面常量传播规则），这显然是不符合实际的。
+
 But for Pointer Analysis, it will based on point-to relation, it will only return one.get() and return the value 1.
 
 ## Pointer Analysis

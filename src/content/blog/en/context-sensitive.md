@@ -56,9 +56,9 @@ x.get() -> NAC
 y.get() -> NAC
 ```
 
-瀵逛簬甯搁噺浼犳挱鏉ヨ锛宯1瀵瑰簲浜唎1锛宯2瀵瑰簲浜唎2锛宨d绫讳娇n瀵瑰簲浜唎1,o2锛屽啀浼犲埌x,y涓椂浠栦滑鍒嗗埆閮芥寚鍚戜簡o1鍜宱2锛屽湪鏈€缁坓et鐨勬椂鍊欏氨浼氫娇锟?1\cap 2$ = NAC
+对于常量传播来说，n1对应了o1，n2对应了o2，id类使n对应了o1,o2，再传到x,y中时他们分别都指向了o1和o2，在最终get的时候就会使得$1\cap 2$ = NAC
 
-浣嗘槸瀵逛簬涓婁笅鏂囨晱鎰燂紙鍔ㄦ€佸垎鏋愶級鐨勬椂鍊欙紝灏变細鍒嗗紑鑰冭檻锛屼粠鑰屼娇x.get()杩斿洖姝ｇ‘鐨勶拷?
+但是对于上下文敏感（动态分析）的时候，就会分开考虑，从而使x.get()返回正确的值1
 
 e.g.2
 
@@ -122,7 +122,8 @@ class X{
 }
 ```
 
-瀵逛簬variable鍜宮ethod鏈塁S锛岃€宧eap娌℃湁锟?
+对于variable和method有CS，而heap没有时
+
 |variable|Object|Note|
 |:----:|:----:|:----:|
 |n1|o1||
@@ -130,24 +131,25 @@ class X{
 |3:p|o1||
 |3:x|o8||
 |x1|o8||
-|4:p|o2|鍙互鐪嬪埌p鍜寈浣滀簡鍖哄垎|
+|4:p|o2|可以看到p和x作了区分|
 |4:x|o8||
 |x2|o8||
-|o8.f|o1,o2|杩欓噷浼氬嚭鐜伴棶棰榺
+|o8.f|o1,o2|这里会出现问题|
 |n|o1,o2||
 
-heap涔熸湁CS锟?
+heap也有CS时
+
 |variable|Object|Note|
 |:----:|:----:|:----:|
 |n1|o1||
 |n2|o2||
 |3:p|o1||
-|3:x|3:o8|杩欓噷浣滀簡鍖哄垎|
+|3:x|3:o8|这里作了区分|
 |x1|3:o8||
 |4:p|o2||
 |4:x|4:o8||
 |x2|4:o8||
-|3:o8.f|o1|濡傛灏辫閬夸簡o8鐨勫閲嶆寚鍚憒
+|3:o8.f|o1|如此就规避了o8的多重指向|
 |n|o1||
 
 **IMPORTANT**:cs heap must based on context sensitivity
@@ -208,14 +210,14 @@ Solve(m_entry){
         Propagate(n,delta)
 
         if(n == variable c:x){
-            for each c锟?o_i in delta{
+            for each c':o_i in delta{
                 for each x.f = y in S{
-                    addEdge(c:y,c锟?o_i.f)
+                    addEdge(c:y,c':o_i.f)
                 }
                 for each y = x.f in S{
-                    addEdge(c锟?o_i.f,c:y)
+                    addEdge(c':o_i.f,c:y)
                 }
-                ProcessCall(c:x,c锟?o_i)
+                ProcessCall(c:x,c':o_i)
             }
         }
     }
@@ -236,11 +238,11 @@ AddReachable(c:m){
 }
 
 #MethodCall
-ProcessCall(c:x,c锟?o_i){
+ProcessCall(c:x,c':o_i){
     for each l: r = x.k(a1,...,an) in S{
         m = Dispatch(o_i,k)
-        ct = Select(c,l,c锟?o_i,m)
-        add <ct:m_this,c锟?o_i> to WL
+        ct = Select(c,l,c':o_i,m)
+        add <ct:m_this,c':o_i> to WL
         if(c:l -> ct:m !in CG){
             add c:l -> ct:m to CG
             AddReachable(ct:m)
@@ -282,12 +284,12 @@ Select(caller context,call site,receive object with heap CS,callee site)
 call-site **chain**
 
 ```text
-Select(c,l,c锟?o,m)=[l1,l2,...,l]
+Select(c,l,c':o,m)=[l1,l2,...,l]
 
 where c = [l1,l2,...]
 ```
 
-濡傛灉绫讳腑鍑虹幇閫掑綊浼氭槸浠€涔堟儏鍐碉紵
+如果类中出现递归会是什么情况？
 
 ```bash
 void main(){
@@ -299,7 +301,7 @@ void foo(){
 }
 ```
 
-瀵逛簬foo鏉ヨ锛岀敱浜庨€掑綊锛屽叾context浼氬彉涓篬2,6,6,6,...]鏃犻檺閲嶅涓嬪幓锛屾鏃舵垜浠渶瑕佸紩鍏ヤ竴涓檺鍒舵潵閬垮厤杩欑鎯呭喌
+对于foo来说，由于递归，其context会变为[2,6,6,6,...]无限重复下去，此时我们需要引入一个限制来避免这种情况
 
 #### k-limiting context abstraction
 
@@ -307,9 +309,9 @@ set an upper bound k for length of context(method context and heap context use d
 
 e.g.
 
-1-call-site:Select(c,l,c锟?o,m)=[l]
+1-call-site:Select(c,l,c':o,m)=[l]
 
-2-call-site:Select(c,l,c锟?o,m)=[l鈥橈拷?l] where c = [l鈥欙紝l鈥樷€橾
+2-call-site:Select(c,l,c':o,m)=[l'',l] where c = [l',l'']
 
 ### Object sensitivity
 

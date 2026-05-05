@@ -34,7 +34,7 @@ tags:
 analysis program P to reason about its behaviors and determines whether it satisfies some demands before running.
 
 *Rice Theory: Any non-trival property of the behavior of programs in a r.e language is undecidable.*
-*鎬荤殑鏉ヨ锛屼竴涓畬缇庣殑闈欐€佸垎鏋愭槸涓嶅瓨鍦ㄧ殑*
+*总的来说，一个完美的静态分析是不存在的*
 
 Perfect Static Analysis can not be done:Sound&Complete
 
@@ -42,9 +42,9 @@ Perfect Static Analysis can not be done:Sound&Complete
 
 =>Complete ~= underapproximate
 
-p.s:*Sound鍜孋omplete浜岄€変竴锛氶€塻ound鍒欏嚭鐜癴alse positive璇姤锛岄€塩omplete鍒欏嚭鐜癴alse negative婕忔姤*
+p.s:*Sound和Complete二选一：选sound则出现false positive误报，选complete则出现false negative漏报*
 
-涓€鑸潵璇达紝鎴戜滑鏇村€惧悜soundness
+一般来说，我们更倾向soundness
 
 ### Necessity of Soundness
 
