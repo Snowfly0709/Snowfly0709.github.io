@@ -1,0 +1,12 @@
+---
+interface Props {
+  annotation?: string;
+}
+
+const { annotation = "12 cols · 24px gutter" } = Astro.props;
+---
+<div class="dimension-line" aria-hidden="true">
+  <span class="line"></span>
+  <span class="annotation">{annotation}</span>
+  <span class="line"></span>
+</div>

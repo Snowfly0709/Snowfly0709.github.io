@@ -1,0 +1,265 @@
+/* ============================================================
+   Bilingual typography engine
+   ============================================================ */
+
+/* ----- Section number — 01/02 (en) or 壹/贰 (zh) ----- */
+
+.section-number {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.section-number .num {
+  font-family: var(--font-display);
+  font-size: var(--fs-roman);
+  font-weight: 540;
+  letter-spacing: 0.02em;
+  font-variation-settings: "opsz" 60, "SOFT" 30;
+  font-feature-settings: "smcp", "c2sc", "lnum";
+}
+
+html[lang="zh"] .section-number .num {
+  font-family: var(--font-cjk);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.section-number .rule {
+  flex: 1;
+  height: 1px;
+  background: var(--accent);
+  align-self: center;
+  opacity: 0.5;
+  max-width: 80px;
+}
+
+.section-number .label {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+html[lang="zh"] .section-number .label {
+  font-family: var(--font-cjk);
+  text-transform: none;
+  letter-spacing: 0.08em;
+}
+
+/* ----- Dimension line — under section titles ----- */
+
+.dimension-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -14px 0 36px;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  color: var(--text-faint);
+  letter-spacing: 0.02em;
+}
+
+.dimension-line::before,
+.dimension-line::after {
+  content: "├";
+  font-size: 1.06rem;
+}
+
+.dimension-line::after { content: "┤"; }
+
+.dimension-line .line {
+  flex: 1;
+  height: 1px;
+  background: var(--line-faint);
+  position: relative;
+}
+
+.dimension-line .line::before,
+.dimension-line .line::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 1px;
+  height: 7px;
+  background: var(--line-faint);
+}
+
+.dimension-line .line::before { left: 0; }
+.dimension-line .line::after  { right: 0; }
+
+.dimension-line .annotation {
+  white-space: nowrap;
+}
+
+/* ----- Vertical Han title — 中文版 Hero 主标题（竖排） ----- */
+
+.vertical-title {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--font-cjk);
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: 0.18em;
+  color: var(--text);
+  padding: 16px 0;
+  border-left: 1px solid var(--line-soft);
+  border-right: 1px solid var(--line-soft);
+  position: relative;
+}
+
+.vertical-title::before,
+.vertical-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--accent);
+  background: var(--bg);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.vertical-title::before { top: -3px; }
+.vertical-title::after  { bottom: -3px; }
+
+.vertical-title .accent-char {
+  color: var(--accent);
+}
+
+@supports not (writing-mode: vertical-rl) {
+  .vertical-title {
+    writing-mode: initial;
+    border: none;
+  }
+}
+
+/* ----- Hero vertical slot — 中文 Hero 主标题区域（竖排，左侧） ----- */
+
+.hero-vertical-slot {
+  position: absolute;
+  left: var(--gutter);
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  width: 22%;
+  max-width: 260px;
+}
+
+.hero-vertical-slot .vertical-title {
+  margin: 0 auto;
+  max-height: 76vh;
+}
+
+/* ZH desktop: vertical title IS the headline. Hide the horizontal h1
+   (sr-only — keep for SEO & screen readers), push content to the right. */
+@media (min-width: 981px) {
+  html[lang="zh"] .hero-grid {
+    padding-left: 280px;
+  }
+  html[lang="zh"] .hero-headline {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* ZH mobile: drop vertical slot, restore horizontal h1 */
+@media (max-width: 980px) {
+  .hero-vertical-slot { display: none; }
+  html[lang="zh"] .hero-grid { padding-left: 0; }
+}
+
+/* ----- Bilingual pair — 双语并置段落 ----- */
+
+.bilingual-pair {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 24px;
+  margin: 1.4rem 0;
+  align-items: start;
+}
+
+.bilingual-pair > .divider {
+  width: 1px;
+  background: var(--accent-soft);
+  align-self: stretch;
+}
+
+.bilingual-pair .zh {
+  font-family: var(--font-cjk);
+  text-indent: 2em;
+  line-height: var(--lh-loose);
+}
+
+.bilingual-pair .en {
+  font-family: var(--font-body);
+  font-style: italic;
+  line-height: var(--lh-loose);
+  color: var(--text-muted);
+}
+
+@media (max-width: 760px) {
+  .bilingual-pair {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .bilingual-pair > .divider {
+    width: auto;
+    height: 1px;
+  }
+}
+
+/* ----- Bilingual mode toggle ----- */
+
+.bilingual-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  padding: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.bilingual-toggle button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+
+.bilingual-toggle button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Mode-driven visibility for bilingual pair */
+[data-bilingual-mode="zh-only"] .bilingual-pair { grid-template-columns: 1fr; }
+[data-bilingual-mode="zh-only"] .bilingual-pair > .en,
+[data-bilingual-mode="zh-only"] .bilingual-pair > .divider { display: none; }
+
+[data-bilingual-mode="en-only"] .bilingual-pair { grid-template-columns: 1fr; }
+[data-bilingual-mode="en-only"] .bilingual-pair > .zh,
+[data-bilingual-mode="en-only"] .bilingual-pair > .divider { display: none; }

@@ -1,0 +1,49 @@
+---
+// ¶ Paragraph Mark — fixed top-right scroll indicator
+// - Vertical position == scroll percentage
+// - Rotates 360deg per full scroll
+// - Pulses 200ms when crossing a heading
+---
+<div class="paragraph-mark" data-paragraph-mark aria-hidden="true">¶</div>
+
+<script>
+  const mark = document.querySelector<HTMLElement>("[data-paragraph-mark]");
+  if (mark) {
+    const baseTop = 22;
+    const maxTop = () => window.innerHeight - 60;
+
+    const update = () => {
+      const doc = document.documentElement;
+      const max = Math.max(1, doc.scrollHeight - window.innerHeight);
+      const pct = Math.min(1, Math.max(0, window.scrollY / max));
+      const top = baseTop + (maxTop() - baseTop) * pct;
+      const rot = pct * 360;
+      mark.style.transform = `translate3d(0, ${top - baseTop}px, 0) rotate(${rot}deg)`;
+    };
+
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { raf = 0; update(); });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    update();
+
+    // Pulse when a heading enters the top quarter of the viewport
+    const headings = document.querySelectorAll<HTMLElement>("main h1, main h2, main h3");
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            mark.classList.add("paragraph-mark--pulse");
+            setTimeout(() => mark.classList.remove("paragraph-mark--pulse"), 240);
+          }
+        }
+      },
+      { rootMargin: "-20% 0px -75% 0px", threshold: 0 }
+    );
+    headings.forEach((h) => obs.observe(h));
+  }
+</script>

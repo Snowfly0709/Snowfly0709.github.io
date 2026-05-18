@@ -1,5 +1,6 @@
 ﻿---
 import { navItems } from "../data/site";
+import ThemeToggle from "./ThemeToggle.astro";
 
 interface Props {
   lang: "en" | "zh";
@@ -29,19 +30,25 @@ const zhPath = pathname.startsWith("/en/") ? pathname.replace(/^\/en\//, "/zh/")
 
       <div class="lang-switch" aria-label="Language switcher">
         <a href={enPath} class={lang === "en" ? "active" : ""}>EN</a>
+        <span class="divider" aria-hidden="true">/</span>
         <a href={zhPath} class={lang === "zh" ? "active" : ""}>中</a>
       </div>
+
+      <ThemeToggle lang={lang} />
     </div>
   </div>
 </header>
 
 <script>
-  const toggle = document.querySelector("[data-nav-toggle]");
-  const wrap = document.querySelector("[data-nav-wrap]");
-
-  if (toggle && wrap) {
+  const wireMobileToggle = () => {
+    const toggle = document.querySelector<HTMLElement>("[data-nav-toggle]");
+    const wrap = document.querySelector<HTMLElement>("[data-nav-wrap]");
+    if (!toggle || !wrap || toggle.dataset.bound) return;
+    toggle.dataset.bound = "1";
     toggle.addEventListener("click", () => {
       wrap.classList.toggle("open");
     });
-  }
+  };
+  wireMobileToggle();
+  document.addEventListener("astro:page-load", wireMobileToggle);
 </script>

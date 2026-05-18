@@ -1,0 +1,126 @@
+---
+interface Props {
+  lang: "en" | "zh";
+}
+
+const { lang } = Astro.props;
+const label = lang === "zh" ? "切换主题" : "Toggle theme";
+---
+<button
+  class="theme-toggle"
+  type="button"
+  data-theme-toggle
+  aria-label={label}
+  title={label}
+>
+  <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"/>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+  </svg>
+  <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line-soft);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out),
+                background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .theme-icon {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    transition: opacity var(--dur-base) var(--ease-out),
+                transform var(--dur-base) var(--ease-spring);
+  }
+
+  /* Default: show sun in light, moon in dark */
+  .theme-icon--sun { opacity: 1; transform: scale(1) rotate(0); }
+  .theme-icon--moon { opacity: 0; transform: scale(0.4) rotate(-60deg); }
+
+  :global([data-theme="dark"]) .theme-icon--sun {
+    opacity: 0;
+    transform: scale(0.4) rotate(60deg);
+  }
+
+  :global([data-theme="dark"]) .theme-icon--moon {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+</style>
+
+<script>
+  const toggleAll = () => {
+    const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]");
+    buttons.forEach((btn) => {
+      if (btn.hasAttribute("data-theme-bound")) return;
+      btn.setAttribute("data-theme-bound", "");
+
+      btn.addEventListener("click", (event) => {
+        const root = document.documentElement;
+        const current = root.getAttribute("data-theme") === "dark" ? "dark" : "light";
+        const next = current === "dark" ? "light" : "dark";
+
+        const apply = () => {
+          root.setAttribute("data-theme", next);
+          try { localStorage.setItem("theme", next); } catch (_) {}
+        };
+
+        // Circular sweep view transition from click coords
+        const doc = document as Document & {
+          startViewTransition?: (cb: () => void) => { ready: Promise<void> };
+        };
+        if (typeof doc.startViewTransition === "function" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          const x = event.clientX;
+          const y = event.clientY;
+          const endRadius = Math.hypot(
+            Math.max(x, window.innerWidth - x),
+            Math.max(y, window.innerHeight - y)
+          );
+          const transition = doc.startViewTransition(apply);
+          transition.ready.then(() => {
+            document.documentElement.animate(
+              {
+                clipPath: [
+                  `circle(0 at ${x}px ${y}px)`,
+                  `circle(${endRadius}px at ${x}px ${y}px)`,
+                ],
+              },
+              {
+                duration: 520,
+                easing: "cubic-bezier(0.16,1,0.3,1)",
+                pseudoElement: "::view-transition-new(root)",
+              }
+            );
+          });
+        } else {
+          apply();
+        }
+      });
+    });
+  };
+
+  if (typeof window !== "undefined") {
+    toggleAll();
+    document.addEventListener("astro:page-load", toggleAll);
+  }
+</script>

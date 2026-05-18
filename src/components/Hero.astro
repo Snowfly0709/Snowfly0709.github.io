@@ -1,5 +1,7 @@
-﻿---
+---
 import { heroCopy } from "../data/site";
+import VerticalTitle from "./VerticalTitle.astro";
+import TokenStream from "./TokenStream.astro";
 
 interface Props {
   lang: "en" | "zh";
@@ -7,10 +9,16 @@ interface Props {
 
 const { lang } = Astro.props;
 const copy = heroCopy[lang];
+const verticalText = lang === "zh" ? "我建造能落地的AI产品" : "";
 ---
-<section class="hero">
-  <canvas class="hero-canvas" id="hero-canvas"></canvas>
+<section class="hero" data-lang={lang}>
   <div class="hero-gridline" aria-hidden="true"></div>
+
+  {lang === "zh" && (
+    <div class="hero-vertical-slot">
+      <VerticalTitle text={verticalText} accentChars="AI" />
+    </div>
+  )}
 
   <div class="container grid-12 hero-grid">
     <p class="hero-kicker">{copy.kicker}</p>
@@ -20,119 +28,29 @@ const copy = heroCopy[lang];
       <span class="accent-square" aria-hidden="true"></span>
     </h1>
 
+    <div class="hero-stream">
+      <TokenStream lang={lang} />
+    </div>
+
     <p class="hero-subline">{copy.subline}</p>
 
     <div class="hero-actions">
-      <a href={lang === "en" ? "/en/blog/" : "/zh/blog/"} class="btn primary">{copy.ctaPrimary}</a>
-      <a href={lang === "en" ? "/en/contact/" : "/zh/contact/"} class="btn">{copy.ctaSecondary}</a>
+      <a href={lang === "en" ? "/en/blog/" : "/zh/blog/"} class="btn primary" data-magnetic>{copy.ctaPrimary}</a>
+      <a href={lang === "en" ? "/en/contact/" : "/zh/contact/"} class="btn" data-magnetic>{copy.ctaSecondary}</a>
     </div>
   </div>
 </section>
 
-<script>
-  const canvas = document.getElementById("hero-canvas");
-
-  if (canvas instanceof HTMLCanvasElement) {
-    const ctx = canvas.getContext("2d");
-    const points = [];
-    const pointCount = 96;
-    const pointer = { x: 0, y: 0 };
-
-    const resize = () => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      const dpr = window.devicePixelRatio || 1;
-
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-
-      if (ctx) {
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-    };
-
-    const spawn = () => {
-      points.length = 0;
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-
-      pointer.x = width * 0.5;
-      pointer.y = height * 0.5;
-
-      for (let i = 0; i < pointCount; i += 1) {
-        points.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.28,
-          vy: (Math.random() - 0.5) * 0.28
-        });
-      }
-    };
-
-    const tick = () => {
-      if (!ctx) return;
-
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-
-      ctx.clearRect(0, 0, width, height);
-
-      for (const p of points) {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
-
-        const dx = pointer.x - p.x;
-        const dy = pointer.y - p.y;
-        const dist = Math.hypot(dx, dy);
-
-        if (dist > 0 && dist < 170) {
-          const force = (170 - dist) / 170;
-          p.x -= (dx / dist) * force * 0.8;
-          p.y -= (dy / dist) * force * 0.8;
-        }
-      }
-
-      for (let i = 0; i < points.length; i += 1) {
-        for (let j = i + 1; j < points.length; j += 1) {
-          const a = points[i];
-          const b = points[j];
-          const d = Math.hypot(a.x - b.x, a.y - b.y);
-
-          if (d < 140) {
-            const alpha = (1 - d / 140) * 0.2;
-            ctx.strokeStyle = `rgba(15,15,15,${alpha})`;
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      for (const p of points) {
-        ctx.fillStyle = "#111111";
-        ctx.fillRect(p.x - 1, p.y - 1, 2, 2);
-      }
-
-      requestAnimationFrame(tick);
-    };
-
-    window.addEventListener("pointermove", (event) => {
-      const rect = canvas.getBoundingClientRect();
-      pointer.x = event.clientX - rect.left;
-      pointer.y = event.clientY - rect.top;
-    });
-
-    window.addEventListener("resize", () => {
-      resize();
-      spawn();
-    });
-
-    resize();
-    spawn();
-    tick();
+<style>
+  .hero-stream {
+    grid-column: 1 / -1;
+    margin-top: 16px;
+    margin-bottom: 8px;
   }
-</script>
+
+  @media (max-width: 980px) {
+    .hero-stream {
+      margin-top: 12px;
+    }
+  }
+</style>

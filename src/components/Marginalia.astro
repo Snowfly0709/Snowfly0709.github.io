@@ -1,0 +1,14 @@
+---
+interface Props {
+  ref?: string;
+  href?: string;
+}
+
+const { ref, href } = Astro.props;
+---
+<aside class="marginalia" role="note">
+  {ref && <span class="ref">{ref}</span>}
+  {href
+    ? <a href={href} target="_blank" rel="noopener"><slot /></a>
+    : <slot />}
+</aside>

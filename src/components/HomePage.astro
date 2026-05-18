@@ -1,6 +1,10 @@
-﻿---
+---
 import Hero from "./Hero.astro";
-import { aboutSections, skills } from "../data/site";
+import SectionNumber from "./SectionNumber.astro";
+import DimensionLine from "./DimensionLine.astro";
+import SkillMap from "./SkillMap.astro";
+import { aboutSections } from "../data/site";
+import { tokenizeContent } from "../utils/markup-keywords";
 
 interface Props {
   lang: "en" | "zh";
@@ -9,128 +13,165 @@ interface Props {
 const { lang } = Astro.props;
 const about = aboutSections[lang];
 
+// Stable attention-graph node IDs for each work / edu / project entry
+// (index-positional — relies on site.ts ordering staying stable)
+const workIds = ["work-keyreply", "work-xjtu-rag", "work-xjtu-bd", "work-pmi"];
+const eduIds = ["edu-ntu", "edu-xjtu"];
+const projectIds = ["proj-dataviz"];
+
+const zhProjectIndex = ["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾"];
+const projectIndexFor = (idx: number) =>
+  lang === "en" ? String(idx + 1).padStart(2, "0") : zhProjectIndex[idx] ?? String(idx + 1);
+
 const labels = {
   about: lang === "en" ? "About" : "关于",
   experience: lang === "en" ? "Experience" : "工作经历",
-  projects: lang === "en" ? "Projects" : "项目经历",
+  projects: lang === "en" ? "Selected Work" : "代表项目",
   education: lang === "en" ? "Education" : "教育经历",
   publications: lang === "en" ? "Publications" : "出版作品",
-  skills: lang === "en" ? "Skill Cloud" : "技能云图",
+  skills: lang === "en" ? "Skill Index" : "技能索引",
   contact: lang === "en" ? "Go To Contact" : "前往联系",
-  laneHint: lang === "en" ? "Latest to Earlier" : "从新到旧"
+  workAnnotation:
+    lang === "en"
+      ? `${about.work.length} roles · ${about.education.length} institutions`
+      : `${about.work.length} 段经历 · ${about.education.length} 所学校`,
+  projectAnnotation:
+    lang === "en"
+      ? `${about.projects.length} project${about.projects.length === 1 ? "" : "s"} · live & shipping`
+      : `${about.projects.length} 个项目 · 已上线`,
+  introAnnotation: lang === "en" ? "intro · bio · portrait" : "简介 · 履历 · 肖像",
+  skillAnnotation:
+    lang === "en" ? "skill index · latent graph" : "技能索引 · 关联图谱",
 };
 
-const cloudMap = [
-  { x: 14, y: 10, s: 0.96, d: 0.2 },
-  { x: 44, y: 8, s: 1.06, d: 0.8 },
-  { x: 74, y: 12, s: 1.0, d: 1.3 },
-  { x: 8, y: 30, s: 1.05, d: 0.5 },
-  { x: 36, y: 28, s: 0.94, d: 1.1 },
-  { x: 62, y: 32, s: 1.08, d: 0.4 },
-  { x: 86, y: 28, s: 0.98, d: 1.6 },
-  { x: 18, y: 52, s: 0.98, d: 0.9 },
-  { x: 50, y: 50, s: 1.06, d: 0.3 },
-  { x: 78, y: 54, s: 0.94, d: 1.2 },
-  { x: 10, y: 76, s: 1.0, d: 1.5 },
-  { x: 38, y: 80, s: 1.08, d: 0.6 },
-  { x: 64, y: 76, s: 0.96, d: 1.0 },
-  { x: 88, y: 80, s: 1.02, d: 0.4 }
-] as const;
+const parsePeriodStart = (period: string) => {
+  const monthYear = period.match(/(\d{2})\/(\d{4})/);
+  if (monthYear) return Number(monthYear[2]) * 12 + Number(monthYear[1]);
+  const yearOnly = period.match(/(\d{4})/);
+  if (yearOnly) return Number(yearOnly[1]) * 12;
+  return 0;
+};
+
+const projects = [...about.projects].sort(
+  (a, b) => parsePeriodStart(b.period) - parsePeriodStart(a.period)
+);
 ---
 <Hero lang={lang} />
 
-<section id="about" class="section">
+{/* ===== 01 — About ============================================= */}
+<section id="about" class="section spread">
   <div class="container">
+    <SectionNumber index={1} lang={lang} label={labels.about} />
     <h2 class="section-title">{labels.about}</h2>
+    <DimensionLine annotation={labels.introAnnotation} />
 
-    <div class="grid-12">
-      <article class="about-intro panel-card">
-        <p>{about.intro}</p>
+    <div class="grid-12 spread-intro">
+      <article class="intro-text" data-reveal="up">
+        <p class="about-intro drop-cap" set:html={tokenizeContent(about.intro, lang, "intro")} />
       </article>
 
-      <aside class="profile-panel panel-card">
-        <div class="profile-photo-box">
-          <img src="/images/profile.png" alt="Portrait of Zifeng Xiong" loading="lazy" width="820" height="1200" />
+      <aside class="intro-portrait" data-reveal="up" data-stagger="1">
+        <div class="portrait-frame">
+          <img
+            src="/images/profile.png"
+            alt="Portrait of Zifeng Xiong"
+            loading="lazy"
+            width="820"
+            height="1200"
+          />
         </div>
-        <p>Zifeng Xiong</p>
+        <p class="portrait-name">Zifeng Xiong</p>
+        <p class="portrait-meta">Hong Kong · Singapore</p>
       </aside>
-
-      <section class="project-lane panel-card">
-        <div class="lane-head">
-          <h3 class="subsection-title">{labels.projects}</h3>
-          {about.projects.length > 1 && <span class="lane-hint">{labels.laneHint}</span>}
-        </div>
-
-        <div class={`project-track${about.projects.length === 1 ? " single" : ""}`}>
-          {about.projects.map((item, idx) => (
-            <article class="project-card">
-              <div class="project-card-head">
-                <span class="project-index">{String(idx + 1).padStart(2, "0")}</span>
-                <span class="project-arrow" aria-hidden="true">→</span>
-              </div>
-              <h4>{item.name}</h4>
-              <p class="meta-line">{item.period}</p>
-              <p>{item.detail}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <div class="timeline">
-        <section class="panel-card info-block">
-          <h3 class="subsection-title">{labels.experience}</h3>
-          {about.work.map((item) => (
-            <article class="timeline-item">
-              <h3>{item.title}</h3>
-              <p class="meta-line">{item.org} | {item.period}</p>
-              {item.detail && <p>{item.detail}</p>}
-            </article>
-          ))}
-        </section>
-
-        <section class="panel-card info-block">
-          <h3 class="subsection-title">{labels.education}</h3>
-          {about.education.map((item) => (
-            <article class="timeline-item">
-              <h3>{item.school}</h3>
-              <p class="meta-line">{item.degree} | {item.period}</p>
-              <p>{item.location}</p>
-            </article>
-          ))}
-        </section>
-
-        <section class="panel-card info-block">
-          <h3 class="subsection-title">{labels.publications}</h3>
-          {about.publications.map((item) => (
-            <article class="timeline-item">
-              <p>{item}</p>
-            </article>
-          ))}
-        </section>
-      </div>
-
-      <section class="skill-cloud-wrap panel-card">
-        <h3 class="subsection-title">{labels.skills}</h3>
-        <div class="skill-cloud" aria-label={labels.skills}>
-          {skills.map((skill, idx) => {
-            const cfg = cloudMap[idx % cloudMap.length];
-            return (
-              <span
-                class="skill-chip cloud-chip"
-                style={`--x:${cfg.x}%;--y:${cfg.y}%;--scale:${cfg.s};--delay:${cfg.d}s;`}
-              >
-                {skill}
-              </span>
-            );
-          })}
-        </div>
-      </section>
     </div>
   </div>
 </section>
 
+{/* ===== 02 — Experience ======================================== */}
+<section id="experience" class="section spread">
+  <div class="container">
+    <SectionNumber index={2} lang={lang} label={labels.experience} />
+    <h2 class="section-title">{labels.experience}</h2>
+    <DimensionLine annotation={labels.workAnnotation} />
+
+    <div class="grid-12 spread-experience">
+      <div class="exp-work" data-reveal="up">
+        <h3 class="exp-subhead">{labels.experience}</h3>
+        {about.work.map((item, idx) => (
+          <article class="exp-item" data-reveal="up" data-stagger={idx + 1}>
+            <h4 data-attention-id={workIds[idx]}>{item.title}</h4>
+            <p class="meta-line">{item.org} | {item.period}</p>
+            {item.detail && (
+              <p class="exp-detail" set:html={tokenizeContent(item.detail, lang, `w${idx}`)} />
+            )}
+          </article>
+        ))}
+      </div>
+
+      <div class="exp-side">
+        <div class="exp-aside-block" data-reveal="up" data-stagger="1">
+          <h3 class="exp-subhead">{labels.education}</h3>
+          {about.education.map((item, idx) => (
+            <article class="exp-item" data-reveal="up" data-stagger={idx + 1}>
+              <h4 data-attention-id={eduIds[idx]}>{item.school}</h4>
+              <p class="meta-line">{item.degree} | {item.period}</p>
+              <p class="exp-detail" set:html={tokenizeContent(item.location, lang, `e${idx}`)} />
+            </article>
+          ))}
+        </div>
+
+        <div class="exp-aside-block" data-reveal="up" data-stagger="2">
+          <h3 class="exp-subhead">{labels.publications}</h3>
+          {about.publications.map((item, idx) => (
+            <article class="exp-item exp-item--narrow" data-reveal="up" data-stagger={idx + 1}>
+              <p class="exp-detail" set:html={tokenizeContent(item, lang, `pub${idx}`)} />
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* ===== 03 — Selected Work ===================================== */}
+<section id="projects" class="section spread">
+  <div class="container">
+    <SectionNumber index={3} lang={lang} label={labels.projects} />
+    <h2 class="section-title">{labels.projects}</h2>
+    <DimensionLine annotation={labels.projectAnnotation} />
+
+    <div class="spread-projects">
+      {projects.map((p, idx) => (
+        <article class="project-spread" data-reveal="up" data-stagger={idx + 1}>
+          <div class="project-spread-head">
+            <span class="project-spread-index">{projectIndexFor(idx)}</span>
+            <h3 data-attention-id={projectIds[idx]}>{p.name}</h3>
+            <p class="meta-line">{p.period}</p>
+          </div>
+          <p class="project-spread-body" set:html={tokenizeContent(p.detail, lang, `proj${idx}`)} />
+          <span class="project-spread-arrow" aria-hidden="true">→</span>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+{/* ===== 04 — Skill Index ======================================= */}
+<section id="skills" class="section spread">
+  <div class="container">
+    <SectionNumber index={4} lang={lang} label={labels.skills} />
+    <h2 class="section-title">{labels.skills}</h2>
+    <DimensionLine annotation={labels.skillAnnotation} />
+
+    <SkillMap lang={lang} />
+  </div>
+</section>
+
+{/* ===== Contact CTA ============================================ */}
 <section class="section section-cta">
   <div class="container">
-    <a class="btn primary" href={lang === "en" ? "/en/contact/" : "/zh/contact/"}>{labels.contact}</a>
+    <a class="btn primary" href={lang === "en" ? "/en/contact/" : "/zh/contact/"} data-magnetic>
+      {labels.contact}
+    </a>
   </div>
 </section>

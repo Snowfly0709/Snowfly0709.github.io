@@ -1,0 +1,17 @@
+---
+interface Props {
+  text: string;
+  accentChars?: string;
+}
+
+const { text, accentChars = "" } = Astro.props;
+const chars = [...text];
+const accentSet = new Set([...accentChars]);
+---
+<div class="vertical-title" aria-hidden="true">
+  {chars.map((c) => (
+    accentSet.has(c)
+      ? <span class="accent-char">{c}</span>
+      : <span>{c}</span>
+  ))}
+</div>

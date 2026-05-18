@@ -1,0 +1,18 @@
+---
+interface Props {
+  index: number;
+  lang: "en" | "zh";
+  label?: string;
+}
+
+const { index, lang, label } = Astro.props;
+
+const enRoman = String(index).padStart(2, "0");
+const zhTraditional = ["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾"];
+const numStr = lang === "en" ? enRoman : zhTraditional[index - 1] ?? String(index);
+---
+<div class="section-number" aria-hidden="true">
+  <span class="num">{numStr}</span>
+  <span class="rule"></span>
+  {label && <span class="label">{label}</span>}
+</div>

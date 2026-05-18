@@ -1,6 +1,18 @@
-﻿---
+---
+// Font self-hosting — fontsource bundles woff2 into Astro build
+import "@fontsource-variable/fraunces/full.css";
+import "@fontsource-variable/source-serif-4/index.css";
+import "@fontsource-variable/jetbrains-mono/wght.css";
+import "@fontsource/noto-serif-sc/400.css";
+import "@fontsource/noto-serif-sc/600.css";
+import "@fontsource/noto-serif-sc/chinese-simplified-400.css";
+import "@fontsource/noto-serif-sc/chinese-simplified-600.css";
+
 import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
+import Colophon from "../components/Colophon.astro";
+import ParagraphMark from "../components/ParagraphMark.astro";
 import { siteMeta } from "../data/site";
 
 interface Props {
@@ -23,43 +35,79 @@ const { lang, title = siteMeta.title, description = siteMeta.description } = Ast
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url.href} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <ClientRouter />
+
+    {/* FOUC-free theme bootstrap — runs synchronously on initial load AND after every view transition */}
+    <script is:inline>
+      (function () {
+        function applyTheme() {
+          try {
+            var saved = localStorage.getItem("theme");
+            var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            var theme = saved || (prefersDark ? "dark" : "light");
+            document.documentElement.setAttribute("data-theme", theme);
+          } catch (_) {
+            document.documentElement.setAttribute("data-theme", "light");
+          }
+        }
+        applyTheme();
+        document.addEventListener("astro:after-swap", applyTheme);
+      })();
+    </script>
   </head>
   <body>
+    <ParagraphMark />
     <Header lang={lang} />
     <main>
-      <slot />
+      <div class="attention-host" data-attention-host>
+        <svg
+          class="attention-canvas"
+          data-attention-canvas
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g data-attention-edges></g>
+        </svg>
+        <slot />
+      </div>
     </main>
 
-    <footer class="site-footer">
-      <div class="container">(C) {new Date().getFullYear()} Zifeng Xiong</div>
-    </footer>
+    <Colophon lang={lang} />
+
+    {/* Motion primitives — run on initial load and after each view transition */}
+    <script>
+      import "../scripts/motion";
+      import "../scripts/magnetic";
+      import "../scripts/attention-graph";
+      import "../scripts/page-tokens";
+    </script>
 
     <script>
-      const pres = document.querySelectorAll(".post-body pre");
-      for (const pre of pres) {
-        if (pre.querySelector(".copy-btn")) continue;
-        const button = document.createElement("button");
-        button.className = "copy-btn";
-        button.textContent = "Copy";
-        button.type = "button";
-        button.addEventListener("click", async () => {
-          const code = pre.querySelector("code");
-          if (!code) return;
-          try {
-            await navigator.clipboard.writeText(code.textContent || "");
-            button.textContent = "Copied";
-            setTimeout(() => {
-              button.textContent = "Copy";
-            }, 1200);
-          } catch {
-            button.textContent = "Failed";
-            setTimeout(() => {
-              button.textContent = "Copy";
-            }, 1200);
-          }
-        });
-        pre.append(button);
-      }
+      const wireCopyButtons = () => {
+        const pres = document.querySelectorAll(".post-body pre");
+        for (const pre of pres) {
+          if (pre.querySelector(".copy-btn")) continue;
+          const button = document.createElement("button");
+          button.className = "copy-btn";
+          button.textContent = "Copy";
+          button.type = "button";
+          button.addEventListener("click", async () => {
+            const code = pre.querySelector("code");
+            if (!code) return;
+            try {
+              await navigator.clipboard.writeText(code.textContent || "");
+              button.textContent = "Copied";
+              setTimeout(() => { button.textContent = "Copy"; }, 1200);
+            } catch {
+              button.textContent = "Failed";
+              setTimeout(() => { button.textContent = "Copy"; }, 1200);
+            }
+          });
+          pre.append(button);
+        }
+      };
+      wireCopyButtons();
+      document.addEventListener("astro:page-load", wireCopyButtons);
     </script>
   </body>
 </html>

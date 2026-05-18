@@ -1,0 +1,426 @@
+---
+import { skillGroups, skillRelations, flattenSkills, buildAdjacency } from "../data/skills";
+
+interface Props {
+  lang: "en" | "zh";
+}
+
+const { lang } = Astro.props;
+
+// Slug a skill name to its attention-graph node id
+const slugify = (s: string): string =>
+  s.toLowerCase().replace(/[\s·]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+
+const flat = flattenSkills();
+const adjacencyJSON = JSON.stringify(buildAdjacency());
+
+// Pre-split into two columns: core (col A) | stack + security (col B)
+const colA = flat.filter((s) => s.group === "core");
+const colB = flat.filter((s) => s.group !== "core");
+
+const columns = [colA, colB];
+
+// Pre-compute "first of group" markers so the template stays simple
+type Row =
+  | { kind: "header"; id: string; labelEn: string; labelZh: string }
+  | { kind: "skill"; name: string; index: number };
+
+const buildColumnRows = (col: typeof flat): Row[] => {
+  const rows: Row[] = [];
+  let prevGroup = "";
+  for (const s of col) {
+    if (s.group !== prevGroup) {
+      const g = skillGroups.find((x) => x.id === s.group)!;
+      rows.push({ kind: "header", id: g.id, labelEn: g.labelEn, labelZh: g.labelZh });
+      prevGroup = s.group;
+    }
+    rows.push({ kind: "skill", name: s.name, index: s.index });
+  }
+  return rows;
+};
+
+const columnRows = columns.map(buildColumnRows);
+
+const labels = {
+  graphMeta: lang === "zh"
+    ? `图：${flat.length} 个节点 · ${skillRelations.length} 条关联`
+    : `graph: ${flat.length} nodes · ${skillRelations.length} edges`,
+  hint: lang === "zh" ? "悬停查看关联结构" : "hover to reveal connections",
+};
+---
+<div class="skill-map" data-skill-map data-adjacency={adjacencyJSON}>
+  <p class="skill-map-meta">{labels.graphMeta}</p>
+
+  <svg class="skill-map-svg" data-skill-svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <g data-skill-lines></g>
+  </svg>
+
+  <div class="skill-map-grid">
+    {columnRows.map((col, colIdx) => (
+      <ul class="skill-col" data-col={colIdx}>
+        {col.map((row) =>
+          row.kind === "header" ? (
+            <li class="skill-group-header" aria-hidden="true">
+              <span class="label">{lang === "zh" ? row.labelZh : row.labelEn}</span>
+              <span class="rule"></span>
+            </li>
+          ) : (
+            <li
+              class="skill-row"
+              data-skill={row.name}
+              data-attention-id={slugify(row.name)}
+              tabindex="0"
+            >
+              <span class="num">{String(row.index).padStart(2, "0")}</span>
+              <span class="dash" aria-hidden="true">─</span>
+              <span class="name">{row.name}</span>
+            </li>
+          )
+        )}
+      </ul>
+    ))}
+  </div>
+
+  <p class="skill-map-hint">{labels.hint}</p>
+</div>
+
+<style>
+  .skill-map {
+    position: relative;
+    padding: 8px 0 8px;
+  }
+
+  .skill-map-meta {
+    margin: 0 0 24px;
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+  }
+
+  :global(html[lang="zh"]) .skill-map-meta {
+    font-family: var(--font-cjk);
+    letter-spacing: 0.08em;
+  }
+
+  .skill-map-svg {
+    position: absolute;
+    inset: 40px 0 30px 0;
+    width: 100%;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 0;
+  }
+
+  .skill-map-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 80px;
+    align-items: start;
+  }
+
+  .skill-col {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .skill-group-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 0 10px;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    letter-spacing: 0.16em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .skill-col:first-child .skill-group-header:first-child {
+    padding-top: 0;
+  }
+
+  :global(html[lang="zh"]) .skill-group-header {
+    font-family: var(--font-cjk);
+    text-transform: none;
+    letter-spacing: 0.18em;
+    font-size: 0.94rem;
+  }
+
+  .skill-group-header .rule {
+    flex: 1;
+    height: 1px;
+    background: var(--line-faint);
+  }
+
+  .skill-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 40px 16px 1fr;
+    align-items: baseline;
+    gap: 0 12px;
+    padding: 15px 12px 15px 18px;
+    border-top: 1px solid var(--line-faint);
+    cursor: pointer;
+    color: var(--text);
+    outline: none;
+    transition: color 280ms cubic-bezier(0.22, 0.61, 0.36, 1),
+                background-color 280ms cubic-bezier(0.22, 0.61, 0.36, 1),
+                padding-left 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .skill-row:last-child {
+    border-bottom: 1px solid var(--line-faint);
+  }
+
+  .skill-row::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 2px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .skill-row.is-active::before {
+    transform: scaleY(1);
+  }
+
+  .skill-row.is-active {
+    background: var(--accent-soft);
+    padding-left: 26px;
+    color: var(--accent);
+  }
+
+  .skill-row.is-related {
+    color: var(--accent);
+  }
+
+  .skill-row .num {
+    font-family: var(--font-mono);
+    font-size: 0.96rem;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .skill-row .dash {
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    transition: color 280ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .skill-row.is-active .dash,
+  .skill-row.is-related .dash {
+    color: var(--accent);
+  }
+
+  .skill-row .name {
+    font-family: var(--font-body);
+    font-size: 1.22rem;
+    line-height: 1.32;
+  }
+
+  :global(html[lang="zh"]) .skill-row .name {
+    font-family: var(--font-cjk);
+  }
+
+  .skill-row:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .skill-map-hint {
+    margin: 26px 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+  }
+
+  :global(html[lang="zh"]) .skill-map-hint {
+    font-family: var(--font-cjk);
+    text-transform: none;
+    letter-spacing: 0.12em;
+  }
+
+  :global(.skill-map-svg .edge) {
+    stroke: var(--accent);
+    stroke-width: 1;
+    fill: none;
+    stroke-dasharray: 5 4;
+    opacity: 0;
+    transition: opacity 280ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  :global(.skill-map-svg .edge.is-on) {
+    opacity: 0.85;
+  }
+
+  @media (max-width: 860px) {
+    .skill-map-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .skill-map-svg { display: none; }
+  }
+</style>
+
+<script>
+  const SVG_NS = "http://www.w3.org/2000/svg";
+
+  type Center = { x: number; y: number; right: number; left: number; w: number };
+
+  function initSkillMap(root: HTMLElement) {
+    if (root.hasAttribute("data-skill-init")) return;
+    root.setAttribute("data-skill-init", "1");
+
+    const svg = root.querySelector<SVGSVGElement>("[data-skill-svg]");
+    const linesLayer = root.querySelector<SVGGElement>("[data-skill-lines]");
+    if (!svg || !linesLayer) return;
+
+    let adjacency: Record<string, string[]> = {};
+    try {
+      adjacency = JSON.parse(root.getAttribute("data-adjacency") || "{}");
+    } catch {
+      adjacency = {};
+    }
+
+    const rowEls = Array.from(root.querySelectorAll<HTMLElement>(".skill-row"));
+    const rows = new Map<string, HTMLElement>();
+    for (const el of rowEls) {
+      const name = el.dataset.skill;
+      if (name) rows.set(name, el);
+    }
+
+    const centers = new Map<string, Center>();
+    const edges = new Map<string, SVGPathElement>();
+
+    // Create unique edge paths (one per relation, key = sorted "A|B")
+    for (const [a, neighbors] of Object.entries(adjacency)) {
+      for (const b of neighbors) {
+        const key = [a, b].sort().join("|");
+        if (edges.has(key)) continue;
+        const path = document.createElementNS(SVG_NS, "path");
+        path.setAttribute("class", "edge");
+        linesLayer.appendChild(path);
+        edges.set(key, path);
+      }
+    }
+
+    const measure = () => {
+      const svgRect = svg.getBoundingClientRect();
+      if (svgRect.width === 0 || svgRect.height === 0) return;
+      svg.setAttribute("viewBox", `0 0 ${svgRect.width} ${svgRect.height}`);
+      svg.setAttribute("width", String(svgRect.width));
+      svg.setAttribute("height", String(svgRect.height));
+
+      centers.clear();
+      for (const [name, el] of rows) {
+        const r = el.getBoundingClientRect();
+        centers.set(name, {
+          x: r.left - svgRect.left + r.width / 2,
+          y: r.top - svgRect.top + r.height / 2,
+          right: r.right - svgRect.left,
+          left: r.left - svgRect.left,
+          w: r.width,
+        });
+      }
+    };
+
+    requestAnimationFrame(() => {
+      measure();
+      setTimeout(measure, 800);
+    });
+    const ro = "ResizeObserver" in window ? new ResizeObserver(measure) : null;
+    ro?.observe(root);
+    window.addEventListener("resize", measure, { passive: true });
+
+    const clear = () => {
+      for (const el of rows.values()) {
+        el.classList.remove("is-active", "is-related");
+      }
+      for (const p of edges.values()) {
+        p.classList.remove("is-on");
+      }
+    };
+
+    const drawEdge = (path: SVGPathElement, a: Center, b: Center) => {
+      const sameCol = Math.abs(a.x - b.x) < 100;
+      let d: string;
+      if (sameCol) {
+        // Same column → arc outward to the right
+        const midX = Math.max(a.right, b.right) + 28;
+        d =
+          `M ${a.right.toFixed(1)} ${a.y.toFixed(1)} ` +
+          `C ${midX.toFixed(1)} ${a.y.toFixed(1)}, ` +
+          `${midX.toFixed(1)} ${b.y.toFixed(1)}, ` +
+          `${b.right.toFixed(1)} ${b.y.toFixed(1)}`;
+      } else {
+        // Cross-column → smooth horizontal bezier
+        const leftPt = a.x < b.x ? a : b;
+        const rightPt = a.x < b.x ? b : a;
+        const startX = leftPt.right;
+        const endX = rightPt.left;
+        const midX = (startX + endX) / 2;
+        d =
+          `M ${startX.toFixed(1)} ${leftPt.y.toFixed(1)} ` +
+          `C ${midX.toFixed(1)} ${leftPt.y.toFixed(1)}, ` +
+          `${midX.toFixed(1)} ${rightPt.y.toFixed(1)}, ` +
+          `${endX.toFixed(1)} ${rightPt.y.toFixed(1)}`;
+      }
+      path.setAttribute("d", d);
+    };
+
+    const highlight = (name: string) => {
+      clear();
+      const a = centers.get(name);
+      const el = rows.get(name);
+      if (!a || !el) return;
+      el.classList.add("is-active");
+
+      const neighbors = adjacency[name] ?? [];
+      for (const n of neighbors) {
+        const nb = rows.get(n);
+        const c = centers.get(n);
+        if (!nb || !c) continue;
+        nb.classList.add("is-related");
+        const key = [name, n].sort().join("|");
+        const path = edges.get(key);
+        if (path) {
+          drawEdge(path, a, c);
+          path.classList.add("is-on");
+        }
+      }
+    };
+
+    rows.forEach((el, name) => {
+      el.addEventListener("pointerenter", () => highlight(name));
+      el.addEventListener("pointerleave", clear);
+      el.addEventListener("focus", () => highlight(name));
+      el.addEventListener("blur", clear);
+    });
+  }
+
+  function initAll() {
+    document.querySelectorAll<HTMLElement>("[data-skill-map]").forEach(initSkillMap);
+  }
+
+  if (typeof window !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initAll);
+    } else {
+      initAll();
+    }
+    document.addEventListener("astro:page-load", initAll);
+  }
+</script>

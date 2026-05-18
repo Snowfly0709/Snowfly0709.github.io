@@ -1,0 +1,71 @@
+---
+interface Props {
+  lang: "en" | "zh";
+}
+
+const { lang } = Astro.props;
+
+// Build-time year as Roman-style display
+const buildDate = new Date();
+const year = buildDate.getFullYear();
+const monthAbbrEn = buildDate.toLocaleString("en-US", { month: "short" });
+const dateStr = `${buildDate.getDate()} ${monthAbbrEn} ${year}`;
+
+// MMXXVI-style roman numerals for year
+const romanYear = (n: number): string => {
+  const map: [number, string][] = [
+    [1000, "M"], [900, "CM"], [500, "D"], [400, "CD"],
+    [100, "C"],  [90, "XC"],  [50, "L"],  [40, "XL"],
+    [10, "X"],   [9, "IX"],   [5, "V"],   [4, "IV"],   [1, "I"],
+  ];
+  let res = "";
+  for (const [v, s] of map) {
+    while (n >= v) { res += s; n -= v; }
+  }
+  return res;
+};
+
+const t = lang === "zh"
+  ? {
+      title: "版本页",
+      copy: "字体采用 Fraunces、Source Serif 4、思源宋体 与 JetBrains Mono。基于 Astro 构建，使用 CSS Grid 排版，由四十七行 Canvas 与 SVG 点亮 Hero。",
+      stack: "Astro 5 · TypeScript · CSS Grid",
+      palette: "朱砂 #a8311e",
+      build: `构建于 ${buildDate.getFullYear()}年${buildDate.getMonth() + 1}月${buildDate.getDate()}日`,
+      attribution: "(C) Zifeng Xiong",
+      location: "Hong Kong · Singapore",
+    }
+  : {
+      title: "Colophon",
+      copy: "Set in Fraunces, Source Serif 4, Noto Serif SC, and JetBrains Mono. Composed in Astro, typeset with CSS Grid, illuminated by forty-seven lines of Canvas and SVG.",
+      stack: "Astro 5 · TypeScript · CSS Grid",
+      palette: "Cinnabar #a8311e",
+      build: `Built ${dateStr}`,
+      attribution: "© Zifeng Xiong",
+      location: "Hong Kong · Singapore",
+    };
+---
+<footer class="colophon">
+  <div class="container inner">
+    <div class="colophon-title">
+      <span class="label">{t.title}</span>
+      <span class="rule"></span>
+      <span class="year">{romanYear(year)}</span>
+    </div>
+
+    <div class="colophon-body">
+      <p class="colophon-text">{t.copy}</p>
+
+      <div class="colophon-meta">
+        <span>{t.stack}</span>
+        <span><span class="swatch" aria-hidden="true"></span>{t.palette}</span>
+        <span>{t.build}</span>
+      </div>
+    </div>
+
+    <div class="colophon-foot">
+      <span>{t.attribution}</span>
+      <span>{t.location}</span>
+    </div>
+  </div>
+</footer>

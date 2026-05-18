@@ -1,0 +1,361 @@
+---
+import { heroTokens, type HeroTokenSet } from "../data/hero-tokens";
+
+interface Props {
+  lang: "en" | "zh";
+}
+
+const { lang } = Astro.props;
+const set: HeroTokenSet = heroTokens[lang];
+const highlightSet = new Set(set.highlight ?? []);
+const attentionJSON = JSON.stringify(set.attention);
+---
+<div
+  class="token-stream"
+  data-token-stream
+  data-lang={lang}
+  data-attention={attentionJSON}
+>
+  <svg class="token-stream-svg" data-token-svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="token-glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="18" />
+      </filter>
+    </defs>
+    <g data-token-glows filter="url(#token-glow)"></g>
+    <g data-token-lines></g>
+  </svg>
+
+  <div class="token-row" data-token-row>
+    {set.tokens.map((t, i) => (
+      <span
+        class:list={["token", { "token--accent": highlightSet.has(i) }]}
+        data-idx={i}
+        style={`--enter-delay:${120 + i * 90}ms`}
+      >
+        {t}
+      </span>
+    ))}
+  </div>
+
+  <p class="token-stream-hint">
+    {lang === "zh" ? "悬停 token 显示注意力" : "hover a token to reveal attention"}
+  </p>
+</div>
+
+<style>
+  .token-stream {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 0 24px;
+    margin-top: 18px;
+    user-select: none;
+  }
+
+  .token-stream-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: visible;
+  }
+
+  .token-row {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 6px;
+    font-family: var(--font-mono);
+    font-size: clamp(0.92rem, 1.4vw, 1.18rem);
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+  }
+
+  :global(html[lang="zh"]) .token-row {
+    font-family: var(--font-cjk);
+    font-size: clamp(1.0rem, 1.6vw, 1.36rem);
+    letter-spacing: 0.05em;
+  }
+
+  .token {
+    position: relative;
+    padding: 7px 12px;
+    border: 1px solid var(--line-soft);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--bg-elevated) 85%, transparent);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: var(--text);
+    cursor: pointer;
+    transform: translateY(8px);
+    opacity: 0;
+    animation: token-enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--enter-delay);
+    transition: border-color var(--dur-base, 220ms) var(--ease-out, ease-out),
+                color var(--dur-base, 220ms) var(--ease-out, ease-out),
+                background-color var(--dur-base, 220ms) var(--ease-out, ease-out);
+  }
+
+  .token--accent {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .token.is-active {
+    color: var(--accent-ink);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .token.is-related {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .token-stream-hint {
+    margin: 22px 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+  }
+
+  :global(html[lang="zh"]) .token-stream-hint {
+    font-family: var(--font-cjk);
+    text-transform: none;
+    letter-spacing: 0.12em;
+  }
+
+  @keyframes token-enter {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* SVG primitives are styled via the global selector since they're created in JS */
+  :global(.token-stream-svg .att-line) {
+    stroke: var(--accent);
+    stroke-linecap: round;
+    fill: none;
+    opacity: 0;
+    transition: opacity 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  :global(.token-stream-svg .att-line.is-on) {
+    opacity: 1;
+  }
+
+  :global(.token-stream-svg .att-glow) {
+    fill: var(--accent);
+    opacity: 0;
+    transition: opacity 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  :global(.token-stream-svg .att-glow.is-on) {
+    opacity: 0.55;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .token {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+    :global(.token-stream-svg .att-line),
+    :global(.token-stream-svg .att-glow) {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const SVG_NS = "http://www.w3.org/2000/svg";
+
+  type Geom = { x: number; y: number; w: number; h: number };
+  type State = {
+    container: HTMLElement;
+    svg: SVGSVGElement;
+    glowsLayer: SVGGElement;
+    linesLayer: SVGGElement;
+    tokens: HTMLElement[];
+    attention: number[][];
+    geom: Geom[];
+    glows: SVGCircleElement[];
+    lines: (SVGLineElement | null)[][];
+  };
+
+  function initOne(container: HTMLElement) {
+    if (container.hasAttribute("data-token-init")) return;
+    container.setAttribute("data-token-init", "1");
+
+    const svg = container.querySelector<SVGSVGElement>("[data-token-svg]");
+    const glowsLayer = container.querySelector<SVGGElement>("[data-token-glows]");
+    const linesLayer = container.querySelector<SVGGElement>("[data-token-lines]");
+    const row = container.querySelector<HTMLElement>("[data-token-row]");
+    if (!svg || !glowsLayer || !linesLayer || !row) return;
+
+    const tokens = Array.from(row.querySelectorAll<HTMLElement>(".token"));
+    let attention: number[][] = [];
+    try {
+      attention = JSON.parse(container.getAttribute("data-attention") || "[]");
+    } catch {
+      attention = [];
+    }
+    if (!attention.length || attention.length !== tokens.length) return;
+
+    const state: State = {
+      container, svg, glowsLayer, linesLayer, tokens, attention,
+      geom: [], glows: [], lines: [],
+    };
+
+    // Build glow circles + attention lines once
+    for (let i = 0; i < tokens.length; i++) {
+      const glow = document.createElementNS(SVG_NS, "circle");
+      glow.setAttribute("class", "att-glow");
+      glow.setAttribute("r", "0");
+      glowsLayer.appendChild(glow);
+      state.glows.push(glow);
+
+      const row: (SVGLineElement | null)[] = [];
+      for (let j = 0; j < tokens.length; j++) {
+        if (i === j) {
+          row.push(null);
+          continue;
+        }
+        const line = document.createElementNS(SVG_NS, "line");
+        line.setAttribute("class", "att-line");
+        const w = attention[i]?.[j] ?? 0;
+        line.setAttribute("stroke-width", String(0.8 + w * 2.2));
+        line.setAttribute("stroke-dasharray", `${(4 + w * 8).toFixed(1)} 5`);
+        linesLayer.appendChild(line);
+        row.push(line);
+      }
+      state.lines.push(row);
+    }
+
+    const measure = () => {
+      const cRect = container.getBoundingClientRect();
+      if (cRect.width === 0 || cRect.height === 0) return;
+      svg.setAttribute("viewBox", `0 0 ${cRect.width} ${cRect.height}`);
+      svg.setAttribute("width", String(cRect.width));
+      svg.setAttribute("height", String(cRect.height));
+      state.geom = tokens.map((t) => {
+        const r = t.getBoundingClientRect();
+        return {
+          x: r.left - cRect.left + r.width / 2,
+          y: r.top - cRect.top + r.height / 2,
+          w: r.width,
+          h: r.height,
+        };
+      });
+      for (let i = 0; i < tokens.length; i++) {
+        const g = state.glows[i];
+        const c = state.geom[i];
+        if (!c) continue;
+        g.setAttribute("cx", String(c.x));
+        g.setAttribute("cy", String(c.y));
+        g.setAttribute("r", String(Math.max(c.w, c.h) * 0.55));
+      }
+    };
+
+    // Measure now and after fonts/animations settle
+    requestAnimationFrame(() => {
+      measure();
+      // Tokens animate in over ~600ms + max stagger (~720ms for 8 tokens) → settle by ~1400ms
+      setTimeout(measure, 1500);
+    });
+
+    const ro = "ResizeObserver" in window ? new ResizeObserver(measure) : null;
+    ro?.observe(container);
+    window.addEventListener("resize", measure, { passive: true });
+
+    const clear = () => {
+      for (let i = 0; i < tokens.length; i++) {
+        state.glows[i].classList.remove("is-on");
+        tokens[i].classList.remove("is-active", "is-related");
+        for (let j = 0; j < tokens.length; j++) {
+          state.lines[i][j]?.classList.remove("is-on");
+        }
+      }
+    };
+
+    const showFrom = (fromIdx: number) => {
+      clear();
+      const a = state.geom[fromIdx];
+      if (!a) return;
+      tokens[fromIdx].classList.add("is-active");
+      state.glows[fromIdx].classList.add("is-on");
+
+      const ai = state.attention[fromIdx] ?? [];
+      for (let j = 0; j < tokens.length; j++) {
+        if (j === fromIdx) continue;
+        const w = ai[j] ?? 0;
+        if (w < 0.25) continue;
+        const b = state.geom[j];
+        const line = state.lines[fromIdx][j];
+        if (!a || !b || !line) continue;
+        line.setAttribute("x1", a.x.toFixed(1));
+        line.setAttribute("y1", a.y.toFixed(1));
+        line.setAttribute("x2", b.x.toFixed(1));
+        line.setAttribute("y2", b.y.toFixed(1));
+        line.style.opacity = (0.35 + w * 0.55).toFixed(2);
+        line.classList.add("is-on");
+        tokens[j].classList.add("is-related");
+      }
+    };
+
+    tokens.forEach((t, i) => {
+      t.addEventListener("pointerenter", () => showFrom(i));
+      t.addEventListener("pointerleave", clear);
+      t.addEventListener("focus", () => showFrom(i));
+      t.addEventListener("blur", clear);
+      t.setAttribute("tabindex", "0");
+    });
+
+    // Auto-demo after the initial entrance: walk through accent tokens once.
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduced) {
+      const accentIdx: number[] = [];
+      tokens.forEach((t, i) => {
+        if (t.classList.contains("token--accent")) accentIdx.push(i);
+      });
+      if (accentIdx.length) {
+        let step = 0;
+        const tick = () => {
+          if (step >= accentIdx.length) {
+            setTimeout(clear, 600);
+            return;
+          }
+          showFrom(accentIdx[step]);
+          step++;
+          setTimeout(tick, 800);
+        };
+        setTimeout(tick, 1800);
+      }
+    }
+  }
+
+  function initAll() {
+    document.querySelectorAll<HTMLElement>("[data-token-stream]").forEach(initOne);
+  }
+
+  if (typeof window !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initAll);
+    } else {
+      initAll();
+    }
+    document.addEventListener("astro:page-load", initAll);
+  }
+</script>
