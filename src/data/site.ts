@@ -11,11 +11,13 @@ export const navItems = {
   en: [
     { label: "About", href: "/en/#about" },
     { label: "Blog", href: "/en/blog/" },
+    { label: "Atelier", href: "/en/atelier/" },
     { label: "Contact", href: "/en/contact/" }
   ],
   zh: [
     { label: "关于", href: "/zh/#about" },
     { label: "博客", href: "/zh/blog/" },
+    { label: "工坊", href: "/zh/atelier/" },
     { label: "联系", href: "/zh/contact/" }
   ]
 } as const;

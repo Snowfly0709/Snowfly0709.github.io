@@ -1,0 +1,244 @@
+---
+import { atelierItems } from "../data/atelier";
+
+interface Props {
+  lang: "en" | "zh";
+}
+
+const { lang } = Astro.props;
+
+const labels = {
+  title: lang === "en" ? "Atelier" : "工坊",
+  kicker: lang === "en" ? "WORKSHOP / 工坊" : "工坊 / WORKSHOP",
+  intro:
+    lang === "en"
+      ? "A workshop for small frontend experiments — interactive sketches, generative pieces, and short-lived prototypes. Each one runs in its own sandbox, separate from the typography and theme of this site."
+      : "存放一些自己做的前端小实验——可交互的速写、生成式作品、短命的雏形。每一件都跑在独立的沙盒里，与本站的字体与配色无关。",
+  empty:
+    lang === "en"
+      ? "No pieces yet. The first ones are coming soon."
+      : "尚无作品。第一批正在路上。",
+  emptyHint:
+    lang === "en"
+      ? "Drop a self-contained HTML folder under public/atelier/<slug>/ and register it in src/data/atelier.ts."
+      : "把自包含的 HTML 目录放到 public/atelier/<slug>/，并在 src/data/atelier.ts 中登记。"
+};
+
+const items = [...atelierItems].sort((a, b) => b.date.localeCompare(a.date));
+
+const dateFmt = (iso: string) => {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
+};
+---
+
+<section class="section atelier-page">
+  <div class="container atelier-shell">
+    <p class="atelier-kicker">{labels.kicker}</p>
+    <h1 class="section-title">{labels.title}</h1>
+    <p class="atelier-intro">{labels.intro}</p>
+
+    {items.length === 0 ? (
+      <div class="atelier-empty">
+        <p class="atelier-empty-line">{labels.empty}</p>
+        <p class="atelier-empty-hint">{labels.emptyHint}</p>
+      </div>
+    ) : (
+      <div class="atelier-list">
+        {items.map((item, i) => (
+          <a
+            class="atelier-card"
+            href={`/atelier/${item.slug}/`}
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="atelier-index" aria-hidden="true">
+              {String(items.length - i).padStart(2, "0")}
+            </span>
+            <div class="atelier-body">
+              <div class="atelier-card-head">
+                <h3 class="atelier-title">{item.title[lang]}</h3>
+                <span class="atelier-arrow" aria-hidden="true">↗</span>
+              </div>
+              <p class="atelier-desc">{item.description[lang]}</p>
+              <div class="atelier-meta">
+                <span class="atelier-date">{dateFmt(item.date)}</span>
+                {item.tags.length > 0 && (
+                  <span class="atelier-tags">
+                    {item.tags.map((tag) => (
+                      <span class="atelier-tag">{tag}</span>
+                    ))}
+                  </span>
+                )}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .atelier-kicker {
+    margin: 0 0 14px;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .atelier-intro {
+    margin: 0 0 40px;
+    max-width: 64ch;
+    color: var(--text-muted);
+    font-size: 1.06rem;
+    line-height: var(--lh-body);
+  }
+
+  :global(html[lang="zh"]) .atelier-intro { font-family: var(--font-cjk); }
+
+  .atelier-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  .atelier-card {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 20px;
+    align-items: start;
+    padding: 26px 28px;
+    border: 1px solid var(--line-soft);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: inherit;
+    transition: transform var(--dur-base) var(--ease-out),
+                border-color var(--dur-base) var(--ease-out),
+                background-color var(--dur-base) var(--ease-out);
+  }
+
+  .atelier-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--line);
+    background: var(--bg-elevated);
+  }
+
+  .atelier-index {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    padding-top: 6px;
+    border-top: 1px solid var(--accent);
+    align-self: start;
+  }
+
+  .atelier-body { min-width: 0; }
+
+  .atelier-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .atelier-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.4vw, 2rem);
+    font-weight: 480;
+    line-height: 1.16;
+    letter-spacing: -0.015em;
+    font-variation-settings: "opsz" 72;
+  }
+
+  :global(html[lang="zh"]) .atelier-title { font-family: var(--font-cjk); font-weight: 600; }
+
+  .atelier-arrow {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    color: var(--accent);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .atelier-card:hover .atelier-arrow {
+    transform: translate(3px, -3px);
+  }
+
+  .atelier-desc {
+    margin: 12px 0 16px;
+    color: var(--text-muted);
+    font-size: 1.04rem;
+    line-height: var(--lh-body);
+    font-family: var(--font-body);
+  }
+
+  :global(html[lang="zh"]) .atelier-desc { font-family: var(--font-cjk); }
+
+  .atelier-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text-faint);
+    letter-spacing: 0.02em;
+  }
+
+  .atelier-tags {
+    display: inline-flex;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  .atelier-tag { color: var(--text-muted); }
+  .atelier-tag:not(:last-child)::after {
+    content: "·";
+    margin: 0 8px;
+    color: var(--text-faint);
+  }
+
+  .atelier-empty {
+    padding: 72px 24px;
+    border: 1px dashed var(--line-soft);
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+
+  .atelier-empty-line {
+    margin: 0 0 10px;
+    font-family: var(--font-display);
+    font-size: 1.18rem;
+    color: var(--text-muted);
+    letter-spacing: 0.01em;
+  }
+
+  :global(html[lang="zh"]) .atelier-empty-line { font-family: var(--font-cjk); }
+
+  .atelier-empty-hint {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text-faint);
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 640px) {
+    .atelier-card {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .atelier-index {
+      border-top: none;
+      padding-top: 0;
+    }
+  }
+</style>
