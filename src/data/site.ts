@@ -48,7 +48,7 @@ export const aboutSections = {
     work: [
       {
         title: "AI Product Associate",
-        org: "KeyReply",
+        org: "KeyReply Pte. Ltd.",
         period: "04/2026 - Present",
         detail: ""
       },
@@ -75,6 +75,12 @@ export const aboutSections = {
       }
     ],
     projects: [
+      {
+        name: "MindGap · Claude Code Plugin",
+        period: "05/2026",
+        detail:
+          "A Claude Code plugin that measures where each turn's wall time actually goes — Claude wait, automated tools, or user-gated tools. Zero-dependency Node.js hooks log every UserPromptSubmit / PreToolUse / PostToolUse / Stop to JSONL; a paired skill aggregates per-turn timings on demand. Published to the Claude Code marketplace under MIT."
+      },
       {
         name: "AI Data Visualization Workflow Tool",
         period: "01/2026",
@@ -106,7 +112,7 @@ export const aboutSections = {
     work: [
       {
         title: "AI 产品助理",
-        org: "KeyReply",
+        org: "KeyReply Pte. Ltd.",
         period: "2026.04 - 至今",
         detail: ""
       },
@@ -133,6 +139,12 @@ export const aboutSections = {
       }
     ],
     projects: [
+      {
+        name: "MindGap · Claude Code 插件",
+        period: "2026.05",
+        detail:
+          "一个 Claude Code 插件，把每个 turn 的等待时长拆成三段：模型思考、自动化工具、需用户响应的工具。零依赖 Node.js 钩子将 UserPromptSubmit / PreToolUse / PostToolUse / Stop 四类事件落到 JSONL，配套的 skill 按需聚合并展示每个 turn 的发呆分布。已以 MIT 协议发布到 Claude Code 插件市场。"
+      },
       {
         name: "AI 数据可视化工作流工具",
         period: "2026.01",

@@ -39,7 +39,8 @@ export const attentionNodes: AttentionNode[] = [
   { id: "edu-ntu", labelEn: "Nanyang Technological University", labelZh: "南洋理工大学", group: "edu", aliases: ["NTU"] },
   { id: "edu-xjtu", labelEn: "Xi'an Jiaotong University", labelZh: "西安交通大学", group: "edu", aliases: ["XJTU"] },
 
-  // ----- Project (1) -----
+  // ----- Project (2) -----
+  { id: "proj-mindgap", labelEn: "MindGap", labelZh: "MindGap", group: "project", aliases: ["mindgap"] },
   { id: "proj-dataviz", labelEn: "AI Data Visualization Workflow Tool", labelZh: "AI 数据可视化工作流工具", group: "project" },
 
   // ----- Inline keywords (from body text) -----
@@ -100,6 +101,9 @@ export const attentionEdges: ReadonlyArray<readonly [string, string]> = [
   ["proj-dataviz", "workflow-design"],
   ["proj-dataviz", "coze-fastgpt"],
   ["proj-dataviz", "kw-lark"],
+  ["proj-mindgap", "product-management"],
+  ["proj-mindgap", "workflow-design"],
+  ["proj-mindgap", "typescript"],
 
   // ----- keyword ↔ skill -----
   ["kw-knn", "rag"],
