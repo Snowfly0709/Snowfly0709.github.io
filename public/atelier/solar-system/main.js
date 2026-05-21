@@ -55,6 +55,8 @@
     canvas.addEventListener('wheel', onWheel, { passive: false });
     canvas.addEventListener('click', onClick);
     canvas.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('touchstart', onTouchStart, { passive: true });
+    canvas.addEventListener('touchend', onTouchEnd, { passive: true });
     window.addEventListener('keydown', onKeyDown);
 
     lastNow = performance.now();
@@ -201,6 +203,11 @@
     const px = e.clientX - rect.left;
     const py = e.clientY - rect.top;
     const STATE = NS.scenes.STATE;
+    // In DETAIL, any click / tap exits back to overview (mobile-friendly).
+    if (scene.state === STATE.DETAIL) {
+      NS.scenes.dismissDetail(scene);
+      return;
+    }
     const overviewActive = scene.state === STATE.OVERVIEW || scene.state === STATE.ENTRY_ANIM;
     if (overviewActive) {
       // Return button has priority — it sits left of the explore button.
@@ -217,6 +224,29 @@
     const cx = Math.floor(px / cellW);
     const cy = Math.floor(py / cellH);
     NS.scenes.handleClick(scene, cx, cy, performance.now());
+  }
+
+  // Touch swipe fallback. Modern browsers synthesize a `click` for a clean tap
+  // so onClick handles short presses; this catches the case where a finger
+  // drags past the tap threshold and the click never fires.
+  let touchStartX = -1, touchStartY = -1;
+  function onTouchStart(e) {
+    if (e.touches.length !== 1) { touchStartY = -1; return; }
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }
+  function onTouchEnd(e) {
+    if (touchStartY < 0 || !scene) return;
+    const t = e.changedTouches && e.changedTouches[0];
+    if (!t) { touchStartY = -1; return; }
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+    const dist = Math.hypot(dx, dy);
+    touchStartY = -1;
+    // In DETAIL state, any swipe > 30 px dismisses back to overview.
+    if (scene.state === NS.scenes.STATE.DETAIL && dist > 30) {
+      NS.scenes.dismissDetail(scene);
+    }
   }
 
   function onMouseMove(e) {

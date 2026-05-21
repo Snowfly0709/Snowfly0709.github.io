@@ -400,7 +400,7 @@ window.SolarSys = window.SolarSys || {};
     title: 'SOLAR · 太阳系',
     subtitle: '一份点阵观测笔记',
     hint: 'WHEEL · ZOOM    CLICK · INSPECT',
-    detailHint: 'WHEEL OUT · RETURN',
+    detailHint: 'TAP · WHEEL · SWIPE  —  点击任意处返回',
     loading: 'LOADING'
   };
 

@@ -197,6 +197,12 @@ window.SolarSys = window.SolarSys || {};
     scene.transitionProgress = 0;
   }
 
+  // Public dismissal helper — usable by click, tap, swipe handlers in main.js
+  // (the existing wheel-out path inside handleWheel uses the same beginZoomOut).
+  function dismissDetail(scene) {
+    if (scene.state === STATE.DETAIL) beginZoomOut(scene);
+  }
+
   function pickBody(scene, cellX, cellY, currentTime) {
     const cols = scene.grid.cols, rows = scene.grid.rows;
     let best = null;
@@ -252,6 +258,7 @@ window.SolarSys = window.SolarSys || {};
 
   NS.scenes = {
     STATE, defaultScale,
-    makeScene, update, handleWheel, handleClick, updateHover
+    makeScene, update, handleWheel, handleClick, updateHover,
+    dismissDetail
   };
 })(window.SolarSys);
