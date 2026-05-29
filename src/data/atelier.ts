@@ -24,6 +24,16 @@ export interface AtelierItem {
  */
 export const atelierItems: readonly AtelierItem[] = [
   {
+    slug: "yongguang-hospital",
+    title: { en: "Yongguang Asylum", zh: "永光精神病院" },
+    description: {
+      en: "A browser-native ARG. Comb through emails, fake wikis, weibo threads, tabloid archives, and first-person scenes to unravel a 1996 cold case in the fictional city of Aihu.",
+      zh: "浏览器原生的 ARG 解谜。在博客后台、仿百科、仿微博、地方报刊存档与第一人称场景之间穿梭，追查 1996 年艾湖市的一桩悬案。"
+    },
+    date: "2026-05-29",
+    tags: ["game", "vue", "arg"]
+  },
+  {
     slug: "solar-system",
     title: { en: "ASCII Orrery", zh: "字符太阳系" },
     description: {
