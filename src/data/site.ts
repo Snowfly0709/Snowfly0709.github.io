@@ -47,10 +47,11 @@ export const aboutSections = {
       "Master's student in Cybersecurity at NTU Singapore, working at the intersection of AI, security, and product design. I translate technical capabilities into practical, user-oriented solutions — LLM applications, RAG architectures, and backend systems that emphasize reliability, scalability, and data privacy in sensitive domains.",
     work: [
       {
-        title: "AI Product Associate",
+        title: "AI Product Associate Intern",
         org: "KeyReply Pte. Ltd.",
         period: "04/2026 - Present",
-        detail: ""
+        detail:
+          "Translated an early-stage Behavioural CRM concept into a working AI product prototype by defining the PRD, designing customer profiling and propensity-to-buy workflows, and validating the system with 20K+ real insurance voicebot transcripts from AIA Singapore."
       },
       {
         title: "Researcher (Part-time)",
@@ -111,10 +112,11 @@ export const aboutSections = {
       "南洋理工大学网络安全硕士在读，专注于 AI、安全与产品设计的交叉领域。我擅长把技术能力转化为可落地的用户解决方案 —— 涵盖 LLM 应用、RAG 架构与后端系统，强调在敏感领域中的可靠性、可扩展性与数据隐私。",
     work: [
       {
-        title: "AI 产品助理",
+        title: "AI 产品助理（实习）",
         org: "KeyReply Pte. Ltd.",
         period: "2026.04 - 至今",
-        detail: ""
+        detail:
+          "将一个早期阶段的 Behavioural CRM 概念落地为可运行的 AI 产品原型——撰写 PRD，设计客户画像与购买倾向预测工作流，并基于 AIA Singapore 提供的 20,000+ 条真实保险 voicebot 通话记录完成系统验证。"
       },
       {
         title: "研究员（兼职）",
