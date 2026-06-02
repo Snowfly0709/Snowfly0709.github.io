@@ -51,7 +51,7 @@ export const aboutSections = {
         org: "KeyReply Pte. Ltd.",
         period: "04/2026 - Present",
         detail:
-          "Translated an early-stage Behavioural CRM concept into a working AI product prototype by defining the PRD, designing customer profiling and propensity-to-buy workflows, and validating the system with 20K+ real insurance voicebot transcripts from AIA Singapore."
+          "Delivered realtime voice AI product capabilities from concept to production, including Behavioural CRM prototypes validated on 20K+ insurance call transcripts, a Logicalis AI Showcase check-in app with voice interaction, and a black-box QA evidence system for healthcare voicebot reliability."
       },
       {
         title: "Researcher (Part-time)",
@@ -116,7 +116,7 @@ export const aboutSections = {
         org: "KeyReply Pte. Ltd.",
         period: "2026.04 - 至今",
         detail:
-          "将一个早期阶段的 Behavioural CRM 概念落地为可运行的 AI 产品原型——撰写 PRD，设计客户画像与购买倾向预测工作流，并基于 AIA Singapore 提供的 20,000+ 条真实保险 voicebot 通话记录完成系统验证。"
+          "将实时语音 AI 产品能力从概念推进至生产——包括基于 20,000+ 条保险通话记录验证的 Behavioural CRM 原型、为 Logicalis AI Showcase 打造的语音交互签到应用，以及面向医疗 voicebot 可靠性的黑盒 QA 取证系统。"
       },
       {
         title: "研究员（兼职）",
