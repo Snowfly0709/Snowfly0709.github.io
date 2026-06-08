@@ -37,6 +37,9 @@ const { lang, title = siteMeta.title, description = siteMeta.description } = Ast
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <ClientRouter />
 
+    {/* ElevenLabs Conversational AI widget loader — loaded once, deduped across view transitions */}
+    <script is:inline async type="text/javascript" src="https://unpkg.com/@elevenlabs/convai-widget-embed"></script>
+
     {/* FOUC-free theme bootstrap — runs synchronously on initial load AND after every view transition */}
     <script is:inline>
       (function () {
@@ -73,6 +76,9 @@ const { lang, title = siteMeta.title, description = siteMeta.description } = Ast
     </main>
 
     <Colophon lang={lang} />
+
+    {/* Floating voice-AI widget — persists across client-side navigation so it never flickers */}
+    <elevenlabs-convai agent-id="agent_3701ktk6j328fa1bvtkpyje8c96d" transition:persist="convai-widget"></elevenlabs-convai>
 
     {/* Motion primitives — run on initial load and after each view transition */}
     <script>
