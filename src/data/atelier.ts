@@ -24,6 +24,16 @@ export interface AtelierItem {
  */
 export const atelierItems: readonly AtelierItem[] = [
   {
+    slug: "voice-audition",
+    title: { en: "Voice Audition", zh: "声音甄选室" },
+    description: {
+      en: "A guided listening deck for picking the voice of an AI voicebot. Step through paired and ranked samples in a spectral, latent-space room — each one blooms a live waveform painted by frequency — and tell me which timbres sound most natural, approachable, and genuinely Singaporean.",
+      zh: "为一个 AI 语音助手挑选声音的引导式试听台。在一间频谱化的「潜空间」里逐张翻看配对与排序的样本——每段声音都会绽放一道按频率上色的实时波形——告诉我哪种音色听起来最自然、最亲切、最像真正的新加坡人。"
+    },
+    date: "2026-06-09",
+    tags: ["web-audio", "voice", "research"]
+  },
+  {
     slug: "yongguang-hospital",
     title: { en: "Yongguang Asylum", zh: "永光精神病院" },
     description: {
