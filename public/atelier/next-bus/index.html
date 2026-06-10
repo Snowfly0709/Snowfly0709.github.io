@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Next Bus · 下一班巴士</title>
+  <meta name="description" content="A live LED departure board for any Singapore bus stop — real-time arrivals from LTA DataMall, refreshed every 20 seconds." />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#08090b" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;600;700;900&family=Overpass:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Night-time street backdrop -->
+  <div class="night" aria-hidden="true">
+    <div class="streetglow"></div>
+    <div class="grain"></div>
+  </div>
+
+  <main class="scene">
+    <header class="masthead">
+      <h1 class="masthead-title">NEXT BUS<span class="masthead-slash" aria-hidden="true">/</span><span class="masthead-zh">下一班巴士</span></h1>
+    </header>
+
+    <!-- Stop picker console -->
+    <section class="console">
+      <div class="searchwrap">
+        <label class="search-label" for="search">CHANGE STOP</label>
+        <input id="search" class="search" type="search" autocomplete="off" spellcheck="false"
+               placeholder="stop code or name… e.g. 20251, Clementi"
+               aria-label="Search for a bus stop" role="combobox"
+               aria-expanded="false" aria-controls="results" aria-autocomplete="list" />
+        <ul class="results" id="results" role="listbox" hidden></ul>
+      </div>
+      <div class="recent" id="recent"></div>
+    </section>
+
+    <!-- The departure board -->
+    <section class="board" id="board" aria-live="polite">
+      <div class="board-top">
+        <div class="live" id="live-pill"><span class="live-dot"></span><span id="live-label">LIVE</span></div>
+        <div class="stopline">
+          <span class="stop-code" id="stop-code">·····</span>
+          <span class="stop-name" id="stop-name">CONNECTING…</span>
+          <span class="stop-road" id="stop-road"></span>
+        </div>
+        <div class="clock" id="clock" title="Singapore time">--:--:--</div>
+      </div>
+
+      <div class="rows" id="rows">
+        <div class="board-msg" id="board-msg">POWERING ON…</div>
+      </div>
+
+      <div class="board-bottom">
+        <div class="legend">
+          <span class="lg"><i class="lded l-sea"></i>seats</span>
+          <span class="lg"><i class="lded l-sda"></i>standing</span>
+          <span class="lg"><i class="lded l-lsd"></i>crowded</span>
+          <span class="lg lg-note">DBL double-deck · SCH timetable</span>
+        </div>
+        <div class="refresh">
+          <span id="updated">—</span>
+          <span class="sweep"><span class="sweep-fill" id="sweep"></span></span>
+        </div>
+      </div>
+
+      <div class="led-grid" aria-hidden="true"></div>
+      <div class="board-glass" aria-hidden="true"></div>
+    </section>
+
+    <!-- Map noticeboard: the map card stands on two posts like a street display -->
+    <section class="waypost" aria-label="Pick a stop from the map">
+      <div class="sign-alert" id="sign-alert" role="alert" hidden></div>
+      <div class="mapframe">
+        <div id="map" class="map" aria-label="Map of bus stops"></div>
+        <button class="locate-fab" id="locate" type="button" aria-label="Locate me · 定位" title="Locate me · 定位">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="6"/>
+            <circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+            <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+          </svg>
+        </button>
+        <div class="maphint" id="maphint" hidden>ZOOM IN TO SEE STOPS · 放大查看站点</div>
+      </div>
+      <div class="posts" aria-hidden="true">
+        <span class="post"></span>
+        <span class="post"></span>
+      </div>
+    </section>
+
+    <footer class="colophon">
+      <span>data · LTA DataMall via <a href="https://github.com/cheeaun/arrivelah" target="_blank" rel="noopener">arrivelah</a></span>
+      <span>stops · <a href="https://busrouter.sg" target="_blank" rel="noopener">busrouter.sg</a></span>
+      <span>map · © OpenStreetMap · © CARTO</span>
+    </footer>
+  </main>
+
+  <noscript>
+    <div class="noscript">This departure board needs JavaScript to fetch live arrivals.</div>
+  </noscript>
+
+  <script src="app.js"></script>
+</body>
+</html>

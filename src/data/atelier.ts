@@ -24,6 +24,16 @@ export interface AtelierItem {
  */
 export const atelierItems: readonly AtelierItem[] = [
   {
+    slug: "next-bus",
+    title: { en: "Next Bus", zh: "下一班巴士" },
+    description: {
+      en: "A live LED departure board for any Singapore bus stop. Search by code or name (fuzzy — \"block\" finds \"Blk\"), pick a stop off the night map, or one-tap locate to the stop nearest you — amber dot-matrix arrivals refreshed every 20 seconds from LTA DataMall.",
+      zh: "一块可查询全岛任意巴士站的 LED 实时到站屏。按代码或站名模糊搜索（打 block 也能搜到 Blk）、在夜色地图上点选站点，或一键定位到离你最近的站——琥珀色点阵班次每 20 秒从 LTA DataMall 刷新一次。"
+    },
+    date: "2026-06-10",
+    tags: ["live-data", "transit", "led"]
+  },
+  {
     slug: "voice-audition",
     title: { en: "Voice Audition", zh: "声音甄选室" },
     description: {
