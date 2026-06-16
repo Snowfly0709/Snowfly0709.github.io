@@ -3,12 +3,16 @@
 // - Vertical position == scroll percentage
 // - Rotates 360deg per full scroll
 // - Pulses 200ms when crossing a heading
+// Re-initialises on astro:page-load so it keeps working across ClientRouter
+// (View Transitions) navigations, not just the first full page load.
 ---
 <div class="paragraph-mark" data-paragraph-mark aria-hidden="true">¶</div>
 
 <script>
-  const mark = document.querySelector<HTMLElement>("[data-paragraph-mark]");
-  if (mark) {
+  function initParagraphMark() {
+    const mark = document.querySelector("[data-paragraph-mark]");
+    if (!mark) return;
+
     const baseTop = 22;
     const maxTop = () => window.innerHeight - 60;
 
@@ -21,18 +25,29 @@
       mark.style.transform = `translate3d(0, ${top - baseTop}px, 0) rotate(${rot}deg)`;
     };
 
-    let raf = 0;
-    const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => { raf = 0; update(); });
-    };
+    // Always point the (single) scroll/resize listener at the CURRENT page's mark.
+    window.__pmUpdate = update;
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", update, { passive: true });
+    if (!window.__pmBound) {
+      window.__pmBound = true;
+      let raf = 0;
+      const onScroll = () => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          if (window.__pmUpdate) window.__pmUpdate();
+        });
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", () => window.__pmUpdate && window.__pmUpdate(), {
+        passive: true
+      });
+    }
+
     update();
 
-    // Pulse when a heading enters the top quarter of the viewport
-    const headings = document.querySelectorAll<HTMLElement>("main h1, main h2, main h3");
+    // Pulse when a heading enters the top quarter of the viewport (re-observed per page).
+    const headings = document.querySelectorAll("main h1, main h2, main h3");
     const obs = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -46,4 +61,8 @@
     );
     headings.forEach((h) => obs.observe(h));
   }
+
+  document.addEventListener("astro:page-load", initParagraphMark);
+  if (document.readyState !== "loading") initParagraphMark();
+  else document.addEventListener("DOMContentLoaded", initParagraphMark);
 </script>
