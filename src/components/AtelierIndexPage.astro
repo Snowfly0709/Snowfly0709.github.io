@@ -1,90 +1,234 @@
 ---
-import { atelierItems } from "../data/atelier";
+import { atelierItems, registers, type Register, type AtelierItem } from "../data/atelier";
+import SectionNumber from "./SectionNumber.astro";
+import DimensionLine from "./DimensionLine.astro";
 
 interface Props {
   lang: "en" | "zh";
 }
 
 const { lang } = Astro.props;
+const zh = lang === "zh";
 
 const labels = {
-  title: lang === "en" ? "Atelier" : "工坊",
-  kicker: lang === "en" ? "WORKSHOP / 工坊" : "工坊 / WORKSHOP",
-  intro:
-    lang === "en"
-      ? "A workshop for small frontend experiments — interactive sketches, generative pieces, and short-lived prototypes. Each one runs in its own sandbox, separate from the typography and theme of this site."
-      : "存放一些自己做的前端小实验——可交互的速写、生成式作品、短命的雏形。每一件都跑在独立的沙盒里，与本站的字体与配色无关。",
-  empty:
-    lang === "en"
-      ? "No pieces yet. The first ones are coming soon."
-      : "尚无作品。第一批正在路上。",
-  emptyHint:
-    lang === "en"
-      ? "Drop a self-contained HTML folder under public/atelier/<slug>/ and register it in src/data/atelier.ts."
-      : "把自包含的 HTML 目录放到 public/atelier/<slug>/，并在 src/data/atelier.ts 中登记。"
+  kicker: zh ? "图版墙 · THE PLATE WALL" : "THE PLATE WALL · 图版墙",
+  title: zh ? "工坊" : "Atelier",
+  intro: zh
+    ? "小作品的陈列墙——每件作为一张编号图版悬挂于此，按工具 / 创想 / 研究分带。每件都跑在独立的沙盒里，与本站的字体与配色无关。"
+    : "A wall of small pieces — each hung as a numbered plate and sorted into Tools / Imaginings / Research. Every piece runs in its own sandbox, separate from the typography and theme of this site.",
+  search: zh ? "检索图版…" : "Find a plate…",
+  searchAria: zh ? "检索图版" : "Search the plate wall",
+  indexAria: zh ? "图版目录" : "Catalogue of plates",
+  proof: "PROOF · 待制",
+  plate: zh ? "图版" : "PLATE",
+  noMatch: zh ? "无此图版" : "No such plate",
+  noMatchHint: zh ? "检查拼写，或清空检索。" : "Check the spelling, or clear the stick."
 };
 
-const items = [...atelierItems].sort((a, b) => b.date.localeCompare(a.date));
+// Stable, build-time plate numbers — oldest piece = 01, never recomputed on filter.
+const byDateAsc = [...atelierItems].sort((a, b) => a.date.localeCompare(b.date));
+const plateNo = new Map<string, number>();
+byDateAsc.forEach((it, i) => plateNo.set(it.slug, i + 1));
+const pno = (slug: string) => String(plateNo.get(slug) ?? 0).padStart(2, "0");
+
+// Group by register in hang order; date-DESC within; drop empty registers (incl. misc).
+const grouped = registers
+  .map((reg) => ({
+    reg,
+    items: atelierItems
+      .filter((it) => (it.category ?? "misc") === reg.id)
+      .sort((a, b) => b.date.localeCompare(a.date))
+  }))
+  .filter((g) => g.items.length > 0);
+
+const total = atelierItems.length;
+
+const regName = (r: Register) => (zh ? r.labelZh : r.labelEn);
+const regAlt = (r: Register) => (zh ? r.labelEn : r.labelZh);
 
 const dateFmt = (iso: string) => {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", {
+  return d.toLocaleDateString(zh ? "zh-CN" : "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric"
   });
 };
+
+const statusText = (s?: "live" | "sandbox") =>
+  s === "live" ? (zh ? "实时" : "LIVE") : zh ? "沙盒" : "SANDBOX";
+
+const haystack = (it: AtelierItem) =>
+  [
+    it.title.en,
+    it.title.zh,
+    it.tagline?.en,
+    it.tagline?.zh,
+    it.description.en,
+    it.description.zh,
+    ...it.tags
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+const headerAnnotation = zh
+  ? `${total} 件图版 · ${grouped.length} 带 · 陈列于工坊`
+  : `${total} plates · ${grouped.length} registers · hung in the atelier`;
+
+const plateCountAnnotation = (n: number) =>
+  zh ? `${n} 件` : `${n} ${n === 1 ? "plate" : "plates"}`;
+
+// Running index for staggered entrance.
+let order = 0;
+const plateStyle = (it: AtelierItem) => {
+  const parts: string[] = [];
+  if (it.aspect === "landscape") parts.push("--plate-aspect:4 / 3");
+  if (it.posterTint) parts.push(`--proof-tint:${it.posterTint}`);
+  parts.push(`--enter-delay:${order++ * 60}ms`);
+  return parts.join(";");
+};
 ---
 
 <section class="section atelier-page">
   <div class="container atelier-shell">
-    <p class="atelier-kicker">{labels.kicker}</p>
-    <h1 class="section-title">{labels.title}</h1>
-    <p class="atelier-intro">{labels.intro}</p>
+    <header class="atelier-head">
+      <p class="atelier-kicker">{labels.kicker}</p>
+      <h1 class="section-title">{labels.title}</h1>
+      <p class="atelier-intro">{labels.intro}</p>
+      <DimensionLine annotation={headerAnnotation} />
+    </header>
 
-    {items.length === 0 ? (
-      <div class="atelier-empty">
-        <p class="atelier-empty-line">{labels.empty}</p>
-        <p class="atelier-empty-hint">{labels.emptyHint}</p>
-      </div>
-    ) : (
-      <div class="atelier-list">
-        {items.map((item, i) => (
-          <a
-            class="atelier-card"
-            href={`/atelier/${item.slug}/`}
-            target="_blank"
-            rel="noopener"
-          >
-            <span class="atelier-index" aria-hidden="true">
-              {String(items.length - i).padStart(2, "0")}
-            </span>
-            <div class="atelier-body">
-              <div class="atelier-card-head">
-                <h3 class="atelier-title">{item.title[lang]}</h3>
-                <span class="atelier-arrow" aria-hidden="true">↗</span>
-              </div>
-              <p class="atelier-desc">{item.description[lang]}</p>
-              <div class="atelier-meta">
-                <span class="atelier-date">{dateFmt(item.date)}</span>
-                {item.tags.length > 0 && (
-                  <span class="atelier-tags">
-                    {item.tags.map((tag) => (
-                      <span class="atelier-tag">{tag}</span>
-                    ))}
-                  </span>
-                )}
+    <div class="atelier-body">
+      <aside class="atelier-rail" data-rail>
+        <div class="rail-stick">
+          <label class="stick">
+            <span class="stick-mark" aria-hidden="true">¶</span>
+            <input
+              class="stick-input"
+              type="search"
+              data-search
+              placeholder={labels.search}
+              aria-label={labels.searchAria}
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </label>
+          <p class="rail-count" data-count aria-live="polite">{total} / {total}</p>
+        </div>
+
+        <nav class="rail-index" aria-label={labels.indexAria}>
+          {grouped.map((g) => (
+            <div class="rail-group" data-rail-group={g.reg.id}>
+              <a class="rail-group-head" href={`#reg-${g.reg.id}`}>
+                <span>{regName(g.reg)}</span>
+                <span class="rail-group-count">{g.items.length}</span>
+              </a>
+              <ul class="rail-rows">
+                {g.items.map((it) => (
+                  <li>
+                    <a class="rail-row" href={`#plate-${it.slug}`} data-rail-row data-slug={it.slug}>
+                      <span class="rail-no">{pno(it.slug)}</span>
+                      <span class="rail-title">{it.title[lang]}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      </aside>
+
+      <div class="atelier-wall" data-wall>
+        {grouped.map((g, gi) => (
+          <section class="register" id={`reg-${g.reg.id}`} data-register={g.reg.id}>
+            <div class="register-head">
+              {zh && <span class="register-vert" aria-hidden="true">{g.reg.labelZh}</span>}
+              <div class="register-head-main">
+                <SectionNumber index={gi + 1} lang={lang} label={`${regName(g.reg)} · ${regAlt(g.reg)}`} />
+                <DimensionLine annotation={plateCountAnnotation(g.items.length)} />
               </div>
             </div>
-          </a>
+
+            <div class="register-plates">
+              {g.items.map((it) => (
+                <a
+                  class:list={["plate", it.scale === "large" && "plate--large", !it.poster && "plate--proof"]}
+                  id={`plate-${it.slug}`}
+                  href={`/atelier/${it.slug}/`}
+                  target="_blank"
+                  rel="noopener"
+                  data-plate
+                  data-slug={it.slug}
+                  data-cat={g.reg.id}
+                  data-haystack={haystack(it)}
+                  style={plateStyle(it)}
+                >
+                  <div class="plate-frame">
+                    <span class="plate-no" aria-hidden="true">{pno(it.slug)}</span>
+                    <span class="regmark regmark--tl" aria-hidden="true"></span>
+                    <span class="regmark regmark--tr" aria-hidden="true"></span>
+                    <span class="regmark regmark--bl" aria-hidden="true"></span>
+                    <span class="regmark regmark--br" aria-hidden="true"></span>
+                    <div class="plate-art">
+                      {it.poster ? (
+                        <img src={it.poster.src} alt={it.poster.alt[lang]} loading="lazy" />
+                      ) : (
+                        <div class="proof">
+                          <span class="proof-kicker">⌗ {labels.plate}</span>
+                          <span class="proof-num">{pno(it.slug)}</span>
+                          <span class="proof-medium">{regName(g.reg)}</span>
+                          <span class="proof-stamp">{labels.proof}</span>
+                          <span class="proof-inkbar" aria-hidden="true">
+                            <i></i><i></i><i></i><i></i>
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div class="plate-caption">
+                    <span class="plate-arrow" aria-hidden="true">↗</span>
+                    <h3 class="plate-title">{it.title[lang]}</h3>
+                    {it.tagline && <p class="plate-tagline">{it.tagline[lang]}</p>}
+                    <div class="plate-meta">
+                      <span class="plate-medium">{regName(g.reg)}</span>
+                      <span class="plate-date">{dateFmt(it.date)}</span>
+                      {it.status && (
+                        <span class:list={["plate-status", it.status === "live" && "is-live"]}>
+                          {statusText(it.status)}
+                        </span>
+                      )}
+                    </div>
+                    {it.tags.length > 0 && (
+                      <div class="plate-tags">
+                        {it.tags.map((tag) => (
+                          <span class="plate-tag">{tag}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
         ))}
+
+        <div class="atelier-empty" data-empty hidden>
+          <p class="atelier-empty-line">{labels.noMatch}</p>
+          <p class="atelier-empty-hint">{labels.noMatchHint}</p>
+        </div>
       </div>
-    )}
+    </div>
   </div>
 </section>
 
 <style>
+  .is-hidden { display: none !important; }
+
+  /* ---- header ---- */
+  .atelier-head { margin-bottom: 44px; }
   .atelier-kicker {
     margin: 0 0 14px;
     font-family: var(--font-mono);
@@ -93,152 +237,576 @@ const dateFmt = (iso: string) => {
     color: var(--text-muted);
     text-transform: uppercase;
   }
-
   .atelier-intro {
-    margin: 0 0 40px;
-    max-width: 64ch;
+    margin: 0 0 26px;
+    max-width: 62ch;
     color: var(--text-muted);
     font-size: 1.06rem;
     line-height: var(--lh-body);
   }
-
   :global(html[lang="zh"]) .atelier-intro { font-family: var(--font-cjk); }
 
-  .atelier-list {
+  /* ---- two-column shell ---- */
+  .atelier-body {
     display: grid;
-    gap: 16px;
-  }
-
-  .atelier-card {
-    display: grid;
-    grid-template-columns: 56px 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 40px;
     align-items: start;
-    padding: 26px 28px;
+  }
+  @media (min-width: 981px) {
+    .atelier-body { grid-template-columns: minmax(0, 1fr) 264px; gap: 48px; }
+    .atelier-wall { grid-column: 1; grid-row: 1; }
+    .atelier-rail {
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 96px;
+      align-self: start;
+    }
+  }
+
+  /* ---- catalogue rail (desktop) ---- */
+  .rail-stick { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .stick {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 8px 12px;
     border: 1px solid var(--line-soft);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     background: var(--surface);
-    color: inherit;
-    transition: transform var(--dur-base) var(--ease-out),
-                border-color var(--dur-base) var(--ease-out),
-                background-color var(--dur-base) var(--ease-out);
+    transition: border-color var(--dur-base) var(--ease-out);
   }
-
-  .atelier-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--line);
-    background: var(--bg-elevated);
-  }
-
-  .atelier-index {
+  .stick:focus-within { border-color: var(--accent); }
+  .stick-mark { font-family: var(--font-mono); color: var(--accent); font-size: 0.9rem; }
+  .stick-input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
     font-family: var(--font-mono);
-    font-size: 0.82rem;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    padding-top: 6px;
-    border-top: 1px solid var(--accent);
-    align-self: start;
+    font-size: 0.86rem;
+    letter-spacing: 0.01em;
+    caret-color: var(--accent);
+  }
+  .stick-input:focus { outline: none; }
+  .stick-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+  .rail-count {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--text-faint);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
 
-  .atelier-body { min-width: 0; }
-
-  .atelier-card-head {
+  .rail-group { margin-bottom: 16px; }
+  .rail-group-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    gap: 12px;
-  }
-
-  .atelier-title {
-    margin: 0;
-    font-family: var(--font-display);
-    font-size: clamp(1.4rem, 2.4vw, 2rem);
-    font-weight: 480;
-    line-height: 1.16;
-    letter-spacing: -0.015em;
-    font-variation-settings: "opsz" 72;
-  }
-
-  :global(html[lang="zh"]) .atelier-title { font-family: var(--font-cjk); font-weight: 600; }
-
-  .atelier-arrow {
+    gap: 8px;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--line-soft);
     font-family: var(--font-mono);
-    font-size: 1.1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .rail-group-head:hover { color: var(--accent); }
+  :global(html[lang="zh"]) .rail-group-head { letter-spacing: 0.08em; }
+  .rail-group-count { color: var(--text-faint); }
+  .rail-rows { list-style: none; margin: 0; padding: 0; }
+  .rail-row {
+    display: flex;
+    gap: 9px;
+    align-items: baseline;
+    padding: 3px 0 3px 9px;
+    margin-left: -10px;
+    border-left: 1px solid transparent;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.86rem;
+    transition: color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  .rail-row:hover,
+  .rail-row.is-active { color: var(--accent); border-left-color: var(--accent); }
+  .rail-no {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  :global(html[lang="zh"]) .rail-title { font-family: var(--font-cjk); }
+
+  /* ---- catalogue rail (mobile: sticky jump-bar above the wall) ---- */
+  @media (max-width: 980px) {
+    .atelier-rail {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(8px);
+      margin: 0 calc(-1 * var(--gutter, 24px));
+      padding: 12px var(--gutter, 24px);
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .rail-stick { margin-bottom: 10px; }
+    .rail-index { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+    .rail-index::-webkit-scrollbar { display: none; }
+    .rail-group { margin: 0; flex: 0 0 auto; }
+    .rail-group-head {
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      padding: 6px 12px;
+      margin: 0;
+    }
+    .rail-rows { display: none; }
+  }
+
+  /* ---- wall + registers ---- */
+  .atelier-wall { min-width: 0; }
+  .register { scroll-margin-top: 96px; }
+  .register + .register { margin-top: 60px; }
+  .register-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .register-head-main { flex: 1; min-width: 0; }
+  .register-vert { display: none; }
+  @media (min-width: 981px) {
+    :global(html[lang="zh"]) .register-vert {
+      display: inline-block;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      font-family: var(--font-cjk);
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      padding-top: 2px;
+    }
+  }
+
+  .register-plates {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px 28px;
+  }
+  @media (max-width: 700px) {
+    .register-plates { grid-template-columns: 1fr; }
+  }
+
+  /* ---- plate ---- */
+  .plate {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    color: inherit;
+    text-decoration: none;
+    scroll-margin-top: 96px;
+  }
+  .plate--large { grid-column: span 2; }
+  @media (max-width: 700px) { .plate--large { grid-column: auto; } }
+
+  .plate-frame { position: relative; }
+  .plate-art {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    aspect-ratio: var(--plate-aspect, 4 / 5);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--bg-elevated);
+    box-shadow: inset 0 0 0 5px var(--surface), inset 0 0 0 6px var(--line-soft);
+    transition: transform var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out);
+  }
+  .plate--large .plate-art { aspect-ratio: 16 / 9; }
+  .plate-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .plate:hover .plate-art,
+  .plate:focus-visible .plate-art {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 5px var(--surface), inset 0 0 0 6px var(--accent),
+      0 12px 26px -14px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Dark mode: resting (non-selected) frame goes near-black so only the image
+     reads; hover still lifts to a cinnabar frame (higher specificity wins). */
+  :global([data-theme="dark"]) .plate-art {
+    border-color: var(--bg-sunken);
+    box-shadow: inset 0 0 0 5px var(--bg-sunken), inset 0 0 0 6px var(--bg-sunken);
+  }
+  .plate:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 5px;
+    border-radius: var(--radius-sm);
+  }
+
+  .plate-no {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 3;
+    padding: 2px 6px;
+    background: var(--surface);
+    border-top: 1px solid var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* registration / set-up marks at the plate corners */
+  .regmark {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    z-index: 1;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+  .regmark::before,
+  .regmark::after { content: ""; position: absolute; background: var(--accent); }
+  .regmark::before { left: 50%; top: -4px; bottom: -4px; width: 1px; transform: translateX(-50%); }
+  .regmark::after { top: 50%; left: -4px; right: -4px; height: 1px; transform: translateY(-50%); }
+  .regmark--tl { top: -6px; left: -6px; }
+  .regmark--tr { top: -6px; right: -6px; }
+  .regmark--bl { bottom: -6px; left: -6px; }
+  .regmark--br { bottom: -6px; right: -6px; }
+  .plate--proof .regmark { opacity: 0.42; }
+  .plate:hover .regmark,
+  .plate:focus-visible .regmark,
+  .plate.is-sole .regmark { opacity: 0.9; }
+
+  /* ---- proof-sheet placeholder ---- */
+  .proof {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background:
+      radial-gradient(circle at 30% 20%, var(--proof-tint, transparent) 0, transparent 60%),
+      var(--bg-elevated);
+  }
+  .proof-kicker {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .proof-num {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(3rem, 11vw, 6rem);
+    line-height: 1;
+    color: var(--line-faint);
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: "opsz" 144;
+  }
+  .proof-medium {
+    font-size: 0.86rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  :global(html[lang="zh"]) .proof-medium { font-family: var(--font-cjk); letter-spacing: 0.3em; }
+  .proof-stamp {
+    position: absolute;
+    bottom: 30px;
+    transform: rotate(-6deg);
+    padding: 3px 9px;
+    border: 1.5px solid var(--accent);
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    opacity: 0.85;
+  }
+  .proof-inkbar { position: absolute; bottom: 10px; left: 10px; display: flex; }
+  .proof-inkbar i { width: 18px; height: 6px; display: block; }
+  .proof-inkbar i:nth-child(1) { background: var(--text); }
+  .proof-inkbar i:nth-child(2) { background: var(--accent); }
+  .proof-inkbar i:nth-child(3) { background: var(--bg-sunken); }
+  .proof-inkbar i:nth-child(4) { background: #c9a23f; }
+
+  /* ---- caption ---- */
+  .plate-caption { position: relative; padding: 14px 2px 0; }
+  .plate-arrow {
+    position: absolute;
+    top: 14px;
+    right: 2px;
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
     color: var(--accent);
     transition: transform var(--dur-base) var(--ease-out);
   }
-
-  .atelier-card:hover .atelier-arrow {
-    transform: translate(3px, -3px);
+  .plate:hover .plate-arrow { transform: translate(3px, -3px); }
+  .plate-title {
+    margin: 0;
+    padding-right: 24px;
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 1.9vw, 1.55rem);
+    font-weight: 500;
+    line-height: 1.16;
+    letter-spacing: -0.012em;
+    font-variation-settings: "opsz" 60;
   }
-
-  .atelier-desc {
-    margin: 12px 0 16px;
+  :global(html[lang="zh"]) .plate-title { font-family: var(--font-cjk); font-weight: 600; }
+  .plate-tagline {
+    margin: 7px 0 11px;
     color: var(--text-muted);
-    font-size: 1.04rem;
-    line-height: var(--lh-body);
+    font-size: 0.98rem;
+    line-height: 1.5;
     font-family: var(--font-body);
   }
-
-  :global(html[lang="zh"]) .atelier-desc { font-family: var(--font-cjk); }
-
-  .atelier-meta {
+  :global(html[lang="zh"]) .plate-tagline { font-family: var(--font-cjk); }
+  .plate-meta {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 12px;
     font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-size: 0.74rem;
     color: var(--text-faint);
     letter-spacing: 0.02em;
   }
-
-  .atelier-tags {
-    display: inline-flex;
-    gap: 0;
-    flex-wrap: wrap;
+  .plate-medium { color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; }
+  .plate-date { font-variant-numeric: tabular-nums; }
+  .plate-status {
+    padding: 1px 6px;
+    border: 1px solid var(--line-soft);
+    border-radius: 2px;
+    letter-spacing: 0.12em;
   }
-
-  .atelier-tag { color: var(--text-muted); }
-  .atelier-tag:not(:last-child)::after {
+  .plate-status.is-live { color: var(--accent); border-color: var(--accent); }
+  .plate-tags {
+    margin-top: 9px;
+    display: flex;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+  .plate-tag:not(:last-child)::after {
     content: "·";
-    margin: 0 8px;
+    margin: 0 7px;
     color: var(--text-faint);
   }
 
+  /* ---- empty / zero-result state ---- */
   .atelier-empty {
-    padding: 72px 24px;
+    padding: 64px 24px;
     border: 1px dashed var(--line-soft);
     border-radius: var(--radius-md);
     text-align: center;
   }
-
   .atelier-empty-line {
     margin: 0 0 10px;
     font-family: var(--font-display);
-    font-size: 1.18rem;
+    font-size: 1.2rem;
     color: var(--text-muted);
     letter-spacing: 0.01em;
   }
-
   :global(html[lang="zh"]) .atelier-empty-line { font-family: var(--font-cjk); }
-
   .atelier-empty-hint {
     margin: 0;
     font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: var(--text-faint);
     letter-spacing: 0.04em;
   }
 
-  @media (max-width: 640px) {
-    .atelier-card {
-      grid-template-columns: 1fr;
-      gap: 12px;
+  /* ---- entrance + jump highlight ---- */
+  @media (prefers-reduced-motion: no-preference) {
+    .plate {
+      animation: plate-hang var(--dur-slow) var(--ease-out-expo) both;
+      animation-delay: var(--enter-delay, 0ms);
     }
-    .atelier-index {
-      border-top: none;
-      padding-top: 0;
+    @keyframes plate-hang {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: none; }
+    }
+    .plate.is-flash .plate-art { animation: plate-flash 1.1s var(--ease-out); }
+    @keyframes plate-flash {
+      0%, 100% { box-shadow: inset 0 0 0 5px var(--surface), inset 0 0 0 6px var(--line-soft); }
+      30% {
+        box-shadow: inset 0 0 0 5px var(--surface), inset 0 0 0 6px var(--accent),
+          0 0 0 4px var(--accent-soft);
+      }
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plate-art,
+    .plate-arrow,
+    .regmark,
+    .rail-row,
+    .stick { transition: none; }
+    .plate:hover .plate-art,
+    .plate:focus-visible .plate-art { transform: none; }
+  }
 </style>
+
+<script>
+  function initAtelier() {
+    const wall = document.querySelector("[data-wall]");
+    if (!wall) return;
+
+    const search = document.querySelector("[data-search]");
+    const countEl = document.querySelector("[data-count]");
+    const emptyEl = document.querySelector("[data-empty]");
+    const plates = Array.from(document.querySelectorAll("[data-plate]"));
+    const registerEls = Array.from(document.querySelectorAll("[data-register]"));
+    const railRows = Array.from(document.querySelectorAll("[data-rail-row]"));
+    const railGroups = Array.from(document.querySelectorAll("[data-rail-group]"));
+    const total = plates.length;
+
+    function apply() {
+      const q = (search && search.value ? search.value : "").trim().toLowerCase();
+      const match = {};
+      let visible = 0;
+
+      for (const p of plates) {
+        const hay = p.getAttribute("data-haystack") || "";
+        const show = q === "" || hay.indexOf(q) !== -1;
+        p.classList.toggle("is-hidden", !show);
+        p.classList.remove("is-sole");
+        match[p.getAttribute("data-slug")] = show;
+        if (show) visible++;
+      }
+
+      for (const reg of registerEls) {
+        const any = Array.from(reg.querySelectorAll("[data-plate]")).some(
+          (p) => !p.classList.contains("is-hidden")
+        );
+        reg.classList.toggle("is-hidden", !any);
+      }
+
+      for (const row of railRows) {
+        row.classList.toggle("is-hidden", !match[row.getAttribute("data-slug")]);
+      }
+      for (const g of railGroups) {
+        const any = Array.from(g.querySelectorAll("[data-rail-row]")).some(
+          (r) => !r.classList.contains("is-hidden")
+        );
+        g.classList.toggle("is-hidden", !any);
+      }
+
+      if (q !== "" && visible === 1) {
+        const sole = plates.find((p) => !p.classList.contains("is-hidden"));
+        if (sole) sole.classList.add("is-sole");
+      }
+
+      if (countEl) countEl.textContent = (q === "" ? total : visible) + " / " + total;
+      if (emptyEl) emptyEl.hidden = visible !== 0;
+    }
+
+    if (search && !search.dataset.bound) {
+      search.dataset.bound = "1";
+      search.addEventListener("input", apply);
+      search.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const vis = plates.filter((p) => !p.classList.contains("is-hidden"));
+          if (vis.length === 1) {
+            const href = vis[0].getAttribute("href");
+            if (href) window.open(href, "_blank", "noopener");
+          }
+        } else if (e.key === "Escape" && search.value) {
+          search.value = "";
+          apply();
+        }
+      });
+    }
+
+    // Quick controlled slide when a rail entry is clicked (instead of an instant hash jump).
+    const rail = document.querySelector("[data-rail]");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const smoothScrollTo = (targetEl, offset, duration) => {
+      const startY = window.scrollY;
+      const destY = Math.max(0, targetEl.getBoundingClientRect().top + startY - offset);
+      const dist = destY - startY;
+      if (Math.abs(dist) < 2) return;
+      if (reduceMotion.matches || duration <= 0) {
+        window.scrollTo(0, destY);
+        return;
+      }
+      const startT = performance.now();
+      const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+      const frame = (now) => {
+        const p = Math.min(1, (now - startT) / duration);
+        window.scrollTo(0, startY + dist * ease(p));
+        if (p < 1) requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    };
+
+    if (rail && !rail.dataset.scrollBound) {
+      rail.dataset.scrollBound = "1";
+      rail.addEventListener("click", (e) => {
+        const link = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+        if (!link || !rail.contains(link)) return;
+        const id = decodeURIComponent((link.getAttribute("href") || "").slice(1));
+        if (!id) return;
+        const target = document.getElementById(id);
+        if (!target) return;
+        e.preventDefault();
+        smoothScrollTo(target, 96, 420);
+        if (history.replaceState) history.replaceState(null, "", "#" + id);
+        if (id.indexOf("plate-") === 0) {
+          target.classList.add("is-flash");
+          setTimeout(() => target.classList.remove("is-flash"), 1200);
+        }
+      });
+    }
+
+    apply();
+  }
+
+  if (!window.__atelierSlash) {
+    window.__atelierSlash = true;
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "/") return;
+      const ae = document.activeElement;
+      const tag = ae && ae.tagName ? ae.tagName.toLowerCase() : "";
+      if (tag === "input" || tag === "textarea" || (ae && ae.isContentEditable)) return;
+      const s = document.querySelector("[data-search]");
+      if (s) {
+        e.preventDefault();
+        s.focus();
+      }
+    });
+  }
+
+  document.addEventListener("astro:page-load", initAtelier);
+  if (document.readyState !== "loading") initAtelier();
+  else document.addEventListener("DOMContentLoaded", initAtelier);
+</script>
