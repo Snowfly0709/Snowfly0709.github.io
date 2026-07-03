@@ -1,0 +1,28 @@
+# Normalize line endings: check out with the platform's native EOL,
+# store LF in the repository. Stops the recurring "LF will be replaced
+# by CRLF" warnings when working on Windows.
+* text=auto
+
+# Explicitly treat web source as text (LF in repo).
+*.html  text
+*.css   text
+*.js    text
+*.json  text
+*.svg   text
+*.md    text
+*.yml   text
+*.yaml  text
+
+# Binary assets — never touch line endings.
+*.mp3   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.pdf   binary
