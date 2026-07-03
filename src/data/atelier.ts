@@ -74,29 +74,6 @@ export const atelierItems: readonly AtelierItem[] = [
     }
   },
   {
-    slug: "voice-audition",
-    title: { en: "Voice Audition", zh: "声音甄选室" },
-    tagline: {
-      en: "A blind listening deck for choosing an AI voice.",
-      zh: "盲选 AI 语音音色的引导式试听台。"
-    },
-    description: {
-      en: "A guided listening deck for picking the voice of an AI voicebot. Step through paired and ranked samples in a spectral, latent-space room — each one blooms a live waveform painted by frequency — and tell me which timbres sound most natural, approachable, and genuinely Singaporean.",
-      zh: "为一个 AI 语音助手挑选声音的引导式试听台。在一间频谱化的「潜空间」里逐张翻看配对与排序的样本——每段声音都会绽放一道按频率上色的实时波形——告诉我哪种音色听起来最自然、最亲切、最像真正的新加坡人。"
-    },
-    date: "2026-06-09",
-    tags: ["web-audio", "voice", "research"],
-    category: "research",
-    status: "sandbox",
-    poster: {
-      src: "/atelier/voice-audition/poster.webp",
-      alt: {
-        en: "Impressionist oil painting of glowing magenta-to-cyan columns of sound rising in a dark chamber.",
-        zh: "印象派油画：幽暗厅室中升起的洋红到青色声谱光柱。"
-      }
-    }
-  },
-  {
     slug: "yongguang-hospital",
     title: { en: "Yongguang Asylum", zh: "永光精神病院" },
     tagline: {
