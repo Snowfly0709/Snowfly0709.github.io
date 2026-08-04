@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hypothesis Engine · Atelier · Zifeng Xiong</title>
+<meta name="description" content="An adversarially-gated society of LLM agents that proposes, tests, and honestly reads a null — in-silico, feeding real population-health pilots." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#e7ebe9; --panel:#f1f4f2; --sunk:#dde2df; --ink:#12171a;
+    --muted:#586160; --faint:#8b9290; --line:rgba(18,23,26,.16); --grid:rgba(18,23,26,.07);
+    --blue:#17408c; --blue-2:#2a63c9; --blue-soft:rgba(23,64,140,.09); --kill:#c0392b;
+    --mono:"Martian Mono","IBM Plex Mono",ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+    --data:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --max:1080px; --gut:26px;
+  }
+  html[data-theme="dark"]{
+    --paper:#0e1216; --panel:#151b20; --sunk:#0a0e11; --ink:#dfe6e4;
+    --muted:#9aa4a2; --faint:#616b69; --line:rgba(223,230,228,.16); --grid:rgba(223,230,228,.06);
+    --blue:#6fa0ff; --blue-2:#8fb6ff; --blue-soft:rgba(111,160,255,.12); --kill:#e2685a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+    font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:34px 34px;background-position:-1px -1px;transition:background-color .3s,color .3s}
+  ::selection{background:var(--blue);color:#fff}
+  .num{font-variant-numeric:tabular-nums}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut);background:var(--paper);box-shadow:0 0 0 1px var(--line)}
+  .mono{font-family:var(--mono)}.data{font-family:var(--data)}
+  .col{max-width:62ch}
+
+  /* topbar */
+  .top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);
+    font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);
+    padding:14px 0;border-bottom:1px solid var(--ink)}
+  .top b{color:var(--blue);font-weight:600}
+  .tg{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    background:none;border:1px solid var(--line);color:var(--muted);padding:5px 9px;border-radius:2px;cursor:pointer;transition:.2s}
+  .tg:hover{border-color:var(--blue);color:var(--blue)}.tg:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+  /* hero */
+  .hero{padding:56px 0 42px;border-bottom:1px solid var(--line)}
+  .ey{font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+  .ey .on{color:var(--kill)}
+  h1{font-family:var(--mono);font-weight:600;font-size:clamp(1.95rem,5.4vw,3.35rem);line-height:1.05;letter-spacing:-.025em;margin:0 0 .5em;max-width:15ch;text-wrap:balance}
+  h1 .k{color:var(--blue)}
+  .dek{font-size:1.14rem;color:var(--muted);max-width:56ch;margin:0}
+  .dek b{color:var(--ink);font-weight:600}
+
+  figure{margin:0}
+  .fig{margin-top:36px;border:1px solid var(--line);background:var(--panel);border-radius:2px;overflow:hidden}
+  .fig .cap{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);padding:10px 16px;border-bottom:1px solid var(--line)}
+  .fig .cap b{color:var(--blue);font-weight:600}
+  .fig canvas{display:block;width:100%;height:auto}
+  figcaption{font-family:var(--mono);font-size:10.5px;color:var(--faint);padding:9px 16px;border-top:1px solid var(--grid);letter-spacing:.02em}
+
+  /* sections */
+  section{padding:44px 0;border-bottom:1px solid var(--line)}
+  .kick{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);display:flex;gap:12px;margin-bottom:22px}
+  .kick .n{color:var(--blue)}
+  h2{font-family:var(--mono);font-weight:600;font-size:clamp(1.35rem,3vw,1.8rem);letter-spacing:-.015em;margin:0 0 .55em;line-height:1.14;text-wrap:balance}
+  p{margin:0 0 1.05rem}p:last-child{margin:0}.muted{color:var(--muted)}.lede{font-size:1.08rem}
+  em.t{font-style:normal;font-family:var(--data);font-size:.85em;color:var(--blue);background:var(--blue-soft);padding:.04em .32em;border-radius:2px}
+  .pull{font-family:var(--mono);font-weight:500;font-size:1.14rem;line-height:1.4;color:var(--ink);border-left:2px solid var(--blue);padding:2px 0 2px 18px;margin:1.4rem 0;max-width:46ch}
+
+  /* roles */
+  .roles{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  .role{background:var(--paper);padding:18px 15px}
+  .role .rl{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--kill);display:block;margin-bottom:8px}
+  .role h3{font-size:1.04rem;margin:0 0 3px;font-weight:600}
+  .role .who{font-family:var(--data);font-size:10.5px;color:var(--faint);margin-bottom:9px}
+  .role p{font-size:.87rem;color:var(--muted);margin:0;line-height:1.5}
+  @media(max-width:720px){.roles{grid-template-columns:1fr 1fr}}
+
+  /* gate */
+  .gate{display:grid;grid-template-columns:1fr 250px;gap:30px;align-items:start}
+  @media(max-width:720px){.gate{grid-template-columns:1fr}}
+  .tally{display:flex;gap:7px;margin:4px 0 12px}
+  .cell{width:27px;height:27px;border:1.5px solid var(--ink);display:grid;place-items:center;font-family:var(--data);font-size:11px;border-radius:2px}
+  .cell.p{background:var(--ink);color:var(--paper)}
+  .cell.r{background:linear-gradient(90deg,var(--ink) 50%,transparent 50%)}
+  .cell.f{border-color:var(--kill);color:var(--kill);position:relative;overflow:hidden}
+  .cell.f::after{content:"";position:absolute;left:-2px;right:-2px;top:50%;height:1.5px;background:var(--kill);transform:rotate(-34deg)}
+  .rule{font-family:var(--data);font-size:.82rem;border:1px solid var(--line);border-radius:2px;background:var(--panel)}
+  .rule div{display:flex;justify-content:space-between;padding:10px 14px}
+  .rule div+div{border-top:1px dashed var(--grid)}
+  .rule .f{color:var(--kill)}
+
+  /* invariants */
+  .invwrap{display:grid;grid-template-columns:1fr 220px;gap:26px;align-items:start}
+  @media(max-width:720px){.invwrap{grid-template-columns:1fr}}
+  .asserts{font-family:var(--data);font-size:.82rem;line-height:1.5;border:1px solid var(--line);border-radius:2px;background:var(--panel)}
+  .asserts .ln{display:grid;grid-template-columns:238px 1fr;gap:16px;padding:12px 16px;align-items:baseline}
+  .asserts .ln+.ln{border-top:1px solid var(--grid)}
+  .asserts .a{color:var(--blue);overflow-wrap:anywhere;min-width:0}.asserts .a .ok{color:var(--kill)}
+  .asserts .c{font-family:var(--sans);font-size:.9rem;color:var(--muted)}.asserts .c b{color:var(--ink);font-weight:600}
+  @media(max-width:620px){.asserts .ln{grid-template-columns:1fr;gap:5px}}
+  .setfig{border:1px solid var(--line);background:var(--panel);border-radius:2px;padding:14px}
+  .setfig svg{width:100%;height:auto;display:block}
+  .setfig .lab{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--faint);text-align:center;margin-top:8px}
+  .setfig .lab b{color:var(--kill)}
+
+  /* pipeline */
+  .pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  .pstep{background:var(--paper);padding:14px 12px 16px}
+  .pstep .s{font-family:var(--mono);font-size:1.5rem;font-weight:600;color:var(--blue);line-height:1}
+  .pstep h4{font-size:.92rem;margin:6px 0 3px}
+  .pstep p{font-size:.79rem;color:var(--muted);margin:0;line-height:1.46}
+  @media(max-width:720px){.pipe{grid-template-columns:1fr 1fr 1fr}}
+  @media(max-width:460px){.pipe{grid-template-columns:1fr 1fr}}
+
+  /* CI plot */
+  .plot{--z:31.25%;--s:43.75%;padding:18px 16px 10px}
+  .scale{position:relative;height:15px;font-family:var(--data);font-size:10px;color:var(--faint);margin:0 132px 6px 168px}
+  .scale span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+  .scale .z{left:var(--z);color:var(--ink)} .scale .s{left:var(--s);color:var(--blue)}
+  .crow{display:grid;grid-template-columns:168px 1fr 118px;align-items:center;padding:13px 0;border-top:1px solid var(--grid)}
+  .clabel{font-size:.9rem;color:var(--ink);padding-right:14px}
+  .clabel small{display:block;font-family:var(--data);font-size:10px;color:var(--faint)}
+  .track{position:relative;height:26px}
+  .track .zl,.track .sl{position:absolute;top:-5px;bottom:-5px;width:1px}
+  .track .zl{left:var(--z);background:var(--ink)}.track .sl{left:var(--s);background:var(--blue)}
+  .band{position:absolute;top:-5px;bottom:-5px;left:var(--z);right:0;background:var(--blue-soft);pointer-events:none}
+  .ci{position:absolute;top:50%;height:9px;transform:translateY(-50%) scaleX(var(--rev,1));transform-origin:left;
+    background:var(--blue-soft);border:1px solid var(--blue);border-radius:1px;transition:transform .7s cubic-bezier(.16,1,.3,1)}
+  .ci .pt{position:absolute;top:50%;left:50%;width:9px;height:9px;transform:translate(-50%,-50%);background:var(--blue);border-radius:50%}
+  .ci .wl,.ci .wr{position:absolute;top:50%;height:13px;width:1px;background:var(--blue);transform:translateY(-50%)}
+  .ci .wl{left:0}.ci .wr{right:0}
+  .ci .val{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-family:var(--data);font-size:9.5px;color:var(--blue);white-space:nowrap}
+  .ci.struck{background:repeating-linear-gradient(45deg,transparent,transparent 4px,var(--kill) 4px,var(--kill) 5px);border-color:var(--kill)}
+  .ci.struck::after{content:"";position:absolute;top:50%;left:0;right:0;height:1.5px;background:var(--kill);transform:translateY(-50%)}
+  .rd{font-family:var(--data);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;text-align:right;font-weight:500}
+  .rd.null{color:var(--muted)}.rd.def{color:var(--blue)}.rd.kill{color:var(--kill)}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--data);font-size:10px;color:var(--faint);padding:10px 16px;border-top:1px solid var(--grid)}
+  .legend i{font-style:normal;display:inline-flex;align-items:center;gap:6px}
+  .legend .sw{width:16px;height:8px;background:var(--blue-soft);border:1px solid var(--blue);display:inline-block}
+  .legend .sw.z{width:1px;height:12px;background:var(--ink);border:0}
+  .legend .sw.s{width:1px;height:12px;background:var(--blue);border:0}
+
+  /* models spec */
+  .specs{border:1px solid var(--line);border-radius:2px;overflow-x:auto;background:var(--panel);font-family:var(--data);font-size:.8rem}
+  .specs table{width:100%;border-collapse:collapse;min-width:680px}
+  .specs th{text-align:left;font-weight:500;color:var(--faint);text-transform:uppercase;letter-spacing:.1em;font-size:9.5px;padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .specs td{padding:11px 14px;border-top:1px solid var(--grid);color:var(--muted);vertical-align:top}
+  .specs tbody tr:first-child td{border-top:none}
+  .specs td.role{color:var(--kill);white-space:nowrap}
+  .specs td.model{color:var(--ink);font-weight:500;white-space:nowrap}
+  .specs td.scale{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  /* footer */
+  footer{padding:34px 0 60px}
+  .colo{display:grid;grid-template-columns:1.35fr 1fr;gap:28px}
+  @media(max-width:640px){.colo{grid-template-columns:1fr}}
+  .scope{font-size:.92rem;color:var(--muted)}.scope b{color:var(--ink)}
+  .colo dl{font-family:var(--data);font-size:.76rem;line-height:1.75;margin:0}
+  .colo dt{color:var(--faint);text-transform:uppercase;letter-spacing:.08em;font-size:.68rem;margin-top:.5rem}
+  .colo dd{margin:0;color:var(--ink)}
+  .sig{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.72rem;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><span>HYPOTHESIS ENGINE <b>/</b> AGENTSOCIETY²</span>
+    <button class="tg" id="tg" type="button" aria-label="Toggle theme">Dark</button></div>
+
+  <div class="hero">
+    <div class="ey"><span class="on">● RESEARCH · 研究</span><span>Singapore population-health</span><span>in-silico · sandbox</span></div>
+    <h1>An engine built to read a <span class="k">null</span> honestly.</h1>
+    <p class="dek">A society of language-model agents proposes population-health hypotheses, tests them on a simulated public, and — when the confidence interval says so — <b>reports the null and closes the case</b>. Its signature is not a clever finding; it is the willingness to draw the interval and read it straight.</p>
+
+    <figure class="fig">
+      <div class="cap"><span>FIG. 0 — <b>reading an interval</b> · between-arm effect on a simulated endpoint</span><span>97.5% CI vs the null band</span></div>
+      <canvas id="cv-hero" width="1040" height="300" aria-label="A null sampling distribution with a confidence interval that includes zero, read as null."></canvas>
+      <figcaption>The shaded curve is where an estimate would land under no effect. When the measured interval overlaps it — includes zero — the engine records a null. No spin, no p-hacking around the band.</figcaption>
+    </figure>
+  </div>
+
+  <section>
+    <div class="col">
+      <p class="lede">Language-model agents can generate behavioural hypotheses faster than any research team can vet them. The risk was never a shortage of ideas — it is a fluent agent presenting a plausible-but-wrong finding with unearned confidence, and a busy human waving it through. Built for a Singapore NCD-and-mental-health grant, this engine treats <b class="muted" style="color:var(--ink)">rigour and honesty as enforced properties</b> rather than good intentions.</p>
+      <p class="muted">It does that by never letting the party with the incentive to find an effect also be the party that certifies it. A generative researcher proposes and runs; a separate, adversarial auditor votes at every gate; a set of machine-checked invariants a human owns and cannot quietly relax guards the boundary; and the whole run leaves an audit trail.</p>
+      <p class="pull">The output is not a confident paper. It is a decision about which real-world pilots are worth running — with the proceedings attached.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="kick"><span class="n">§1</span> A SOCIETY OF FOUR ROLES</div>
+    <div class="col"><p class="muted" style="margin-bottom:20px">Separation of powers, ported to a research pipeline. The point of the split is that no single role can both want a result and grant it.</p></div>
+    <div class="roles">
+      <div class="role"><span class="rl">Researcher</span><h3>Proposes &amp; builds</h3><div class="who">Claude · short-context</div><p>Owns topic, hypothesis, design, code, analysis, write-up. Runs as bounded stage agents so nothing hides in an ever-growing context.</p></div>
+      <div class="role"><span class="rl">Subjects</span><h3>The simulated public</h3><div class="who">local model · non-reasoning</div><p>Persona-conditioned responses from a model that runs <em class="t">on-device</em>. No subject cognition or personal data ever leaves the machine.</p></div>
+      <div class="role"><span class="rl">Auditor</span><h3>The adversary at the gate</h3><div class="who">other vendor · 7–9 panel</div><p>Scores every gate against a fixed rubric. A <em class="t">different model family</em> from the researcher, so a failing verdict is never self-grading.</p></div>
+      <div class="role"><span class="rl">Coordinator</span><h3>Owns the sign-off</h3><div class="who">human-supervised</div><p>Fixes the platform, <em class="t">independently reproduces</em> each integrity proof, releases the run — and catches the researcher understating a verdict.</p></div>
+    </div>
+    <div style="margin-top:30px">
+      <div class="kick">ON THE BENCH — THE ACTUAL MODELS &amp; SCALE</div>
+      <div class="specs">
+        <table>
+          <thead><tr><th>Role</th><th>Model</th><th>Scale</th><th>Mode</th><th>Locus</th></tr></thead>
+          <tbody>
+            <tr><td class="role">Subjects</td><td class="model">Qwen3.6 · 35B-A3B</td><td class="scale">35B total · ~3B active · MoE</td><td>non-reasoning</td><td>local / on-device</td></tr>
+            <tr><td class="role">Auditor</td><td class="model">GPT-5.6</td><td class="scale">frontier · size undisclosed</td><td>7–9-member vote</td><td>OpenAI API</td></tr>
+            <tr><td class="role">Researcher · Coord.</td><td class="model">Claude Opus 4.8</td><td class="scale">frontier · 1M-token context</td><td>agentic</td><td>Anthropic API</td></tr>
+            <tr><td class="role">Personas</td><td class="model">Nemotron-Personas-SG</td><td class="scale">real-data table · dataset-agnostic</td><td>disjoint sample</td><td>local</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted" style="font-size:.82rem;margin-top:10px">Only Qwen&rsquo;s parameter scale is quoted numerically — it is the model we host and can measure. The closed frontier models are named by role and context rather than a fabricated size; no vendor publishes their counts, and the engine does not invent numbers it cannot verify.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="kick"><span class="n">§2</span> THE GATE</div>
+    <div class="gate">
+      <div>
+        <h2>Nothing advances on the researcher&rsquo;s say-so.</h2>
+        <p class="muted">At each stage an independent panel scores fixed rubric dimensions and votes. The tally is deterministic — the researcher cannot argue it down.</p>
+        <div class="tally" aria-hidden="true"><span class="cell p">✓</span><span class="cell p">✓</span><span class="cell p">✓</span><span class="cell p">✓</span><span class="cell p">✓</span><span class="cell r">~</span><span class="cell f"></span></div>
+        <p class="muted" style="font-size:.9rem">Each cell is one auditor — <span style="color:var(--ink)">filled</span> pass · <span style="color:var(--ink)">half</span> revise · <span style="color:var(--kill)">struck</span> fail. Revisions get at most three rounds, and a fix does not reset the count. A residual is documented and advanced; an objection that <b style="color:var(--ink)">recurs or goes near-unanimous</b> is treated as fundamental and forces a <b style="color:var(--kill)">rollback</b> — never a manufactured pass. The final production gate has no escape hatch: a genuine pass, or an honest <em class="t">indeterminate → pilot</em>.</p>
+      </div>
+      <div class="rule" aria-label="vote rule">
+        <div><span>FAIL ≥ 2</span><span class="f">→ FAIL</span></div>
+        <div><span>PASS ≥ 5</span><span>→ PASS</span></div>
+        <div><span>otherwise</span><span class="muted">→ REVISE</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="kick"><span class="n">§3</span> WHAT IT REFUSES TO FAKE</div>
+    <div class="invwrap">
+      <div>
+        <p class="muted" style="margin-bottom:16px">Each line is asserted in code and re-reproduced by the coordinator before a run or a delivery — not a style preference, a contract that fails the run when broken.</p>
+        <div class="asserts">
+          <div class="ln"><span class="a">assert confirmatory ∩ dev == <span class="ok">∅</span></span><span class="c"><b>Disjoint subjects.</b> The people the engine tunes on are never the people it tests on — a distinct seed alone left ~13 chance overlaps, so the tuning set is <em>explicitly</em> excluded and the empty intersection re-proven.</span></div>
+          <div class="ln"><span class="a">assert endpoint.fixed_before_rates</span><span class="c"><b>Arm-blind cut.</b> The outcome is defined before anyone sees per-arm numbers, so it can&rsquo;t be quietly chosen to flatter a result.</span></div>
+          <div class="ln"><span class="a">assert batch == prereg  <span class="ok"># byte</span></span><span class="c"><b>Drift-guard.</b> One character of divergence between what ran and the frozen plan fails the whole run.</span></div>
+          <div class="ln"><span class="a">assert think_tokens == 0</span><span class="c"><b>Reasoning-off subjects.</b> They answer as a population would — fast, non-deliberative — verified as zero chain-of-thought through the harness.</span></div>
+          <div class="ln"><span class="a">assert cite.real &amp;&amp; sim != real</span><span class="c"><b>No fabricated numbers.</b> Citations are real or absent; simulated percentages are never reported as real rates — only between-arm contrasts are read.</span></div>
+        </div>
+      </div>
+      <div class="setfig">
+        <svg viewBox="0 0 200 130" role="img" aria-label="Two non-overlapping sets: tuning personas and confirmatory personas.">
+          <circle cx="66" cy="62" r="46" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="1.4"/>
+          <circle cx="140" cy="62" r="40" fill="none" stroke="var(--ink)" stroke-width="1.4"/>
+          <text x="66" y="60" text-anchor="middle" font-family="var(--data)" font-size="11" fill="var(--blue)">dev</text>
+          <text x="66" y="74" text-anchor="middle" font-family="var(--data)" font-size="9" fill="var(--faint)">352</text>
+          <text x="140" y="60" text-anchor="middle" font-family="var(--data)" font-size="11" fill="var(--ink)">conf.</text>
+          <text x="140" y="74" text-anchor="middle" font-family="var(--data)" font-size="9" fill="var(--faint)">1920</text>
+        </svg>
+        <div class="lab">tuning ∩ confirmatory = <b>∅</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="kick"><span class="n">§4</span> THE PIPELINE — A REAL SEQUENCE</div>
+    <div class="col"><p class="muted" style="margin-bottom:18px">Six stages, each a gate the last must clear. The numbering is earned — this is an actual order of operations, not decoration.</p></div>
+    <div class="pipe">
+      <div class="pstep"><div class="s">0</div><h4>Topic</h4><p>Novelty × implementability × value-of-information. One deployable, agency-controllable lever; the rest rejected on record.</p></div>
+      <div class="pstep"><div class="s">1</div><h4>Design</h4><p>A minimal-pair contrast; the estimand and endpoint pre-registered before a single datum is seen.</p></div>
+      <div class="pstep"><div class="s">2</div><h4>Gates</h4><p>Hypothesis, then design — each through the adversarial panel, with a harness spot-check that the manipulation lands.</p></div>
+      <div class="pstep"><div class="s">3</div><h4>Run</h4><p>Blocks × members of local simulated subjects; the pre-registration frozen to a git tag.</p></div>
+      <div class="pstep"><div class="s">4</div><h4>Analysis</h4><p>Arm-blind, on the realized net estimand; nominal booking split from genuine follow-through.</p></div>
+      <div class="pstep"><div class="s">5</div><h4>Deliver</h4><p>One scoped, pre-registered question — with its power and its limits — handed to a human pilot.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="kick"><span class="n">§5</span> THREE READINGS IT HAS TAKEN</div>
+    <div class="col"><p class="muted">A hypothesis engine is only as trustworthy as the times it says <em>no</em>. Across three Singapore studies the engine has returned a null, flagged a definitional artifact, and rolled back a design it could not make honest — each read on the same axis, in-silico, to prioritise pilots rather than to claim health effects.</p></div>
+    <figure class="fig" style="margin-top:24px">
+      <div class="cap"><span>FIG. 1 — <b>three studies</b> · between-arm effect, one shared axis</span><span>97.5% CI</span></div>
+      <div class="plot">
+        <div class="scale"><span style="left:0">−0.25</span><span class="z">0</span><span class="s">SESOI</span><span style="left:100%">+0.55</span></div>
+        <div class="crow">
+          <div class="clabel">Testimony message<small>mental-health · 30-day step</small></div>
+          <div class="track"><span class="band"></span><span class="zl"></span><span class="sl"></span>
+            <span class="ci" style="left:23.75%;width:27.5%"><span class="wl"></span><span class="pt"></span><span class="wr"></span><span class="val">+0.05 [−0.06, +0.16]</span></span></div>
+          <div class="rd null">Null</div>
+        </div>
+        <div class="crow">
+          <div class="clabel">Pre-booked default<small>screening · booking</small></div>
+          <div class="track"><span class="band"></span><span class="zl"></span><span class="sl"></span>
+            <span class="ci" style="left:33.75%;width:20%"><span class="wl"></span><span class="pt"></span><span class="wr"></span><span class="val">nominal, not genuine</span></span></div>
+          <div class="rd def">Definitional</div>
+        </div>
+        <div class="crow">
+          <div class="clabel">Direct vs self-book<small>conversion · intenders</small></div>
+          <div class="track"><span class="band"></span><span class="zl"></span><span class="sl"></span>
+            <span class="ci struck" style="left:20%;width:46%"><span class="val" style="color:var(--kill)">design failed the gate</span></span></div>
+          <div class="rd kill">Rolled back</div>
+        </div>
+      </div>
+      <div class="legend"><i><span class="sw"></span> 97.5% CI</i><i><span class="sw z"></span> zero</i><i><span class="sw s"></span> SESOI</i><i>shaded = interval must clear the band to count</i></div>
+    </figure>
+    <div class="col" style="margin-top:22px">
+      <p class="muted"><b style="color:var(--ink)">Testimony (null).</b> A first-person &ldquo;I got help&rdquo; message did not beat a bare disclosure at prompting a help-seeking first step — equivalent within a pre-registered band. The engine reported it, and the null motivated a pivot to levers an agency can actually operate.</p>
+      <p class="muted"><b style="color:var(--ink)">Pre-booked default (definitional).</b> A booked-by-default appointment appeared to crush &ldquo;call to book&rdquo; — but the engine split nominal booking from genuine conversion and showed most of the gap was booked-by-construction, a measurement warning rather than a lever.</p>
+      <p class="muted"><b style="color:var(--ink)">Direct vs self-book (rolled back).</b> A byte-identical instrument collapsed the contrast to wording; the design gate failed it near-unanimously, so the engine rolled back to a construct-faithful shape rather than grind a passing verdict.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="kick"><span class="n">§6</span> IT PRE-REGISTERS ITS OWN POWER</div>
+    <div class="gate">
+      <div>
+        <h2>Sized before it runs, not rationalised after.</h2>
+        <p class="muted">Before any batch, the engine simulates its own operating characteristics on the frozen design: how often it would cry effect when there is none (type-I), and how reliably it would detect a real one (power). A study only runs when the numbers clear pre-set marks — so a null is a genuine null, not an underpowered shrug.</p>
+        <p class="muted" style="font-size:.9rem">On the current study: type-I at zero ≈ <span class="data" style="color:var(--blue)">0.023</span>, detection power ≈ <span class="data" style="color:var(--blue)">1.00</span> at the smallest effect worth caring about — holding even under a stress of 15% attrition.</p>
+      </div>
+      <figure class="fig" style="margin-top:0">
+        <div class="cap"><span><b>power curve</b></span><span>frozen design</span></div>
+        <canvas id="cv-power" width="500" height="260" aria-label="Detection power rising from near-zero type-I error to ~1.0 at the SESOI."></canvas>
+      </figure>
+    </div>
+  </section>
+
+  <footer>
+    <div class="colo">
+      <p class="scope"><b>Simulation, not a trial.</b> Every reading here is an in-silico output used to decide which pilots to run; simulated proportions are not real-world uptake, and a one-shot text simulation cannot fully instantiate some real frictions. Where a construct cannot be made valid in-silico, the engine scopes the claim narrowly or reframes — rather than over-reaching. Real behaviour is settled by the human pilot, not the sim.</p>
+      <dl>
+        <dt>Subjects</dt><dd>Qwen3.6 · 35B-A3B · non-reasoning · local</dd>
+        <dt>Auditor</dt><dd>GPT-5.6 · 7–9-member panel</dd>
+        <dt>Researcher · Coord.</dt><dd>Claude Opus 4.8 · 1M context</dd>
+        <dt>Personas</dt><dd>Nemotron-Personas-SG · dataset-agnostic</dd>
+      </dl>
+    </div>
+    <div class="sig"><span>ATELIER PLATE · AGENTSOCIETY² RESEARCH ENGINE</span><span>ZIFENG XIONG</span></div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById("tg");
+  function eff(){var t=root.getAttribute("data-theme");return t==="dark"?"dark":t==="light"?"light":(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");}
+  function paint(){btn.textContent=eff()==="dark"?"Light":"Dark";draw();}
+  btn.addEventListener("click",function(){root.setAttribute("data-theme",eff()==="dark"?"light":"dark");paint();});
+  var reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  function tok(n){return getComputedStyle(root).getPropertyValue(n).trim()||"#888";}
+
+  function setup(cv){var d=window.devicePixelRatio||1,r=cv.getBoundingClientRect();
+    var w=r.width||cv.width, h=cv.height*(w/cv.width);
+    cv.width=w*d;cv.height=h*d;cv.style.height=h+"px";var g=cv.getContext("2d");g.scale(d,d);return{g:g,w:w,h:h};}
+
+  function gauss(x,m,s){return Math.exp(-((x-m)*(x-m))/(2*s*s));}
+
+  function drawHero(p){var cv=document.getElementById("cv-hero");if(!cv)return;var o=setup(cv),g=o.g,w=o.w,h=o.h;
+    var ink=tok("--ink"),blue=tok("--blue"),faint=tok("--faint"),soft=tok("--blue-soft"),kill=tok("--kill");
+    var padL=28,padR=28,axY=h-46,x0=padL,x1=w-padR;
+    var dmin=-0.3,dmax=0.6;function X(v){return x0+(v-dmin)/(dmax-dmin)*(x1-x0);}
+    g.clearRect(0,0,w,h);
+    // null density (centred at 0)
+    var top=26,base=axY,peak=base-(base-top)*0.86;
+    g.beginPath();g.moveTo(X(dmin),base);
+    for(var v=dmin;v<=dmax;v+=0.006){var y=base-(base-peak)*gauss(v,0,0.11)*p;g.lineTo(X(v),y);}
+    g.lineTo(X(dmax),base);g.closePath();g.fillStyle=soft;g.fill();
+    g.strokeStyle=blue;g.globalAlpha=.55;g.lineWidth=1;g.stroke();g.globalAlpha=1;
+    // axis
+    g.strokeStyle=tok("--line");g.beginPath();g.moveTo(x0,base);g.lineTo(x1,base);g.stroke();
+    // zero + sesoi
+    g.strokeStyle=ink;g.beginPath();g.moveTo(X(0),top-6);g.lineTo(X(0),base+8);g.stroke();
+    g.setLineDash([3,3]);g.strokeStyle=blue;g.beginPath();g.moveTo(X(0.10),top+4);g.lineTo(X(0.10),base+8);g.stroke();g.setLineDash([]);
+    g.font="10px "+tok("--data").split(",")[0]+",monospace";g.fillStyle=ink;g.textAlign="center";g.fillText("0",X(0),base+22);
+    g.fillStyle=blue;g.fillText("SESOI +0.10",X(0.10),top-2);
+    g.fillStyle=faint;g.fillText("−0.30",X(dmin)+2,base+22);g.fillText("+0.60",X(dmax)-2,base+22);
+    // CI bracket (crosses zero) drawn with progress
+    var lo=X(-0.06),hi=X(0.16),pt=X(0.05),by=top+6,cur=lo+(hi-lo)*Math.min(1,p*1.15);
+    g.strokeStyle=blue;g.lineWidth=1.6;g.beginPath();g.moveTo(lo,by);g.lineTo(cur,by);g.stroke();
+    g.beginPath();g.moveTo(lo,by-6);g.lineTo(lo,by+6);g.moveTo(hi,by-6);g.lineTo(hi,by+6);
+    if(p>.8){g.stroke();}
+    if(p>=1){g.fillStyle=blue;g.beginPath();g.arc(pt,by,3.4,0,7);g.fill();
+      g.fillStyle=faint;g.textAlign="left";g.font="10px "+tok("--data").split(",")[0]+",monospace";
+      g.fillText("interval includes 0  →  NULL",hi+10,by+3);}
+  }
+  function drawPower(){var cv=document.getElementById("cv-power");if(!cv)return;var o=setup(cv),g=o.g,w=o.w,h=o.h;
+    var ink=tok("--ink"),blue=tok("--blue"),faint=tok("--faint"),soft=tok("--blue-soft");
+    var padL=34,padR=16,padT=16,padB=30,x0=padL,x1=w-padR,y0=h-padB,y1=padT;
+    function X(v){return x0+v/0.28*(x1-x0);}function Y(p){return y0-p*(y0-y1);}
+    g.clearRect(0,0,w,h);
+    g.strokeStyle=tok("--grid");g.lineWidth=1;
+    [0,.25,.5,.75,1].forEach(function(p){g.beginPath();g.moveTo(x0,Y(p));g.lineTo(x1,Y(p));g.stroke();});
+    // type-I line
+    g.setLineDash([3,3]);g.strokeStyle=faint;g.beginPath();g.moveTo(x0,Y(.023));g.lineTo(x1,Y(.023));g.stroke();g.setLineDash([]);
+    // power curve: logistic-ish rising
+    g.beginPath();var first=true;
+    for(var e=0;e<=0.28;e+=0.004){var pw=0.023+(0.977)/(1+Math.exp(-(e-0.06)/0.018));var px=X(e),py=Y(Math.min(1,pw));if(first){g.moveTo(px,py);first=false;}else g.lineTo(px,py);}
+    g.strokeStyle=blue;g.lineWidth=2;g.stroke();
+    g.lineTo(X(0.28),y0);g.lineTo(x0,y0);g.closePath();g.fillStyle=soft;g.globalAlpha=.5;g.fill();g.globalAlpha=1;
+    // SESOI marker + op point
+    g.setLineDash([3,3]);g.strokeStyle=blue;g.beginPath();g.moveTo(X(0.10),y1);g.lineTo(X(0.10),y0);g.stroke();g.setLineDash([]);
+    g.fillStyle=blue;g.beginPath();g.arc(X(0.10),Y(1),3.4,0,7);g.fill();
+    g.font="10px "+tok("--data").split(",")[0]+",monospace";g.fillStyle=faint;g.textAlign="left";
+    g.fillText("power",x0,y1+2);g.fillText("type-I 0.023",x0+2,Y(.023)-4);
+    g.textAlign="center";g.fillStyle=blue;g.fillText("SESOI",X(0.10),y0+18);
+    g.fillStyle=faint;g.fillText("true effect →",(x0+x1)/2,y0+18);
+  }
+  function draw(){drawPower();if(reduce){drawHero(1);}else{ /* hero animates on view */ }}
+
+  var animated=false;
+  function runHero(){if(animated)return;animated=true;if(reduce){drawHero(1);return;}
+    var t0=null;function step(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/1100);drawHero(p);if(p<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){if(e.target.id==="cv-hero")runHero();e.target.classList.add("in");}});},{threshold:.3});
+    var hc=document.getElementById("cv-hero");if(hc)io.observe(hc);
+  }else{drawHero(1);}
+  // reveal CI bars
+  document.querySelectorAll(".ci").forEach(function(el){el.style.setProperty("--rev","0");});
+  if("IntersectionObserver" in window){
+    var io2=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.style.setProperty("--rev","1");io2.unobserve(e.target);}});},{threshold:.4});
+    document.querySelectorAll(".ci").forEach(function(el){reduce?el.style.setProperty("--rev","1"):io2.observe(el);});
+  }else{document.querySelectorAll(".ci").forEach(function(el){el.style.setProperty("--rev","1");});}
+  window.addEventListener("resize",function(){clearTimeout(window._rt);window._rt=setTimeout(function(){drawPower();drawHero(1);},180);});
+  paint();
+})();
+</script>
+</body>
+</html>

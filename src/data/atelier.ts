@@ -118,5 +118,22 @@ export const atelierItems: readonly AtelierItem[] = [
         zh: "解构主义宇宙：碎裂的字符网格在带红色吸积环的黑洞周围扭曲。"
       }
     }
+  },
+  {
+    slug: "hypothesis-engine",
+    title: { en: "Hypothesis Engine", zh: "假设引擎" },
+    tagline: {
+      en: "An LLM-agent society that honestly kills its own hypotheses.",
+      zh: "一个会诚实证否自己假设的智能体社会。"
+    },
+    description: {
+      en: "An adversarially-gated society of LLM agents for Singapore population-health research: a generative researcher proposes and runs pre-registered in-silico studies, an independent auditor panel votes at every gate, and a human coordinator reproduces the integrity proofs — so the engine returns honest nulls and rolls back broken designs instead of manufacturing findings. It feeds real pilots, not claims.",
+      zh: "面向新加坡人口健康研究的对抗式门控智能体社会：生成式研究者提出并运行预注册的硅内研究，独立审计小组在每道门投票，人类协调者复现完整性证明——因而引擎会给出诚实的零结果、对不成立的设计回退，而非制造发现。产出用于真实试点，而非论断。"
+    },
+    date: "2026-08-04",
+    tags: ["llm-agents", "research", "in-silico"],
+    category: "research",
+    status: "sandbox",
+    scale: "large"
   }
 ];
