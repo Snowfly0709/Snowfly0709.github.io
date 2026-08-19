@@ -51,7 +51,7 @@ export const aboutSections = {
         org: "KeyReply Pte. Ltd.",
         period: "04/2026 - Present",
         detail:
-          "Delivered realtime voice AI product capabilities from concept to production, including Behavioural CRM prototypes validated on 20K+ insurance call transcripts, a Logicalis AI Showcase check-in app with voice interaction, and a black-box QA evidence system for healthcare voicebot reliability."
+          "Shipped an LLM-as-a-judge evaluation pipeline (TTS synthesis → blind multi-model transcription → 3-vote majority) that lifted a voice agent's local place-name pronunciation accuracy from 78% to 93.8% across a 349-entry dictionary, packaged as a reusable backend component with edit-safe bulk correction. Drove 0→1 feasibility and architecture for an LLM-tool capability letting voice agents traverse phone menus (DTMF/IVR navigation), hardened by an 8-agent adversarial code review that caught 4 production-blocking defects. Delivered client- and event-facing products end to end: a PII-hardened QR lead-capture web app for a live product event, a single-file visual mockup for a partner client demo on deadline, and requirement-to-voice-stack mapping for a competitive government AI tender. Authored ~50 product specs, feasibility studies, and PRDs on a production voice AI platform, turning ambiguity into documented, decision-ready scope."
       },
       {
         title: "Researcher (Part-time)",
@@ -68,11 +68,11 @@ export const aboutSections = {
           "Multi-agent reinforcement learning (A2C-based) for large-scale microservice scheduling. Validated on real-world ByteDance and Alibaba traces; co-authored publication in Expert Systems with Applications."
       },
       {
-        title: "Project Manager Intern",
+        title: "Product Manager Intern",
         org: "Chengdu Hwadee IT Co., Ltd",
-        period: "11/2023 - 01/2024",
+        period: "11/2023 - 02/2024",
         detail:
-          "Coordinated full-stack delivery (SpringBoot + Vue) for an e-commerce product management system. Defined milestones via Lark; authored 20+ project documents."
+          "Led a 6-person cross-functional team to design and deliver a warehouse inventory management prototype through to enterprise-mentor acceptance, owning requirements, prioritisation, task allocation, and testing. Standardised inbound, outbound, inventory-query, stock-alert, reconciliation, and discrepancy-handling workflows, and personally implemented 4 core frontend, backend, and AI features — authentication, role-based access control, workflow configuration, and LLM-powered daily inventory reports."
       }
     ],
     projects: [
@@ -116,7 +116,7 @@ export const aboutSections = {
         org: "KeyReply Pte. Ltd.",
         period: "2026.04 - 至今",
         detail:
-          "将实时语音 AI 产品能力从概念推进至生产——包括基于 20,000+ 条保险通话记录验证的 Behavioural CRM 原型、为 Logicalis AI Showcase 打造的语音交互签到应用，以及面向医疗 voicebot 可靠性的黑盒 QA 取证系统。"
+          "交付 LLM-as-a-judge 评测流水线（TTS 合成 → 多模型盲评转写 → 三票多数裁定），把语音 Agent 在 349 条本地地名词典上的发音准确率从 78% 提升到 93.8%，并封装为具备安全批量纠正能力的可复用后端组件。主导「语音 Agent 穿越电话菜单（DTMF/IVR 导航）」能力的 0→1 可行性与架构设计，以 8 个 Agent 的对抗式代码评审提前捕获 4 个阻塞上线的缺陷。端到端交付面向客户与现场活动的产品：发布活动上线的 PII 加固二维码线索采集应用、为合作伙伴客户 Demo 按期交付的单文件可视化原型，以及为政府 AI 竞标项目完成的需求到语音技术栈映射。在生产级语音 AI 平台上撰写约 50 份产品方案、可行性研究与 PRD，持续把模糊需求转化为可决策的文档化范围。"
       },
       {
         title: "研究员（兼职）",
@@ -133,11 +133,11 @@ export const aboutSections = {
           "围绕大规模微服务调度问题展开基于 A2C 的多智能体强化学习研究，在字节跳动与阿里巴巴真实数据集上验证有效性，合著论文已发表于 Expert Systems with Applications。"
       },
       {
-        title: "项目经理实习生",
+        title: "产品经理（实习）",
         org: "成都华栈信息技术有限公司",
-        period: "2023.11 - 2024.01",
+        period: "2023.11 - 2024.02",
         detail:
-          "协调电商产品管理系统的全栈交付（SpringBoot + Vue），通过飞书定义与跟踪里程碑，撰写 20+ 项目文档。"
+          "带领 6 人跨职能团队设计并交付仓储库存管理系统原型，直至通过企业导师验收，负责需求梳理、优先级排序、任务分配与测试。标准化入库、出库、库存查询、缺货预警、对账与异常处理等流程，并亲自实现认证、基于角色的权限控制、工作流配置与大模型驱动的每日库存报表共 4 项前后端与 AI 核心功能。"
       }
     ],
     projects: [
