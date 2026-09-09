@@ -18,7 +18,7 @@ const about = aboutSections[lang];
 const workIds = ["work-keyreply", "work-xjtu-rag", "work-xjtu-bd", "work-pmi"];
 const eduIds = ["edu-ntu", "edu-xjtu"];
 // Order matches `projects` after the period-DESC sort below.
-const projectIds = ["proj-mindgap", "proj-dataviz"];
+const projectIds = ["proj-sayexact", "proj-mindgap", "proj-dataviz"];
 
 const zhProjectIndex = ["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾"];
 const projectIndexFor = (idx: number) =>
@@ -48,6 +48,9 @@ const labels = {
 const parsePeriodStart = (period: string) => {
   const monthYear = period.match(/(\d{2})\/(\d{4})/);
   if (monthYear) return Number(monthYear[2]) * 12 + Number(monthYear[1]);
+  // zh periods read "2026.08 - 至今"
+  const yearMonth = period.match(/(\d{4})\.(\d{1,2})/);
+  if (yearMonth) return Number(yearMonth[1]) * 12 + Number(yearMonth[2]);
   const yearOnly = period.match(/(\d{4})/);
   if (yearOnly) return Number(yearOnly[1]) * 12;
   return 0;

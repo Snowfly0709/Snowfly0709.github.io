@@ -51,7 +51,7 @@ export const aboutSections = {
         org: "KeyReply Pte. Ltd.",
         period: "04/2026 - Present",
         detail:
-          "Shipped an LLM-as-a-judge evaluation pipeline (TTS synthesis → blind multi-model transcription → 3-vote majority) that lifted a voice agent's local place-name pronunciation accuracy from 78% to 93.8% across a 349-entry dictionary, packaged as a reusable backend component with edit-safe bulk correction. Drove 0→1 feasibility and architecture for an LLM-tool capability letting voice agents traverse phone menus (DTMF/IVR navigation), hardened by an 8-agent adversarial code review that caught 4 production-blocking defects. Delivered client- and event-facing products end to end: a PII-hardened QR lead-capture web app for a live product event, a single-file visual mockup for a partner client demo on deadline, and requirement-to-voice-stack mapping for a competitive government AI tender. Authored ~50 product specs, feasibility studies, and PRDs on a production voice AI platform, turning ambiguity into documented, decision-ready scope."
+          "Partnered with the customer-success team and stakeholders to replace fragmented controls and a flat 1700+ voice catalog with a guided voice-and-character configuration workspace; translated needs into 50+ PRDs and interactive prototypes, aligned scope with design and engineering, and shipped 5 production pages. Led a cross-product UX redesign across 20+ pages, running 7 parallel AI agents alongside interactive prototypes to cut navigation friction and resolve 400+ UI inconsistencies and 10+ UX issues across information architecture, components, and outdated copy. Turned recurring support feedback on mispronounced local names into a measurable product initiative — a 349-entry benchmark and blind evaluation workflow, then productization of the pronunciation component — lifting usable accuracy from 78.0% to 93.8% across 321 unique terms (+15.8 pp). Worked directly with emergency-department staff and clinicians at a public hospital to translate bedside requirements and 6 deployment constraints into a 90-minute workshop, then prioritised and drove delivery of a 20-language, hands-free Translation Assistant with consent, recording, and access controls."
       },
       {
         title: "Researcher (Part-time)",
@@ -72,10 +72,16 @@ export const aboutSections = {
         org: "Chengdu Hwadee IT Co., Ltd",
         period: "11/2023 - 02/2024",
         detail:
-          "Led a 6-person cross-functional team to design and deliver a warehouse inventory management prototype through to enterprise-mentor acceptance, owning requirements, prioritisation, task allocation, and testing. Standardised inbound, outbound, inventory-query, stock-alert, reconciliation, and discrepancy-handling workflows, and personally implemented 4 core frontend, backend, and AI features — authentication, role-based access control, workflow configuration, and LLM-powered daily inventory reports."
+          "Led a 6-member cross-functional team to design and deliver a 6–7 page inventory product through to final acceptance, owning requirements, prioritisation, development coordination, testing, and delivery. Designed the core inventory workflows — inbound, outbound, inventory query, stock alerts, reconciliation, and discrepancy handling — and shipped 4 frontend, backend, and AI features, including Qwen-powered daily reports surfacing stock movements, low-inventory risks, and stale inventory."
       }
     ],
     projects: [
+      {
+        name: "SayExact · Voice Pipeline Accuracy Adapter",
+        period: "08/2026 - Present",
+        detail:
+          "An accuracy adapter for voice pipelines, grown out of an earlier production project. Prioritised fields by error rate × business impact to isolate the highest-value use case, redesigned the capture flow, and validated it through user testing — lifting ASR accuracy past 85%. Taken from concept to internal pilot as a LiveKit Agents adapter with 336 automated tests; an upstream limitation found along the way was fixed and contributed back to the 14K-star repository."
+      },
       {
         name: "MindGap · Claude Code Plugin",
         period: "05/2026",
@@ -92,13 +98,13 @@ export const aboutSections = {
     education: [
       {
         school: "Nanyang Technological University",
-        degree: "M.Sc. in Cyber Security",
+        degree: "M.Sc. in Cyber Security · GPA 4.63/5.0",
         period: "08/2025 - 12/2026",
         location: "Singapore"
       },
       {
         school: "Xi'an Jiaotong University",
-        degree: "B.Eng. in Software Engineering",
+        degree: "B.Eng. in Software Engineering · IELTS 7.5",
         period: "09/2021 - 07/2025",
         location: "Xi'an, China"
       }
@@ -116,7 +122,7 @@ export const aboutSections = {
         org: "KeyReply Pte. Ltd.",
         period: "2026.04 - 至今",
         detail:
-          "交付 LLM-as-a-judge 评测流水线（TTS 合成 → 多模型盲评转写 → 三票多数裁定），把语音 Agent 在 349 条本地地名词典上的发音准确率从 78% 提升到 93.8%，并封装为具备安全批量纠正能力的可复用后端组件。主导「语音 Agent 穿越电话菜单（DTMF/IVR 导航）」能力的 0→1 可行性与架构设计，以 8 个 Agent 的对抗式代码评审提前捕获 4 个阻塞上线的缺陷。端到端交付面向客户与现场活动的产品：发布活动上线的 PII 加固二维码线索采集应用、为合作伙伴客户 Demo 按期交付的单文件可视化原型，以及为政府 AI 竞标项目完成的需求到语音技术栈映射。在生产级语音 AI 平台上撰写约 50 份产品方案、可行性研究与 PRD，持续把模糊需求转化为可决策的文档化范围。"
+          "与客户成功团队及各方干系人合作，把分散的控制项与 1700+ 条扁平语音清单重构为引导式的音色与角色配置工作台；将需求转化为 50+ 份 PRD 与交互原型，与设计、研发对齐范围，交付 5 个生产页面。主导跨产品的 UX 改版，覆盖 20+ 个页面，以 7 个并行 AI Agent 配合交互原型降低导航摩擦，解决 400+ 处 UI 不一致与 10+ 项 UX 问题，涉及信息架构、组件与过时文案。把客服侧反复出现的本地地名读音问题转化为可度量的产品课题：建立 349 条基准集与盲评流程，推动发音组件产品化，在 321 个独立词条上把可用准确率从 78.0% 提升至 93.8%（+15.8 pp）。与某公立医院急诊科的一线人员及临床医生直接合作，把床旁需求与 6 项部署约束浓缩为 90 分钟工作坊，并推动交付支持 20 种语言、免手操作的翻译助手，内置知情同意、录音与访问控制。"
       },
       {
         title: "研究员（兼职）",
@@ -137,10 +143,16 @@ export const aboutSections = {
         org: "成都华栈信息技术有限公司",
         period: "2023.11 - 2024.02",
         detail:
-          "带领 6 人跨职能团队设计并交付仓储库存管理系统原型，直至通过企业导师验收，负责需求梳理、优先级排序、任务分配与测试。标准化入库、出库、库存查询、缺货预警、对账与异常处理等流程，并亲自实现认证、基于角色的权限控制、工作流配置与大模型驱动的每日库存报表共 4 项前后端与 AI 核心功能。"
+          "带领 6 人跨职能团队设计并交付 6–7 个页面的库存管理产品，直至最终验收，负责需求梳理、优先级排序、研发协调、测试与交付。设计入库、出库、库存查询、缺货预警、对账与异常处理等核心库存流程，并交付 4 项前后端与 AI 功能，其中包括由 Qwen 驱动的每日报表，自动呈现库存变动、低库存风险与呆滞库存。"
       }
     ],
     projects: [
+      {
+        name: "SayExact · 语音链路准确率适配器",
+        period: "2026.08 - 至今",
+        detail:
+          "面向语音链路的准确率适配器，脱胎于此前的生产项目。以「错误率 × 业务影响」对字段排序，锁定价值最高的场景，重新设计采集流程并通过用户测试验证，将 ASR 准确率提升至 85% 以上。从概念推进到内部试点，交付带 336 个自动化测试的 LiveKit Agents 适配器；过程中发现的上游缺陷已修复并回馈给该 14K star 的开源仓库。"
+      },
       {
         name: "MindGap · Claude Code 插件",
         period: "2026.05",
@@ -157,13 +169,13 @@ export const aboutSections = {
     education: [
       {
         school: "南洋理工大学",
-        degree: "网络安全硕士",
+        degree: "网络安全硕士 · GPA 4.63/5.0",
         period: "2025.08 - 2026.12",
         location: "新加坡"
       },
       {
         school: "西安交通大学",
-        degree: "软件工程学士",
+        degree: "软件工程学士 · 雅思 7.5",
         period: "2021.09 - 2025.07",
         location: "中国西安"
       }
@@ -181,14 +193,20 @@ export const skills = [
   "AI Agent",
   "Prompt Engineering",
   "Workflow Design",
+  "Reinforcement Learning",
   "Coze",
   "FastGPT",
   "Cybersecurity",
+  "Python",
   "TypeScript",
   "Java",
   "Spring Boot",
+  "SQL",
   "PostgreSQL",
-  "MongoDB"
+  "MongoDB",
+  "Jira",
+  "Figma",
+  "Lark"
 ] as const;
 
 export const contactLinks = [
