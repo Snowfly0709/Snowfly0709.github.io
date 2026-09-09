@@ -50,29 +50,39 @@ export const aboutSections = {
         title: "AI Product Associate Intern",
         org: "KeyReply Pte. Ltd.",
         period: "04/2026 - Present",
-        detail:
-          "Partnered with the customer-success team and stakeholders to replace fragmented controls and a flat 1700+ voice catalog with a guided voice-and-character configuration workspace; translated needs into 50+ PRDs and interactive prototypes, aligned scope with design and engineering, and shipped 5 production pages. Led a cross-product UX redesign across 20+ pages, running 7 parallel AI agents alongside interactive prototypes to cut navigation friction and resolve 400+ UI inconsistencies and 10+ UX issues across information architecture, components, and outdated copy. Turned recurring support feedback on mispronounced local names into a measurable product initiative — a 349-entry benchmark and blind evaluation workflow, then productization of the pronunciation component — lifting usable accuracy from 78.0% to 93.8% across 321 unique terms (+15.8 pp). Worked directly with emergency-department staff and clinicians at a public hospital to translate bedside requirements and 6 deployment constraints into a 90-minute workshop, then prioritised and drove delivery of a 20-language, hands-free Translation Assistant with consent, recording, and access controls."
+        bullets: [
+          "Partnered with the customer-success team and stakeholders to replace fragmented controls and a flat 1700+ voice catalog with a guided voice-and-character configuration workspace; translated needs into 50+ PRDs and interactive prototypes, aligned scope with design and engineering, and shipped 5 production pages.",
+          "Led a cross-product UX redesign across 20+ pages, running 7 parallel AI agents alongside interactive prototypes to cut navigation friction and resolve 400+ UI inconsistencies and 10+ UX issues across information architecture, components, and outdated copy.",
+          "Turned recurring support feedback on mispronounced local names into a measurable product initiative — a 349-entry benchmark and blind evaluation workflow, then productization of the pronunciation component — lifting usable accuracy from 78.0% to 93.8% across 321 unique terms (+15.8 pp).",
+          "Worked directly with emergency-department staff and clinicians at a public hospital to translate bedside requirements and 6 deployment constraints into a 90-minute workshop, then prioritised and drove delivery of a 20-language, hands-free Translation Assistant with consent, recording, and access controls."
+        ]
       },
       {
         title: "Researcher (Part-time)",
         org: "Xi'an Jiaotong University",
         period: "11/2024 - 06/2025",
-        detail:
-          "Built a RAG-based internal Q&A system over policy and process documents. KNN retrieval on long-document corpora; scenario-grounded evaluation reaching 96% Recall@N and 4.4/5 answer relevance."
+        bullets: [
+          "Built a RAG-based internal Q&A system over policy and process documents.",
+          "KNN retrieval on long-document corpora; scenario-grounded evaluation reaching 96% Recall@N and 4.4/5 answer relevance."
+        ]
       },
       {
         title: "Researcher (Part-time)",
         org: "Xi'an Jiaotong University · w/ ByteDance",
         period: "10/2023 - 01/2025",
-        detail:
-          "Multi-agent reinforcement learning (A2C-based) for large-scale microservice scheduling. Validated on real-world ByteDance and Alibaba traces; co-authored publication in Expert Systems with Applications."
+        bullets: [
+          "Multi-agent reinforcement learning (A2C-based) for large-scale microservice scheduling.",
+          "Validated on real-world ByteDance and Alibaba traces; co-authored publication in Expert Systems with Applications."
+        ]
       },
       {
         title: "Product Manager Intern",
         org: "Chengdu Hwadee IT Co., Ltd",
         period: "11/2023 - 02/2024",
-        detail:
-          "Led a 6-member cross-functional team to design and deliver a 6–7 page inventory product through to final acceptance, owning requirements, prioritisation, development coordination, testing, and delivery. Designed the core inventory workflows — inbound, outbound, inventory query, stock alerts, reconciliation, and discrepancy handling — and shipped 4 frontend, backend, and AI features, including Qwen-powered daily reports surfacing stock movements, low-inventory risks, and stale inventory."
+        bullets: [
+          "Led a 6-member cross-functional team to design and deliver a 6–7 page inventory product through to final acceptance, owning requirements, prioritisation, development coordination, testing, and delivery.",
+          "Designed the core inventory workflows — inbound, outbound, inventory query, stock alerts, reconciliation, and discrepancy handling — and shipped 4 frontend, backend, and AI features, including Qwen-powered daily reports surfacing stock movements, low-inventory risks, and stale inventory."
+        ]
       }
     ],
     projects: [
@@ -121,29 +131,39 @@ export const aboutSections = {
         title: "AI 产品助理（实习）",
         org: "KeyReply Pte. Ltd.",
         period: "2026.04 - 至今",
-        detail:
-          "与客户成功团队及各方干系人合作，把分散的控制项与 1700+ 条扁平语音清单重构为引导式的音色与角色配置工作台；将需求转化为 50+ 份 PRD 与交互原型，与设计、研发对齐范围，交付 5 个生产页面。主导跨产品的 UX 改版，覆盖 20+ 个页面，以 7 个并行 AI Agent 配合交互原型降低导航摩擦，解决 400+ 处 UI 不一致与 10+ 项 UX 问题，涉及信息架构、组件与过时文案。把客服侧反复出现的本地地名读音问题转化为可度量的产品课题：建立 349 条基准集与盲评流程，推动发音组件产品化，在 321 个独立词条上把可用准确率从 78.0% 提升至 93.8%（+15.8 pp）。与某公立医院急诊科的一线人员及临床医生直接合作，把床旁需求与 6 项部署约束浓缩为 90 分钟工作坊，并推动交付支持 20 种语言、免手操作的翻译助手，内置知情同意、录音与访问控制。"
+        bullets: [
+          "与客户成功团队及各方干系人合作，把分散的控制项与 1700+ 条扁平语音清单重构为引导式的音色与角色配置工作台；将需求转化为 50+ 份 PRD 与交互原型，与设计、研发对齐范围，交付 5 个生产页面。",
+          "主导跨产品的 UX 改版，覆盖 20+ 个页面，以 7 个并行 AI Agent 配合交互原型降低导航摩擦，解决 400+ 处 UI 不一致与 10+ 项 UX 问题，涉及信息架构、组件与过时文案。",
+          "把客服侧反复出现的本地地名读音问题转化为可度量的产品课题：建立 349 条基准集与盲评流程，推动发音组件产品化，在 321 个独立词条上把可用准确率从 78.0% 提升至 93.8%（+15.8 pp）。",
+          "与某公立医院急诊科的一线人员及临床医生直接合作，把床旁需求与 6 项部署约束浓缩为 90 分钟工作坊，并推动交付支持 20 种语言、免手操作的翻译助手，内置知情同意、录音与访问控制。"
+        ]
       },
       {
         title: "研究员（兼职）",
         org: "西安交通大学",
         period: "2024.11 - 2025.06",
-        detail:
-          "搭建面向内部员工的 RAG 智能问答系统，覆盖政策与流程文档；在长文档语料上设计 KNN 检索方案，构建场景化评估框架，达到 96% Recall@N 与 4.4/5 答案相关度。"
+        bullets: [
+          "搭建面向内部员工的 RAG 智能问答系统，覆盖政策与流程文档。",
+          "在长文档语料上设计 KNN 检索方案，构建场景化评估框架，达到 96% Recall@N 与 4.4/5 答案相关度。"
+        ]
       },
       {
         title: "研究员（兼职）",
         org: "西安交通大学 · 与字节跳动合作",
         period: "2023.10 - 2025.01",
-        detail:
-          "围绕大规模微服务调度问题展开基于 A2C 的多智能体强化学习研究，在字节跳动与阿里巴巴真实数据集上验证有效性，合著论文已发表于 Expert Systems with Applications。"
+        bullets: [
+          "围绕大规模微服务调度问题展开基于 A2C 的多智能体强化学习研究。",
+          "在字节跳动与阿里巴巴真实数据集上验证有效性，合著论文已发表于 Expert Systems with Applications。"
+        ]
       },
       {
         title: "产品经理（实习）",
         org: "成都华栈信息技术有限公司",
         period: "2023.11 - 2024.02",
-        detail:
-          "带领 6 人跨职能团队设计并交付 6–7 个页面的库存管理产品，直至最终验收，负责需求梳理、优先级排序、研发协调、测试与交付。设计入库、出库、库存查询、缺货预警、对账与异常处理等核心库存流程，并交付 4 项前后端与 AI 功能，其中包括由 Qwen 驱动的每日报表，自动呈现库存变动、低库存风险与呆滞库存。"
+        bullets: [
+          "带领 6 人跨职能团队设计并交付 6–7 个页面的库存管理产品，直至最终验收，负责需求梳理、优先级排序、研发协调、测试与交付。",
+          "设计入库、出库、库存查询、缺货预警、对账与异常处理等核心库存流程，并交付 4 项前后端与 AI 功能，其中包括由 Qwen 驱动的每日报表，自动呈现库存变动、低库存风险与呆滞库存。"
+        ]
       }
     ],
     projects: [

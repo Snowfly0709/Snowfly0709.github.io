@@ -105,9 +105,14 @@ const projects = [...about.projects].sort(
           <article class="exp-item" data-reveal="up" data-stagger={idx + 1}>
             <h4 data-attention-id={workIds[idx]}>{item.title}</h4>
             <p class="meta-line">{item.org} | {item.period}</p>
-            {item.detail && (
-              <p class="exp-detail" set:html={tokenizeContent(item.detail, lang, `w${idx}`)} />
-            )}
+            <ul class="exp-bullets">
+              {item.bullets.map((line, bIdx) => (
+                <li
+                  class="exp-detail"
+                  set:html={tokenizeContent(line, lang, `w${idx}-${bIdx}`)}
+                />
+              ))}
+            </ul>
           </article>
         ))}
       </div>
