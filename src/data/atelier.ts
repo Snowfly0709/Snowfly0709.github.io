@@ -134,6 +134,13 @@ export const atelierItems: readonly AtelierItem[] = [
     tags: ["llm-agents", "research", "in-silico"],
     category: "research",
     status: "sandbox",
-    scale: "large"
+    scale: "large",
+    poster: {
+      src: "/atelier/hypothesis-engine/poster.webp",
+      alt: {
+        en: "Tenebrist anatomy theatre: a lattice of glass rods half-collapsed on a stone table under one shaft of light, ringed by robed observers, one hand raised.",
+        zh: "明暗对照的解剖剧场：一束光落在石台上半数已塌的玻璃杆构架，环形看台上袍影环绕，一只手举起。"
+      }
+    }
   }
 ];
