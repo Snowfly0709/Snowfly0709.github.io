@@ -34,7 +34,7 @@ function clearPulse() {
 
 function pickHubId(): string | null {
   if (!state) return null;
-  const candidates = Array.from(state.visible).filter((id) => !state.recent.includes(id));
+  const candidates = Array.from(state.visible).filter((id) => !state!.recent.includes(id));
   const pool = candidates.length > 0 ? candidates : Array.from(state.visible);
   if (pool.length === 0) return null;
   return pool[Math.floor(Math.random() * pool.length)];

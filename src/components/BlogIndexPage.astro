@@ -56,10 +56,10 @@ const tags = [...tagSet].sort((a, b) => a.localeCompare(b));
 </section>
 
 <script>
-  const input = document.querySelector("[data-search-input]");
+  const input = document.querySelector<HTMLInputElement>("[data-search-input]");
   const tagList = document.querySelector("[data-tag-list]");
-  const cards = [...document.querySelectorAll("[data-post-card]")];
-  const empty = document.querySelector("[data-empty]");
+  const cards = [...document.querySelectorAll<HTMLElement>("[data-post-card]")];
+  const empty = document.querySelector<HTMLElement>("[data-empty]");
 
   let activeTag = "all";
 

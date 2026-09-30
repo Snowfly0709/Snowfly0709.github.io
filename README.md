@@ -22,6 +22,15 @@ npm run dev
 npm run build
 ```
 
+## Validation
+
+Before considering a change complete, run both commands and make sure they pass:
+
+```bash
+npm run check
+npm run build
+```
+
 ## Content workflow (reusable)
 
 1. Create a new Markdown file in one of these folders:

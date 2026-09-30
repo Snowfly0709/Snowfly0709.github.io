@@ -1,7 +1,8 @@
 ﻿import rss from "@astrojs/rss";
+import type { APIContext } from "astro";
 import { getCollection } from "astro:content";
 
-export async function GET(context) {
+export async function GET(context: APIContext) {
   const posts = (await getCollection("blog", (entry) => entry.data.lang === "zh" && !entry.data.draft)).sort(
     (a, b) => b.data.date.getTime() - a.data.date.getTime()
   );
@@ -9,7 +10,7 @@ export async function GET(context) {
   return rss({
     title: "熊子枫博客",
     description: "技术笔记与 AI 产品思考。",
-    site: context.site,
+    site: context.site!,
     items: posts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.date,
