@@ -38,7 +38,7 @@ const labels = {
       : `${about.work.length} 段经历 · ${about.education.length} 所学校`,
   projectAnnotation:
     lang === "en"
-      ? `${about.projects.length} project${about.projects.length === 1 ? "" : "s"} · live & shipping`
+      ? `${about.projects.length} project${(about.projects.length as number) === 1 ? "" : "s"} · live & shipping`
       : `${about.projects.length} 个项目 · 已上线`,
   introAnnotation: lang === "en" ? "intro · bio · portrait" : "简介 · 履历 · 肖像",
   skillAnnotation:

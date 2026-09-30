@@ -10,7 +10,7 @@
 
 <script>
   function initParagraphMark() {
-    const mark = document.querySelector("[data-paragraph-mark]");
+    const mark = document.querySelector<HTMLElement>("[data-paragraph-mark]");
     if (!mark) return;
 
     const baseTop = 22;

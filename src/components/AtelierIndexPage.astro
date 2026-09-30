@@ -680,9 +680,9 @@ const plateStyle = (it: AtelierItem) => {
     const wall = document.querySelector("[data-wall]");
     if (!wall) return;
 
-    const search = document.querySelector("[data-search]");
+    const search = document.querySelector<HTMLInputElement>("[data-search]");
     const countEl = document.querySelector("[data-count]");
-    const emptyEl = document.querySelector("[data-empty]");
+    const emptyEl = document.querySelector<HTMLElement>("[data-empty]");
     const plates = Array.from(document.querySelectorAll("[data-plate]"));
     const registerEls = Array.from(document.querySelectorAll("[data-register]"));
     const railRows = Array.from(document.querySelectorAll("[data-rail-row]"));
@@ -691,7 +691,7 @@ const plateStyle = (it: AtelierItem) => {
 
     function apply() {
       const q = (search && search.value ? search.value : "").trim().toLowerCase();
-      const match = {};
+      const match: Record<string, boolean> = {};
       let visible = 0;
 
       for (const p of plates) {
@@ -699,7 +699,7 @@ const plateStyle = (it: AtelierItem) => {
         const show = q === "" || hay.indexOf(q) !== -1;
         p.classList.toggle("is-hidden", !show);
         p.classList.remove("is-sole");
-        match[p.getAttribute("data-slug")] = show;
+        match[String(p.getAttribute("data-slug"))] = show;
         if (show) visible++;
       }
 
@@ -711,7 +711,7 @@ const plateStyle = (it: AtelierItem) => {
       }
 
       for (const row of railRows) {
-        row.classList.toggle("is-hidden", !match[row.getAttribute("data-slug")]);
+        row.classList.toggle("is-hidden", !match[String(row.getAttribute("data-slug"))]);
       }
       for (const g of railGroups) {
         const any = Array.from(g.querySelectorAll("[data-rail-row]")).some(
@@ -747,10 +747,10 @@ const plateStyle = (it: AtelierItem) => {
     }
 
     // Quick controlled slide when a rail entry is clicked (instead of an instant hash jump).
-    const rail = document.querySelector("[data-rail]");
+    const rail = document.querySelector<HTMLElement>("[data-rail]");
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    const smoothScrollTo = (targetEl, offset, duration) => {
+    const smoothScrollTo = (targetEl: Element, offset: number, duration: number) => {
       const startY = window.scrollY;
       const destY = Math.max(0, targetEl.getBoundingClientRect().top + startY - offset);
       const dist = destY - startY;
@@ -760,8 +760,8 @@ const plateStyle = (it: AtelierItem) => {
         return;
       }
       const startT = performance.now();
-      const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-      const frame = (now) => {
+      const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+      const frame = (now: number) => {
         const p = Math.min(1, (now - startT) / duration);
         window.scrollTo(0, startY + dist * ease(p));
         if (p < 1) requestAnimationFrame(frame);
@@ -772,7 +772,7 @@ const plateStyle = (it: AtelierItem) => {
     if (rail && !rail.dataset.scrollBound) {
       rail.dataset.scrollBound = "1";
       rail.addEventListener("click", (e) => {
-        const link = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+        const link = e.target instanceof Element ? e.target.closest('a[href^="#"]') : null;
         if (!link || !rail.contains(link)) return;
         const id = decodeURIComponent((link.getAttribute("href") || "").slice(1));
         if (!id) return;
@@ -797,8 +797,8 @@ const plateStyle = (it: AtelierItem) => {
       if (e.key !== "/") return;
       const ae = document.activeElement;
       const tag = ae && ae.tagName ? ae.tagName.toLowerCase() : "";
-      if (tag === "input" || tag === "textarea" || (ae && ae.isContentEditable)) return;
-      const s = document.querySelector("[data-search]");
+      if (tag === "input" || tag === "textarea" || (ae instanceof HTMLElement && ae.isContentEditable)) return;
+      const s = document.querySelector<HTMLElement>("[data-search]");
       if (s) {
         e.preventDefault();
         s.focus();

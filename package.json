@@ -17,5 +17,9 @@
     "@fontsource-variable/source-serif-4": "^5.2.9",
     "@fontsource/noto-serif-sc": "^5.2.8",
     "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.9.3"
   }
 }
